@@ -4,11 +4,11 @@ import { OrbitControls } from '@react-three/drei';
 import AxisLines from './components/AxisLines';
 import GridLines from './components/GridLines';
 import VectorSphere from './components/VectorSphere';
-import React, { useState } from 'react';
+// import React, { useState } from 'react';
 import './App.css';
 
 function App() {
-  const [orbitControlsEnabled, setOrbitControlsEnabled] = useState(true);
+  // const [orbitControlsEnabled, setOrbitControlsEnabled] = useState(true);
 
 
   return (
@@ -16,7 +16,7 @@ function App() {
       <Canvas>
         <color attach="background" args={["white"]} />
         <OrbitControls
-          enabled={orbitControlsEnabled}
+          // enabled={orbitControlsEnabled}
           // enablePan={enablePanRotate}
           // enableRotate={enablePanRotate}
         />
