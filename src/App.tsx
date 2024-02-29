@@ -1,4 +1,4 @@
-import React from 'react';
+// import React from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import AxisLines from './components/AxisLines';
@@ -16,24 +16,24 @@ function App() {
         <AxisLines />
         <GridLines />
 
-        <mesh
-          onClick={(e) => console.log('click')}
-          onContextMenu={(e) => console.log('context menu')}
-          onDoubleClick={(e) => console.log('double click')}
-          onWheel={(e) => console.log('wheel spins')}
-          onPointerUp={(e) => console.log('up')}
-          onPointerDown={(e) => console.log('down')}
-          onPointerOver={(e) => console.log('over')}
-          onPointerOut={(e) => console.log('out')}
-          onPointerEnter={(e) => console.log('enter')}
-          onPointerLeave={(e) => console.log('leave')}
-          onPointerMove={(e) => console.log('move')}
+        {/* <mesh
+          onClick={(e) => console.log('click' + e)}
+          onContextMenu={(e) => console.log('context menu' + e)}
+          onDoubleClick={(e) => console.log('double click' + e)}
+          onWheel={(e) => console.log('wheel spins' + e)}
+          onPointerUp={(e) => console.log('up' + e)}
+          onPointerDown={(e) => console.log('down' + e)}
+          onPointerOver={(e) => console.log('over' + e)}
+          onPointerOut={(e) => console.log('out' + e)}
+          onPointerEnter={(e) => console.log('enter' + e)}
+          onPointerLeave={(e) => console.log('leave' + e)}
+          onPointerMove={(e) => console.log('move' + e)}
           onPointerMissed={() => console.log('missed')}
-          onUpdate={(self) => console.log('props have been updated')}
+          onUpdate={(self) => console.log('props have been updated' + self)}
         >
           <sphereGeometry />
           <meshStandardMaterial color="RED" />
-        </mesh>
+        </mesh> */}
       </Canvas>
     </div>
   );
