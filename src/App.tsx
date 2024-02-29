@@ -16,7 +16,7 @@ function App() {
         <AxisLines />
         <GridLines />
 
-        {/* <mesh
+        <mesh
           onClick={(e) => console.log('click' + e)}
           onContextMenu={(e) => console.log('context menu' + e)}
           onDoubleClick={(e) => console.log('double click' + e)}
@@ -33,7 +33,7 @@ function App() {
         >
           <sphereGeometry />
           <meshStandardMaterial color="RED" />
-        </mesh> */}
+        </mesh>
       </Canvas>
     </div>
   );
