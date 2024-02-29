@@ -1,6 +1,6 @@
 // import React from 'react';
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls, Grid } from '@react-three/drei';
+import { OrbitControls } from '@react-three/drei';
 import AxisLines from './components/AxisLines';
 import GridLines from './components/GridLines';
 import './App.css';
@@ -10,7 +10,9 @@ function App() {
     <div className="w-full h-full fixed bg-white">
       <Canvas>
         <color attach="background" args={["white"]} />
-        <OrbitControls />
+        <OrbitControls
+          enablePan={false}
+        />
         <pointLight position={[10, 10, 10]} />
 
         <AxisLines />
