@@ -3,6 +3,7 @@ import { Sphere } from '@react-three/drei';
 import { MeshPhysicalMaterial } from 'three';
 import BaseVector from './BaseVector';
 
+
 const VectorSphere: React.FC = () => {
     const [isSelected, setIsSelected] = useState(false);
 
@@ -25,7 +26,7 @@ const VectorSphere: React.FC = () => {
            <Sphere
               position={[0, 0, 0]}
               args={[0.126, 32, 32]}
-              material={sphere_material} 
+              material={sphere_material}
               onClick={() => setIsSelected(!isSelected)}
            />
 
