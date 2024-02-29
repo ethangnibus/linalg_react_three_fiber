@@ -22,13 +22,20 @@ const VectorSphere: React.FC = () => {
 
     return (
         <>
-           <Sphere position={[0, 0, 0]} args={[0.126, 32, 32]} material={sphere_material} 
+           <Sphere
+              position={[0, 0, 0]}
+              args={[0.126, 32, 32]}
+              material={sphere_material} 
               onClick={() => setIsSelected(!isSelected)}
            />
 
-           <BaseVector direction={[1.0, 0.0, 0.0]} color="red"/>
-           <BaseVector direction={[0.0, 1.0, 0.0]} color="green"/>
-           <BaseVector direction={[0.0, 0.0, 1.0]} color="blue"/>
+          {isSelected && (
+              <>
+                  <BaseVector direction={[17.0, 0.0, 0.0]} color="red"/>
+                  <BaseVector direction={[0.0, 200.0, 0.0]} color="green"/>
+                  <BaseVector direction={[0.0, 12.0, 1.0]} color="blue"/>
+              </>
+          )}
         </>
     );
 };
