@@ -55,6 +55,7 @@ const BaseVector: React.FC<BaseVectorsProps> = ({ direction, color, onToggleOrbi
     // const cylinderHeight = lineStart.distanceTo(lineEnd);
     const cylinderHeight = 1000;
 
+
     return (
         <>
             {/* Arrow line cylinder */}
@@ -94,6 +95,8 @@ const BaseVector: React.FC<BaseVectorsProps> = ({ direction, color, onToggleOrbi
                     rotationAngles={rotationAngles}
                     cylinderHeight={cylinderHeight}
                     color={color}
+                    isBaseVectorHovered={isHovered}
+                    isBaseVectorSelected={isSelected}
                 />
             )}
         </>

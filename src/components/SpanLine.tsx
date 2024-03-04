@@ -7,15 +7,17 @@ interface SpanLineProps {
     rotationAngles: THREE.Euler;
     cylinderHeight: number;
     color: string;
+    isBaseVectorHovered: boolean;
+    isBaseVectorSelected: boolean;
 }
 
-const SpanLine: React.FC<SpanLineProps> = ({ spherePosition, rotationAngles, cylinderHeight, color }) => {
+const SpanLine: React.FC<SpanLineProps> = ({ spherePosition, rotationAngles, cylinderHeight, color, isBaseVectorHovered, isBaseVectorSelected }) => {
     const span_line_material = useMemo(() => new THREE.MeshToonMaterial({
         color: color,
         transparent: true,
-        opacity: 0.8,
+        opacity: isBaseVectorSelected ? 0.6 : (isBaseVectorHovered ? 0.4 : 0.0),
         blending: THREE.NormalBlending,
-    }), [color]);
+    }), [color, isBaseVectorHovered, isBaseVectorSelected]);
 
     return (
         <Cylinder
@@ -28,7 +30,7 @@ const SpanLine: React.FC<SpanLineProps> = ({ spherePosition, rotationAngles, cyl
                 16, // radialSegments
             ]}
             material={span_line_material}
-            renderOrder={1}
+            renderOrder={0}
         />
     );
 };
