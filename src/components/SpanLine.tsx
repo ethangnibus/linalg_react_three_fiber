@@ -28,7 +28,7 @@ const SpanLine: React.FC<SpanLineProps> = ({ spherePosition, rotationAngles, cyl
                 16, // radialSegments
             ]}
             material={span_line_material}
-            renderOrder={0}
+            renderOrder={1}
         />
     );
 };
