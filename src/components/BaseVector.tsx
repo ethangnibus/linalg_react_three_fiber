@@ -30,11 +30,9 @@ const BaseVector: React.FC<BaseVectorsProps> = ({ direction, color, onToggleOrbi
     };
 
     useEffect(() => {
-        document.addEventListener('pointerdown', handlePointerDown);
         document.addEventListener('pointerup', handlePointerUp);
 
         return () => {
-            document.removeEventListener('pointerdown', handlePointerDown);
             document.removeEventListener('pointerup', handlePointerUp);
         };
     }, [isHovered, isDragging, onToggleOrbitControls]);
@@ -73,7 +71,7 @@ const BaseVector: React.FC<BaseVectorsProps> = ({ direction, color, onToggleOrbi
                     ]}
                     material={base_vector_material}
                     onClick={() => setIsSelected(!isSelected)}
-                    onPointerDown={() => setIsHovered(true)}
+                    onPointerDown={() => handlePointerDown()}
                     onPointerEnter={() => setIsHovered(true)}
                     onPointerLeave={() => setIsHovered(false)}
                 />
@@ -84,7 +82,7 @@ const BaseVector: React.FC<BaseVectorsProps> = ({ direction, color, onToggleOrbi
                     material={base_vector_material}
                     rotation={rotationAngles}
                     onClick={() => setIsSelected(!isSelected)}
-                    onPointerDown={() => setIsHovered(true)}
+                    onPointerDown={() => handlePointerDown()}
                     onPointerEnter={() => setIsHovered(true)}
                     onPointerLeave={() => setIsHovered(false)}
                 />
