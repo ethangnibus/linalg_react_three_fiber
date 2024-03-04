@@ -28,7 +28,7 @@ function App() {
         <AxisLines />
         
 
-        <VectorSphere onToggleOrbitControls={handleToggleOrbitControls} spherePosition={initialSpherePosition} />
+        <VectorSphere onToggleOrbitControls={handleToggleOrbitControls} initialPosition={initialSpherePosition} />
       </Canvas>
     </div>
   );

@@ -2,13 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { Sphere } from '@react-three/drei';
 import { MeshPhysicalMaterial, Vector3 } from 'three'; // Import Vector3 from three
 import BaseVector from './BaseVector';
+import * as THREE from 'three';
 
 interface VectorSphereProps {
-  onToggleOrbitControls: (enabled: boolean) => void;
-  spherePosition: Vector3; // Change to Vector3 type
+    onToggleOrbitControls: (enabled: boolean) => void;
+    initialPosition: Vector3; // Initial position of the sphere
 }
 
-const VectorSphere: React.FC<VectorSphereProps> = ({ onToggleOrbitControls, spherePosition }) => {
+const VectorSphere: React.FC<VectorSphereProps> = ({ onToggleOrbitControls, initialPosition }) => {
+    const [spherePosition, setSpherePosition] = useState<Vector3>(initialPosition);
     const [isSelected, setIsSelected] = useState(false);
 
     const sphere_material = new MeshPhysicalMaterial({
@@ -23,21 +25,23 @@ const VectorSphere: React.FC<VectorSphereProps> = ({ onToggleOrbitControls, sphe
         specularIntensity: 1.0,
     });
 
-    const handlePointerDown = () => {
-        onToggleOrbitControls(false);
+    const handleToggleSelection = () => {
+        setIsSelected(!isSelected);
     };
 
-    const handlePointerUp = () => {
-        onToggleOrbitControls(true);
+    const handleToggleOrbitControls = (enabled: boolean) => {
+        onToggleOrbitControls(enabled);
     };
 
-    useEffect(() => {
-        document.addEventListener('pointerup', handlePointerUp);
+    const updateSpherePosition = (newPosition: Vector3) => {
+        // Update sphere position
+        // You can add any additional logic here if needed
+        setSpherePosition(newPosition);
+    };
 
-        return () => {
-            document.removeEventListener('pointerup', handlePointerUp);
-        };
-    }, []);
+    const x_unit = new THREE.Vector3(17.0, 0.0, 0.0).normalize();
+    const y_unit = new THREE.Vector3(0.0, 200.0, 0.0).normalize();
+    const z_unit = new THREE.Vector3(0.0, 12.0, 1.0).normalize();
 
     return (
         <>
@@ -45,15 +49,16 @@ const VectorSphere: React.FC<VectorSphereProps> = ({ onToggleOrbitControls, sphe
               position={spherePosition.toArray()} // Convert Vector3 to array
               args={[0.126, 32, 32]}
               material={sphere_material}
-              onClick={() => setIsSelected(!isSelected)}
-              onPointerDown={handlePointerDown}
+              onClick={handleToggleSelection}
+              onPointerDown={() => handleToggleOrbitControls(false)}
+              onPointerUp={() => handleToggleOrbitControls(true)}
            />
 
           {isSelected && (
               <>
-                  <BaseVector direction={[17.0, 0.0, 0.0]} color="red" onToggleOrbitControls={onToggleOrbitControls} spherePosition={spherePosition} />
-                  <BaseVector direction={[0.0, 200.0, 0.0]} color="green" onToggleOrbitControls={onToggleOrbitControls} spherePosition={spherePosition} />
-                  <BaseVector direction={[0.0, 12.0, 1.0]} color="blue" onToggleOrbitControls={onToggleOrbitControls} spherePosition={spherePosition} />
+                  <BaseVector direction={x_unit} color="red" onToggleOrbitControls={handleToggleOrbitControls} spherePosition={spherePosition} updateSpherePosition={updateSpherePosition} />
+                  <BaseVector direction={y_unit} color="green" onToggleOrbitControls={handleToggleOrbitControls} spherePosition={spherePosition} updateSpherePosition={updateSpherePosition} />
+                  <BaseVector direction={z_unit} color="blue" onToggleOrbitControls={handleToggleOrbitControls} spherePosition={spherePosition} updateSpherePosition={updateSpherePosition} />
               </>
           )}
         </>
