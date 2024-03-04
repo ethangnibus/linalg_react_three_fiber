@@ -35,10 +35,6 @@ const BaseVector: React.FC<BaseVectorsProps> = ({ direction, color, onToggleOrbi
         // Calculate new position by adding direction to current sphere position
         const newPosition = spherePosition.clone().add(direction);
         alert("onclick " + newPosition.x + " " + newPosition.y + " " + newPosition.z);
-        // newPosition.x = 3;
-        // newPosition.y = 3;
-        // newPosition.z = 3;
-
         // Call the function to update the sphere position
         updateSpherePosition(newPosition);
         // Toggle selection state
@@ -71,7 +67,11 @@ const BaseVector: React.FC<BaseVectorsProps> = ({ direction, color, onToggleOrbi
         <>
             <group>
                 <Cylinder
-                    position={[norm_vector.x * 0.475, norm_vector.y * 0.475, norm_vector.z * 0.475]}
+                    position={[
+                      spherePosition.x + norm_vector.x * 0.475,
+                      spherePosition.y + norm_vector.y * 0.475,
+                      spherePosition.z + norm_vector.z * 0.475
+                    ]}
                     rotation={rotationAngles}
                     args={[
                         0.02,
@@ -87,7 +87,11 @@ const BaseVector: React.FC<BaseVectorsProps> = ({ direction, color, onToggleOrbi
                     onPointerLeave={() => setIsHovered(false)}
                 />
                 <Cone
-                    position={[norm_vector.x * 0.825, norm_vector.y * 0.825, norm_vector.z * 0.825]}
+                    position={[
+                      spherePosition.x + norm_vector.x * 0.825,
+                      spherePosition.y + norm_vector.y * 0.825,
+                      spherePosition.z + norm_vector.z * 0.825
+                    ]}
                     args={[0.09, 0.35, 16]}
                     material={base_vector_material}
                     rotation={rotationAngles}
