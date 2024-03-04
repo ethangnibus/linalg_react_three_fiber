@@ -1,10 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Sphere } from '@react-three/drei';
-import { MeshPhysicalMaterial } from 'three';
+import { MeshPhysicalMaterial, Vector3 } from 'three'; // Import Vector3 from three
 import BaseVector from './BaseVector';
 
+interface VectorSphereProps {
+  onToggleOrbitControls: (enabled: boolean) => void;
+  spherePosition: Vector3; // Change to Vector3 type
+}
 
-const VectorSphere: React.FC = () => {
+const VectorSphere: React.FC<VectorSphereProps> = ({ onToggleOrbitControls, spherePosition }) => {
     const [isSelected, setIsSelected] = useState(false);
 
     const sphere_material = new MeshPhysicalMaterial({
@@ -18,23 +22,38 @@ const VectorSphere: React.FC = () => {
         clearcoatRoughness: 0.3,
         specularIntensity: 1.0,
     });
-    
 
+    const handlePointerDown = () => {
+        onToggleOrbitControls(false);
+    };
+
+    const handlePointerUp = () => {
+        onToggleOrbitControls(true);
+    };
+
+    useEffect(() => {
+        document.addEventListener('pointerup', handlePointerUp);
+
+        return () => {
+            document.removeEventListener('pointerup', handlePointerUp);
+        };
+    }, []);
 
     return (
         <>
            <Sphere
-              position={[0, 0, 0]}
+              position={spherePosition.toArray()} // Convert Vector3 to array
               args={[0.126, 32, 32]}
               material={sphere_material}
               onClick={() => setIsSelected(!isSelected)}
+              onPointerDown={handlePointerDown}
            />
 
           {isSelected && (
               <>
-                  <BaseVector direction={[17.0, 0.0, 0.0]} color="red"/>
-                  <BaseVector direction={[0.0, 200.0, 0.0]} color="green"/>
-                  <BaseVector direction={[0.0, 12.0, 1.0]} color="blue"/>
+                  <BaseVector direction={[17.0, 0.0, 0.0]} color="red" onToggleOrbitControls={onToggleOrbitControls} spherePosition={spherePosition} />
+                  <BaseVector direction={[0.0, 200.0, 0.0]} color="green" onToggleOrbitControls={onToggleOrbitControls} spherePosition={spherePosition} />
+                  <BaseVector direction={[0.0, 12.0, 1.0]} color="blue" onToggleOrbitControls={onToggleOrbitControls} spherePosition={spherePosition} />
               </>
           )}
         </>
