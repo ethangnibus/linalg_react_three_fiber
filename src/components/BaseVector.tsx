@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Cone, Cylinder, DragControls } from '@react-three/drei';
 import * as THREE from 'three';
 import SpanLine from './SpanLine';
@@ -15,9 +15,11 @@ const BaseVector: React.FC<BaseVectorsProps> = ({ direction, color, onToggleOrbi
     const [isSelected, setIsSelected] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
     const [isDragging, setIsDragging] = useState(false);
+    const [dragStartPosition, setDragStartPosition] = useState<THREE.Vector3>(new THREE.Vector3(0, 0, 0));
 
     const handlePointerDown = () => {
         if (isHovered) {
+            setDragStartPosition(spherePosition.clone())
             onToggleOrbitControls(false);
             setIsDragging(true);
         }
@@ -63,36 +65,19 @@ const BaseVector: React.FC<BaseVectorsProps> = ({ direction, color, onToggleOrbi
 
     const cylinderHeight = 1000;
 
-    const matrix = new THREE.Matrix4();
+    // const matrix = new THREE.Matrix4();
     return (
         <>
             <group>
                 <DragControls
                     autoTransform={false}
-                    matrix={matrix}
-                    onDragStart={() => updateSpherePosition(spherePosition)}
-                    onDrag={(localMatrix, deltaLocalMatrix, worldMatrix, deltaWorldMatrix) => {
+                    onDrag={(localMatrix, _deltaLocalMatrix, _worldMatrix, _deltaWorldMatrix) => {
                         // Get the drag delta
-                        const dragDelta = new THREE.Vector3().setFromMatrixPosition(deltaLocalMatrix);
-                        const world_vec = new THREE.Vector3().setFromMatrixPosition(deltaWorldMatrix);
+                        const dragDelta = new THREE.Vector3().setFromMatrixPosition(localMatrix);
                         
-                        // Calculate the new position along the vector [1, 0, 0]
-                        const len = dragDelta.length();
-                        // const newPosition = spherePosition.clone().add(dragDelta.projectOnVector(new THREE.Vector3(1, 0, 0)));
-                        
-                        // const newPosition = spherePosition.clone().add(
-                        //   norm_vector.multiplyScalar(len * 0.1)
-                        // );
-                        // const newPosition = spherePosition.clone().add(
-                        //   dragDelta.projectOnVector(norm_vector)
-                        // );
-                        const newPosition = 
-                          dragDelta.projectOnVector(norm_vector.add(spherePosition.clone()))
-                        
-                        
-                        // Update the sphere position
+                        const newPosition = dragDelta.projectOnVector(norm_vector).add(dragStartPosition)
+              
                         updateSpherePosition(newPosition);
-                        // matrix.copy(localMatrix)
                     }}
                 >
                     <Cylinder

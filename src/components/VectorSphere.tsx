@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Sphere } from '@react-three/drei';
 import { MeshPhysicalMaterial, Vector3 } from 'three'; // Import Vector3 from three
 import BaseVector from './BaseVector';
