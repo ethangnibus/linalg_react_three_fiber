@@ -39,9 +39,9 @@ const VectorSphere: React.FC<VectorSphereProps> = ({ onToggleOrbitControls, init
         setSpherePosition(newPosition);
     };
 
-    const x_unit = new THREE.Vector3(17.0, 0.0, 0.0).normalize();
-    const y_unit = new THREE.Vector3(0.0, 200.0, 0.0).normalize();
-    const z_unit = new THREE.Vector3(0.0, 12.0, 1.0).normalize();
+    const x_unit = new THREE.Vector3(17.0, 1.0, 0.0).normalize();
+    const y_unit = new THREE.Vector3(0.0, 2.0, 1.0).normalize();
+    const z_unit = new THREE.Vector3(1.0, 3.0, 35.0).normalize();
 
     return (
         <>

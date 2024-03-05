@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Cone, Cylinder, DragControls } from '@react-three/drei';
+import { Cone, Cylinder, DragControls, Line } from '@react-three/drei';
 import * as THREE from 'three';
 import SpanLine from './SpanLine';
 
@@ -16,12 +16,17 @@ const BaseVector: React.FC<BaseVectorsProps> = ({ direction, color, onToggleOrbi
     const [isHovered, setIsHovered] = useState(false);
     const [isDragging, setIsDragging] = useState(false);
     const [dragStartPosition, setDragStartPosition] = useState<THREE.Vector3>(new THREE.Vector3(0, 0, 0));
+    const [dragStartPoint, setDragStartPoint] = useState<THREE.Vector3>(new THREE.Vector3(0, 0, 0));
+    const [dragEndPoint, setDragEndPoint] = useState<THREE.Vector3>(new THREE.Vector3(0, 0, 0));
+    const [currentLine, setCurrentLine] = useState<JSX.Element | null>(null);
+    const [lines, setLines] = useState<JSX.Element[]>([]);
 
-    const handlePointerDown = () => {
+    const handleDragStart = () => {
         if (isHovered) {
-            setDragStartPosition(spherePosition.clone())
-            onToggleOrbitControls(false);
+            setDragStartPosition(spherePosition.clone());
+            setDragStartPoint(spherePosition.clone());
             setIsDragging(true);
+            onToggleOrbitControls(false);
         }
     };
 
@@ -29,18 +34,11 @@ const BaseVector: React.FC<BaseVectorsProps> = ({ direction, color, onToggleOrbi
         if (isDragging) {
             setIsDragging(false);
             onToggleOrbitControls(true);
+            if (currentLine) {
+                setLines([...lines, currentLine]); // Save the current line to the lines array
+            }
+            setCurrentLine(null); // Reset the current line
         }
-    };
-
-    const handleClick = () => {
-        
-        // Calculate new position by adding direction to current sphere position
-        // const newPosition = spherePosition.clone().add(direction);
-        // alert("onclick " + newPosition.x + " " + newPosition.y + " " + newPosition.z);
-        // Call the function to update the sphere position
-        // updateSpherePosition(newPosition);
-        // Toggle selection state
-        setIsSelected(!isSelected);
     };
 
     useEffect(() => {
@@ -49,44 +47,48 @@ const BaseVector: React.FC<BaseVectorsProps> = ({ direction, color, onToggleOrbi
         return () => {
             document.removeEventListener('pointerup', handlePointerUp);
         };
-    }, [isHovered, isDragging, onToggleOrbitControls]);
+    }, [isDragging, onToggleOrbitControls]);
 
-    const base_vector_material = useMemo(() => new THREE.MeshToonMaterial({
-        color: color,
-        transparent: true,
-        opacity: isHovered ? 0.6 : (isSelected ? 1.0 : 0.4),
-    }), [color, isHovered, isSelected]);
+    const handleDrag = (localMatrix: THREE.Matrix4) => {
+        if (!isDragging) return; // Do nothing if not dragging
+        const dragDelta = new THREE.Vector3().setFromMatrixPosition(localMatrix);
+        const newPosition = dragDelta.projectOnVector(direction).add(dragStartPosition);
+        updateSpherePosition(newPosition);
+        setDragEndPoint(newPosition);
+        // Update the endpoint of the current line
+        const updatedLine = (
+            <Line
+                key={Math.random()}
+                points={[dragStartPoint, newPosition]}
+                color={color}
+                dashed={true}
+                lineWidth={5}
+                // opacity={0.4}
+                // transparent={true}
+                dashOffset={0.5}
+                dashScale={20}
+            />
+        );
+        setCurrentLine(updatedLine);
+    };
 
-    const up_vector = new THREE.Vector3(0, 1, 0);
-    const norm_vector = direction;
-    const quaternion = new THREE.Quaternion();
-    quaternion.setFromUnitVectors(up_vector, norm_vector);
-    const rotationAngles = new THREE.Euler().setFromQuaternion(quaternion);
-
-    const cylinderHeight = 1000;
-
-    // const matrix = new THREE.Matrix4();
     return (
         <>
             <group>
                 <DragControls
                     autoTransform={false}
+                    onDragStart={handleDragStart}
                     onDrag={(localMatrix, _deltaLocalMatrix, _worldMatrix, _deltaWorldMatrix) => {
-                        // Get the drag delta
-                        const dragDelta = new THREE.Vector3().setFromMatrixPosition(localMatrix);
-                        
-                        const newPosition = dragDelta.projectOnVector(norm_vector).add(dragStartPosition)
-              
-                        updateSpherePosition(newPosition);
+                        handleDrag(localMatrix);
                     }}
                 >
                     <Cylinder
                         position={[
-                            spherePosition.x + norm_vector.x * 0.475,
-                            spherePosition.y + norm_vector.y * 0.475,
-                            spherePosition.z + norm_vector.z * 0.475
+                            spherePosition.x + direction.x * 0.475,
+                            spherePosition.y + direction.y * 0.475,
+                            spherePosition.z + direction.z * 0.475
                         ]}
-                        rotation={rotationAngles}
+                        rotation={new THREE.Euler().setFromQuaternion(new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), direction))}
                         args={[
                             0.02,
                             0.02,
@@ -94,33 +96,41 @@ const BaseVector: React.FC<BaseVectorsProps> = ({ direction, color, onToggleOrbi
                             16,
                             1,
                         ]}
-                        material={base_vector_material}
-                        onClick={handleClick} // Change onClick to handleClick
-                        onPointerDown={handlePointerDown}
-                        onPointerEnter={() => setIsHovered(true)}
+                        material={useMemo(() => new THREE.MeshToonMaterial({
+                            color: color,
+                            transparent: true,
+                            opacity: isHovered ? 0.6 : (isSelected ? 1.0 : 0.4),
+                        }), [color, isHovered, isSelected])}
+                        onClick={() => setIsSelected(!isSelected)}
+                        onPointerDown={() => setIsHovered(true)}
                         onPointerLeave={() => setIsHovered(false)}
                     />
                     <Cone
                         position={[
-                            spherePosition.x + norm_vector.x * 0.825,
-                            spherePosition.y + norm_vector.y * 0.825,
-                            spherePosition.z + norm_vector.z * 0.825
+                            spherePosition.x + direction.x * 0.825,
+                            spherePosition.y + direction.y * 0.825,
+                            spherePosition.z + direction.z * 0.825
                         ]}
                         args={[0.09, 0.35, 16]}
-                        material={base_vector_material}
-                        rotation={rotationAngles}
-                        onClick={handleClick} // Change onClick to handleClick
-                        onPointerDown={handlePointerDown}
-                        onPointerEnter={() => setIsHovered(true)}
+                        material={useMemo(() => new THREE.MeshToonMaterial({
+                            color: color,
+                            transparent: true,
+                            opacity: isHovered ? 0.6 : (isSelected ? 1.0 : 0.4),
+                        }), [color, isHovered, isSelected])}
+                        rotation={new THREE.Euler().setFromQuaternion(new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), direction))}
+                        onClick={() => setIsSelected(!isSelected)}
+                        onPointerDown={() => setIsHovered(true)}
                         onPointerLeave={() => setIsHovered(false)}
                     />
                 </DragControls>
             </group>
+            {lines}
+            {currentLine}
             {(isHovered || isSelected) && (
                 <SpanLine
                     spherePosition={spherePosition}
-                    rotationAngles={rotationAngles}
-                    cylinderHeight={cylinderHeight}
+                    rotationAngles={new THREE.Euler().setFromQuaternion(new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), direction))}
+                    cylinderHeight={1000}
                     color={color}
                     isBaseVectorHovered={isHovered}
                     isBaseVectorSelected={isSelected}
