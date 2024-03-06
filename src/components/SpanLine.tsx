@@ -6,7 +6,7 @@ interface SpanLineProps {
     spherePosition: THREE.Vector3;
     rotationAngles: THREE.Euler;
     cylinderHeight: number;
-    color: string;
+    color: THREE.Color;
     isBaseVectorHovered: boolean;
     isBaseVectorSelected: boolean;
 }
