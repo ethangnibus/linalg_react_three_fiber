@@ -53,7 +53,7 @@ const SpanPlane: React.FC<SpanPlaneProps> = ({
                 planeWidth,
             ]}
             material={span_plane_material}
-            renderOrder={0}
+            renderOrder={1}
         />
         <Plane
             position={spherePosition.toArray()}

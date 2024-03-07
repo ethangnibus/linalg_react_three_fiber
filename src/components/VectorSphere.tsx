@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Sphere, Box } from '@react-three/drei';
+import { Sphere } from '@react-three/drei';
 import { Vector3 } from 'three'; // Import Vector3 from three
 import BaseVector from './BaseVector';
 import * as THREE from 'three';

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Cone, Cylinder, DragControls, Line } from '@react-three/drei';
 import * as THREE from 'three';
-import SpanLine from './SpanLine';
 
 interface BaseVectorsProps {
     direction: THREE.Vector3; // Direction of the arrow
