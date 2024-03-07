@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import SpanPlane from './SpanPlane';
 import * as THREE from 'three';
 
@@ -19,26 +19,6 @@ const SpanCube: React.FC<SpanCubeProps> = ({
     planeWidth,
     color,
 }) => {
-    const span_plane_material = useMemo(() => new THREE.MeshToonMaterial({
-        color: color,
-        transparent: true,
-        opacity: 0.2,
-        blending: THREE.NormalBlending,
-        side: THREE.DoubleSide,
-    }), [color]);
-
-    const plane_front = new THREE.Euler().setFromQuaternion(
-        new THREE.Quaternion().setFromUnitVectors(
-            new THREE.Vector3(0, 0, 1),
-            vec1.clone().cross(vec2.clone()).normalize()
-        )
-    );
-    const grid = new THREE.Euler().setFromQuaternion(
-        new THREE.Quaternion().setFromUnitVectors(
-            new THREE.Vector3(0, 1, 0),
-            vec1.clone().cross(vec2.clone()).normalize()
-        )
-    );
 
     return (
         <>
