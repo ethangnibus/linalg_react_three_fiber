@@ -22,6 +22,7 @@ const SpanLine: React.FC<SpanLineProps> = ({
         transparent: true,
         opacity: 0.6,
         blending: THREE.NormalBlending,
+        side: THREE.DoubleSide,
     }), [color, baseVectorIsSelected]);
 
     return (

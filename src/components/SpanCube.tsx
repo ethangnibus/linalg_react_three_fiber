@@ -1,19 +1,21 @@
 import React, { useMemo } from 'react';
-import { Plane } from '@react-three/drei';
+import SpanPlane from './SpanPlane';
 import * as THREE from 'three';
 
-interface SpanPlaneProps {
+interface SpanCubeProps {
     spherePosition: THREE.Vector3;
     vec1: THREE.Vector3;
     vec2: THREE.Vector3;
+    vec3: THREE.Vector3;
     planeWidth: number;
     color: THREE.Color;
 }
 
-const SpanPlane: React.FC<SpanPlaneProps> = ({
+const SpanCube: React.FC<SpanCubeProps> = ({
     spherePosition,
     vec1,
     vec2,
+    vec3,
     planeWidth,
     color,
 }) => {
@@ -40,39 +42,30 @@ const SpanPlane: React.FC<SpanPlaneProps> = ({
 
     return (
         <>
-        <Plane
-            position={spherePosition.toArray()}
-            rotation={plane_front}
-            args={[
-                planeWidth,
-                planeWidth,
-            ]}
-            material={span_plane_material}
-            renderOrder={1}
-        />
-        <gridHelper
-            position={spherePosition.toArray()}
-            rotation={grid}
-            args={[
-                1000,
-                1000,
-                color,
-                color]}
-            renderOrder={3}
-        />
-        {/* <gridHelper
-            position={[0, 0, 0]}
-            rotation={grid}
-            args={[
-                1000,
-                1000,
-                "white",
-                "white"]}
-            renderOrder={2}
-        /> */}
+            <SpanPlane
+                spherePosition={spherePosition}
+                vec1={vec1}
+                vec2={vec2}
+                planeWidth={planeWidth}
+                color={color}
+            />
+            <SpanPlane
+                spherePosition={spherePosition}
+                vec1={vec1}
+                vec2={vec3}
+                planeWidth={planeWidth}
+                color={color}
+            />
+            <SpanPlane
+                spherePosition={spherePosition}
+                vec1={vec2}
+                vec2={vec3}
+                planeWidth={planeWidth}
+                color={color}
+            />
         </>
         
     );
 };
 
-export default SpanPlane;
+export default SpanCube;

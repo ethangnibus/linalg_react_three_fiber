@@ -5,6 +5,7 @@ import BaseVector from './BaseVector';
 import * as THREE from 'three';
 import SpanLine from './SpanLine';
 import SpanPlane from './SpanPlane';
+import SpanCube from './SpanCube';
 
 interface VectorSphereProps {
     onToggleOrbitControls: (enabled: boolean) => void;
@@ -28,6 +29,8 @@ const VectorSphere: React.FC<VectorSphereProps> = ({ onToggleOrbitControls, vect
     const [showV1V2Span, setShowV1V2Span] = useState(false);
     const [showV1V3Span, setShowV1V3Span] = useState(false);
     const [showV2V3Span, setShowV2V3Span] = useState(false);
+
+    const [showV1V2V3Span, setShowV1V2V3Span] = useState(false);
 
     const handleToggleSelection = () => {
         setVectorSphereIsSelected(!vectorSphereIsSelected);
@@ -53,6 +56,8 @@ const VectorSphere: React.FC<VectorSphereProps> = ({ onToggleOrbitControls, vect
         setShowV1V3Span(false);
         setShowV2V3Span(false);
 
+        setShowV1V2V3Span(false);
+
         // render span lines
         if (v1IsSelected && !v2IsSelected && !v3IsSelected) {
             setShowV1Span(true);
@@ -73,6 +78,10 @@ const VectorSphere: React.FC<VectorSphereProps> = ({ onToggleOrbitControls, vect
         }
         if (!v1IsSelected && v2IsSelected && v3IsSelected) {
             setShowV2V3Span(true);
+        }
+
+        if (v1IsSelected && v2IsSelected && v3IsSelected) {
+            setShowV1V2V3Span(true);
         }
     }, [v1IsSelected, v2IsSelected, v3IsSelected]);
 
@@ -175,8 +184,7 @@ const VectorSphere: React.FC<VectorSphereProps> = ({ onToggleOrbitControls, vect
                     color={new THREE.Color(0.0, 0.3, 0.3)}
                 />
             )}
-            {/* Render Span Planes */}
-            {(vectorSphereIsSelected && showV1V3Span) && (
+            {(showV1V3Span) && (
                 <SpanPlane
                     spherePosition={vectorSpherePosition}
                     vec1={v1_unit}
@@ -186,14 +194,25 @@ const VectorSphere: React.FC<VectorSphereProps> = ({ onToggleOrbitControls, vect
                     color={new THREE.Color(0.0, 0.3, 0.3)}
                 />
             )}
-            {/* Render Span Planes */}
-            {(vectorSphereIsSelected && showV2V3Span) && (
+            {(showV2V3Span) && (
                 <SpanPlane
                     spherePosition={vectorSpherePosition}
                     vec1={v2_unit}
                     vec2={v3_unit}
                     planeWidth={1000}
                     // color={new THREE.Color(0.35686275, 0.85882354, 0.85882354)}
+                    color={new THREE.Color(0.0, 0.3, 0.3)}
+                />
+            )}
+
+            {/* Render Span Cube */}
+            {(showV1V2V3Span) && (
+                <SpanCube
+                    spherePosition={vectorSpherePosition}
+                    vec1={v1_unit}
+                    vec2={v2_unit}
+                    vec3={v3_unit}
+                    planeWidth={1000}
                     color={new THREE.Color(0.0, 0.3, 0.3)}
                 />
             )}
