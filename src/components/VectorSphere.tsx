@@ -40,7 +40,7 @@ const VectorSphere: React.FC<VectorSphereProps> = ({ onToggleOrbitControls, vect
     });
     const handleToggleSelection = () => {
         setVectorSphereIsSelected(!vectorSphereIsSelected);
-        if (!vectorSphereIsSelected) {
+        if (vectorSphereIsSelected) {
             setCameraTarget(vectorSpherePosition);
         }
     };
