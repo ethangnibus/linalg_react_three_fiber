@@ -161,17 +161,6 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
         )}
             {lines}
             {currentLine}
-            {(vectorSphereIsSelected && baseVectorIsSelected) && (
-                <SpanLine
-                    spherePosition={spherePosition}
-                    rotationAngles={new THREE.Euler().setFromQuaternion(new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), direction))}
-                    cylinderHeight={1000}
-                    // color={new THREE.Color(0.35686275, 0.85882354, 0.85882354)}
-                    color={new THREE.Color(0.0, 0.3, 0.3)}
-                    baseVectorIsHovered={isHovered}
-                    baseVectorIsSelected={baseVectorIsSelected}
-                />
-            )}
         </>
     );
 };
