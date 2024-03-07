@@ -6,14 +6,19 @@ import * as THREE from 'three';
 
 interface VectorSphereProps {
     onToggleOrbitControls: (enabled: boolean) => void;
-    initialPosition: Vector3; // Initial position of the sphere
+    vectorSpherePosition: Vector3;
+    setVectorSpherePosition: (new_position: Vector3) => void;
+    setCameraTarget: (new_position: Vector3) => void;
 }
 
-const VectorSphere: React.FC<VectorSphereProps> = ({ onToggleOrbitControls, initialPosition }) => {
-    const [spherePosition, setSpherePosition] = useState<Vector3>(initialPosition);
+const VectorSphere: React.FC<VectorSphereProps> = ({ onToggleOrbitControls, vectorSpherePosition, setVectorSpherePosition, setCameraTarget }) => {
+    
     const [vectorSphereIsSelected, setVectorSphereIsSelected] = useState(false);
     const [vectorSphereIsHovered, setVectorSphereIsHovered] = useState(false);
-
+    // const [selectedVectors, setSelectedVectors] = useState<Vector3[]>([]);
+    const [v1IsSelected, setV1IsSelected] = useState(false);
+    const [v2IsSelected, setV2IsSelected] = useState(false);
+    const [v3IsSelected, setV3IsSelected] = useState(false);
 
     // const sphere_material = new MeshPhysicalMaterial({
     //     color: isSelected ? 'yellow' : 'blue',
@@ -35,6 +40,9 @@ const VectorSphere: React.FC<VectorSphereProps> = ({ onToggleOrbitControls, init
     });
     const handleToggleSelection = () => {
         setVectorSphereIsSelected(!vectorSphereIsSelected);
+        if (!vectorSphereIsSelected) {
+            setCameraTarget(vectorSpherePosition);
+        }
     };
 
     const handleToggleOrbitControls = (enabled: boolean) => {
@@ -44,7 +52,7 @@ const VectorSphere: React.FC<VectorSphereProps> = ({ onToggleOrbitControls, init
     const updateSpherePosition = (newPosition: Vector3) => {
         // Update sphere position
         // You can add any additional logic here if needed
-        setSpherePosition(newPosition);
+        setVectorSpherePosition(newPosition);
     };
 
     const x_unit = new THREE.Vector3(1.0, 0.0, 0.0).normalize();
@@ -54,7 +62,7 @@ const VectorSphere: React.FC<VectorSphereProps> = ({ onToggleOrbitControls, init
     return (
         <>
            <Sphere
-              position={spherePosition.toArray()} // Convert Vector3 to array
+              position={vectorSpherePosition.toArray()} // Convert Vector3 to array
               scale={vectorSphereIsHovered ? 1.2 : 1.0}
               args={[0.126, 32, 32]}
               material={sphere_material}
@@ -72,27 +80,33 @@ const VectorSphere: React.FC<VectorSphereProps> = ({ onToggleOrbitControls, init
                     color={new THREE.Color(0.45, 0.23, 0.005)}
                     line_color={new THREE.Color(1.0, 0.6, 0.01)}
                     onToggleOrbitControls={handleToggleOrbitControls}
-                    spherePosition={spherePosition}
+                    spherePosition={vectorSpherePosition}
                     updateSpherePosition={updateSpherePosition}
                     vectorSphereIsSelected={vectorSphereIsSelected}
+                    baseVectorIsSelected={v1IsSelected}
+                    setBaseVectorIsSelected={setV1IsSelected}
                 />
                 <BaseVector // v2 teal
                     direction={y_unit}
                     color={new THREE.Color(0.005, 0.4, 0.3)}
                     line_color={new THREE.Color(0.005, 0.7, 0.7)}
                     onToggleOrbitControls={handleToggleOrbitControls}
-                    spherePosition={spherePosition}
+                    spherePosition={vectorSpherePosition}
                     updateSpherePosition={updateSpherePosition}
                     vectorSphereIsSelected={vectorSphereIsSelected}
+                    baseVectorIsSelected={v2IsSelected}
+                    setBaseVectorIsSelected={setV2IsSelected}
                 />
                 <BaseVector // v3 off red
                     direction={z_unit}
                     color={new THREE.Color(0.3, 0.028, 0.028)}
                     line_color={new THREE.Color(0.8, 0.08, 0.08)}
                     onToggleOrbitControls={handleToggleOrbitControls}
-                    spherePosition={spherePosition}
+                    spherePosition={vectorSpherePosition}
                     updateSpherePosition={updateSpherePosition}
                     vectorSphereIsSelected={vectorSphereIsSelected}
+                    baseVectorIsSelected={v3IsSelected}
+                    setBaseVectorIsSelected={setV3IsSelected}
                 />
             </>
         </>

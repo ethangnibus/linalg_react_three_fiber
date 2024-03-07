@@ -11,10 +11,21 @@ interface BaseVectorsProps {
     spherePosition: THREE.Vector3; // Change to Vector3 type
     updateSpherePosition: (newPosition: THREE.Vector3) => void; // Add prop for updating sphere position
     vectorSphereIsSelected: boolean;
+    baseVectorIsSelected: boolean;
+    setBaseVectorIsSelected: (enabled: boolean) => void;
 }
 
-const BaseVector: React.FC<BaseVectorsProps> = ({ direction, color, line_color, onToggleOrbitControls, spherePosition, updateSpherePosition, vectorSphereIsSelected}) => {
-    const [isSelected, setIsSelected] = useState(false);
+const BaseVector: React.FC<BaseVectorsProps> = ({
+    direction,
+    color,
+    line_color,
+    onToggleOrbitControls,
+    spherePosition,
+    updateSpherePosition,
+    vectorSphereIsSelected,
+    baseVectorIsSelected,
+    setBaseVectorIsSelected,
+}) => {
     const [isHovered, setIsHovered] = useState(false);
     const [isDragging, setIsDragging] = useState(false);
     const [dragStartPosition, setDragStartPosition] = useState<THREE.Vector3>(new THREE.Vector3(0, 0, 0));
@@ -89,7 +100,7 @@ const BaseVector: React.FC<BaseVectorsProps> = ({ direction, color, line_color, 
                 onPointerLeave={() => setIsHovered(false)}
                 onClick={() => {
                     if (!isDragging) {
-                        setIsSelected(!isSelected)
+                        setBaseVectorIsSelected(!baseVectorIsSelected)
                     }
                     
                 }}
@@ -121,7 +132,7 @@ const BaseVector: React.FC<BaseVectorsProps> = ({ direction, color, line_color, 
                         material={new THREE.MeshToonMaterial({
                             color: color,
                             transparent: true,
-                            opacity: isHovered ? 0.8 : (isSelected ? 1.0 : 0.5),
+                            opacity: isHovered ? 0.8 : (baseVectorIsSelected ? 1.0 : 0.5),
                         })}
                         
                         
@@ -140,7 +151,7 @@ const BaseVector: React.FC<BaseVectorsProps> = ({ direction, color, line_color, 
                         material={new THREE.MeshToonMaterial({
                             color: color,
                             transparent: true,
-                            opacity: isHovered ? 0.8 : (isSelected ? 1.0 : 0.5),
+                            opacity: isHovered ? 0.8 : (baseVectorIsSelected ? 1.0 : 0.5),
                         })}
                         rotation={new THREE.Euler().setFromQuaternion(new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), direction))}
                         
@@ -150,15 +161,15 @@ const BaseVector: React.FC<BaseVectorsProps> = ({ direction, color, line_color, 
         )}
             {lines}
             {currentLine}
-            {(vectorSphereIsSelected && isSelected) && (
+            {(vectorSphereIsSelected && baseVectorIsSelected) && (
                 <SpanLine
                     spherePosition={spherePosition}
                     rotationAngles={new THREE.Euler().setFromQuaternion(new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), direction))}
                     cylinderHeight={1000}
                     // color={new THREE.Color(0.35686275, 0.85882354, 0.85882354)}
                     color={new THREE.Color(0.0, 0.3, 0.3)}
-                    isBaseVectorHovered={isHovered}
-                    isBaseVectorSelected={isSelected}
+                    baseVectorIsHovered={isHovered}
+                    baseVectorIsSelected={baseVectorIsSelected}
                 />
             )}
         </>

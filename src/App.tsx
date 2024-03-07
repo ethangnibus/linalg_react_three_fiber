@@ -8,11 +8,12 @@ import { Vector3 } from 'three'; // Import Vector3 from three
 
 function App() {
   const [orbitControlsEnabled, setOrbitControlsEnabled] = useState(true);
-  const initialSpherePosition = new Vector3(0, 0, 0); // Initialize the sphere position
-
+  const [vectorSpherePosition, setVectorSpherePosition] = useState<Vector3>(new Vector3(0, 0, 0));
   const handleToggleOrbitControls = (enabled: boolean) => {
     setOrbitControlsEnabled(enabled);
   };
+  const [cameraTarget, setCameraTarget] = useState<Vector3>(new Vector3(0, 0, 0));
+
 
   return (
     <div className="w-full h-full fixed bg-white">
@@ -24,7 +25,8 @@ function App() {
         <OrbitControls
           enableRotate={orbitControlsEnabled}
           dampingFactor={0.1}
-          rotateSpeed={1.0}
+          rotateSpeed={0.5}
+          target={cameraTarget}
         />
         <ambientLight/>
         <directionalLight intensity={5} position={[0, 11, 11]} />
@@ -35,8 +37,9 @@ function App() {
         <AxisLines />
 
         
-
-        <VectorSphere onToggleOrbitControls={handleToggleOrbitControls} initialPosition={initialSpherePosition} />
+        <VectorSphere onToggleOrbitControls={handleToggleOrbitControls} vectorSpherePosition={vectorSpherePosition} setVectorSpherePosition={setVectorSpherePosition} setCameraTarget={setCameraTarget}/>
+       
+        
       </Canvas>
     </div>
   );
