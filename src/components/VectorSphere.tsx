@@ -18,18 +18,22 @@ const VectorSphere: React.FC<VectorSphereProps> = ({ onToggleOrbitControls, vect
     
     const [vectorSphereIsSelected, setVectorSphereIsSelected] = useState(false);
     const [vectorSphereIsHovered, setVectorSphereIsHovered] = useState(false);
+    const [v1, _setV1] = useState<Vector3>(new THREE.Vector3(1.0, 0.0, 0.0));
+    const [v2, _setV2] = useState<Vector3>(new THREE.Vector3(0.0, 2.0, 1.0));
+    const [v3, _setV3] = useState<Vector3>(new THREE.Vector3(1.0, 3.0, 35.0));
+    
+    // states for when vectors are selected
     const [v1IsSelected, setV1IsSelected] = useState(false);
     const [v2IsSelected, setV2IsSelected] = useState(false);
     const [v3IsSelected, setV3IsSelected] = useState(false);
 
+    // states to show span components
     const [showV1Span, setShowV1Span] = useState(false);
     const [showV2Span, setShowV2Span] = useState(false);
     const [showV3Span, setShowV3Span] = useState(false);
-
     const [showV1V2Span, setShowV1V2Span] = useState(false);
     const [showV1V3Span, setShowV1V3Span] = useState(false);
     const [showV2V3Span, setShowV2V3Span] = useState(false);
-
     const [showV1V2V3Span, setShowV1V2V3Span] = useState(false);
 
     const handleToggleSelection = () => {
@@ -85,10 +89,6 @@ const VectorSphere: React.FC<VectorSphereProps> = ({ onToggleOrbitControls, vect
         }
     }, [v1IsSelected, v2IsSelected, v3IsSelected]);
 
-    const v1_unit = new THREE.Vector3(1.0, 0.0, 0.0).normalize();
-    const v2_unit = new THREE.Vector3(0.0, 2.0, 1.0).normalize();
-    const v3_unit = new THREE.Vector3(1.0, 3.0, 35.0).normalize();
-
     return (
         <>
            <Sphere
@@ -106,7 +106,7 @@ const VectorSphere: React.FC<VectorSphereProps> = ({ onToggleOrbitControls, vect
           
             <>
                 <BaseVector // v1 - yellow
-                    direction={v1_unit}
+                    vector={v1}
                     color={new THREE.Color(0.45, 0.23, 0.005)}
                     line_color={new THREE.Color(1.0, 0.6, 0.01)}
                     onToggleOrbitControls={handleToggleOrbitControls}
@@ -117,7 +117,7 @@ const VectorSphere: React.FC<VectorSphereProps> = ({ onToggleOrbitControls, vect
                     setBaseVectorIsSelected={setV1IsSelected}
                 />
                 <BaseVector // v2 teal
-                    direction={v2_unit}
+                    vector={v2}
                     color={new THREE.Color(0.005, 0.4, 0.3)}
                     line_color={new THREE.Color(0.005, 0.7, 0.7)}
                     onToggleOrbitControls={handleToggleOrbitControls}
@@ -128,7 +128,7 @@ const VectorSphere: React.FC<VectorSphereProps> = ({ onToggleOrbitControls, vect
                     setBaseVectorIsSelected={setV2IsSelected}
                 />
                 <BaseVector // v3 off red
-                    direction={v3_unit}
+                    vector={v3}
                     color={new THREE.Color(0.3, 0.028, 0.028)}
                     line_color={new THREE.Color(0.8, 0.08, 0.08)}
                     onToggleOrbitControls={handleToggleOrbitControls}
@@ -144,7 +144,7 @@ const VectorSphere: React.FC<VectorSphereProps> = ({ onToggleOrbitControls, vect
             {(showV1Span) && (
                 <SpanLine
                     spherePosition={vectorSpherePosition}
-                    rotationAngles={new THREE.Euler().setFromQuaternion(new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), v1_unit))}
+                    vector={v1}
                     cylinderHeight={1000}
                     // color={new THREE.Color(0.35686275, 0.85882354, 0.85882354)}
                     color={new THREE.Color(0.0, 0.3, 0.3)}
@@ -154,7 +154,7 @@ const VectorSphere: React.FC<VectorSphereProps> = ({ onToggleOrbitControls, vect
             {(showV2Span) && (
                 <SpanLine
                     spherePosition={vectorSpherePosition}
-                    rotationAngles={new THREE.Euler().setFromQuaternion(new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), v2_unit))}
+                    vector={v2}
                     cylinderHeight={1000}
                     // color={new THREE.Color(0.35686275, 0.85882354, 0.85882354)}
                     color={new THREE.Color(0.0, 0.3, 0.3)}
@@ -164,7 +164,7 @@ const VectorSphere: React.FC<VectorSphereProps> = ({ onToggleOrbitControls, vect
             {(showV3Span) && (
                 <SpanLine
                     spherePosition={vectorSpherePosition}
-                    rotationAngles={new THREE.Euler().setFromQuaternion(new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), v3_unit))}
+                    vector={v3}
                     cylinderHeight={1000}
                     // color={new THREE.Color(0.35686275, 0.85882354, 0.85882354)}
                     color={new THREE.Color(0.0, 0.3, 0.3)}
@@ -177,8 +177,8 @@ const VectorSphere: React.FC<VectorSphereProps> = ({ onToggleOrbitControls, vect
             {(showV1V2Span) && (
                 <SpanPlane
                     spherePosition={vectorSpherePosition}
-                    vec1={v1_unit}
-                    vec2={v2_unit}
+                    vector_u={v1}
+                    vector_v={v2}
                     planeWidth={1000}
                     // color={new THREE.Color(0.35686275, 0.85882354, 0.85882354)}
                     color={new THREE.Color(0.0, 0.3, 0.3)}
@@ -187,8 +187,8 @@ const VectorSphere: React.FC<VectorSphereProps> = ({ onToggleOrbitControls, vect
             {(showV1V3Span) && (
                 <SpanPlane
                     spherePosition={vectorSpherePosition}
-                    vec1={v1_unit}
-                    vec2={v3_unit}
+                    vector_u={v1}
+                    vector_v={v3}
                     planeWidth={1000}
                     // color={new THREE.Color(0.35686275, 0.85882354, 0.85882354)}
                     color={new THREE.Color(0.0, 0.3, 0.3)}
@@ -197,8 +197,8 @@ const VectorSphere: React.FC<VectorSphereProps> = ({ onToggleOrbitControls, vect
             {(showV2V3Span) && (
                 <SpanPlane
                     spherePosition={vectorSpherePosition}
-                    vec1={v2_unit}
-                    vec2={v3_unit}
+                    vector_u={v2}
+                    vector_v={v3}
                     planeWidth={1000}
                     // color={new THREE.Color(0.35686275, 0.85882354, 0.85882354)}
                     color={new THREE.Color(0.0, 0.3, 0.3)}
@@ -209,9 +209,9 @@ const VectorSphere: React.FC<VectorSphereProps> = ({ onToggleOrbitControls, vect
             {(showV1V2V3Span) && (
                 <SpanCube
                     spherePosition={vectorSpherePosition}
-                    vec1={v1_unit}
-                    vec2={v2_unit}
-                    vec3={v3_unit}
+                    vector_a={v1}
+                    vector_b={v2}
+                    vector_c={v3}
                     planeWidth={1000}
                     color={new THREE.Color(0.0, 0.3, 0.3)}
                 />

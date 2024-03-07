@@ -3,7 +3,7 @@ import { Cone, Cylinder, DragControls, Line } from '@react-three/drei';
 import * as THREE from 'three';
 
 interface BaseVectorsProps {
-    direction: THREE.Vector3; // Direction of the arrow
+    vector: THREE.Vector3; // Direction of the arrow
     color: THREE.Color;
     line_color: THREE.Color;
     onToggleOrbitControls: (enabled: boolean) => void;
@@ -15,7 +15,7 @@ interface BaseVectorsProps {
 }
 
 const BaseVector: React.FC<BaseVectorsProps> = ({
-    direction,
+    vector,
     color,
     line_color,
     onToggleOrbitControls,
@@ -33,6 +33,8 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
     const [currentLine, setCurrentLine] = useState<JSX.Element | null>(null);
     const [lines, setLines] = useState<JSX.Element[]>([]);
 
+    const direction = vector.clone().normalize();
+    
     const handleDragStart = () => {
         if (isHovered) {
             setDragStartPosition(spherePosition.clone());
@@ -139,9 +141,6 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
                     
                     <Cone
                         position={[
-                            // direction.x * 0.825,
-                            // direction.y * 0.825,
-                            // direction.z * 0.825,
                             direction.x * (0.35/2),
                             direction.y * (0.35/2),
                             direction.z * (0.35/2),

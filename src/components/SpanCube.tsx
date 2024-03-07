@@ -4,18 +4,18 @@ import * as THREE from 'three';
 
 interface SpanCubeProps {
     spherePosition: THREE.Vector3;
-    vec1: THREE.Vector3;
-    vec2: THREE.Vector3;
-    vec3: THREE.Vector3;
+    vector_a: THREE.Vector3;
+    vector_b: THREE.Vector3;
+    vector_c: THREE.Vector3;
     planeWidth: number;
     color: THREE.Color;
 }
 
 const SpanCube: React.FC<SpanCubeProps> = ({
     spherePosition,
-    vec1,
-    vec2,
-    vec3,
+    vector_a,
+    vector_b,
+    vector_c,
     planeWidth,
     color,
 }) => {
@@ -24,22 +24,22 @@ const SpanCube: React.FC<SpanCubeProps> = ({
         <>
             <SpanPlane
                 spherePosition={spherePosition}
-                vec1={vec1}
-                vec2={vec2}
+                vector_u={vector_a}
+                vector_v={vector_b}
                 planeWidth={planeWidth}
                 color={color}
             />
             <SpanPlane
                 spherePosition={spherePosition}
-                vec1={vec1}
-                vec2={vec3}
+                vector_u={vector_a}
+                vector_v={vector_c}
                 planeWidth={planeWidth}
                 color={color}
             />
             <SpanPlane
                 spherePosition={spherePosition}
-                vec1={vec2}
-                vec2={vec3}
+                vector_u={vector_b}
+                vector_v={vector_c}
                 planeWidth={planeWidth}
                 color={color}
             />

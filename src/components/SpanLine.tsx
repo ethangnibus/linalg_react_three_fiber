@@ -4,7 +4,7 @@ import * as THREE from 'three';
 
 interface SpanLineProps {
     spherePosition: THREE.Vector3;
-    rotationAngles: THREE.Euler;
+    vector: THREE.Vector3;
     cylinderHeight: number;
     color: THREE.Color;
     baseVectorIsSelected: boolean;
@@ -12,7 +12,7 @@ interface SpanLineProps {
 
 const SpanLine: React.FC<SpanLineProps> = ({
     spherePosition,
-    rotationAngles,
+    vector,
     cylinderHeight,
     color,
     baseVectorIsSelected
@@ -25,6 +25,13 @@ const SpanLine: React.FC<SpanLineProps> = ({
         side: THREE.DoubleSide,
     }), [color, baseVectorIsSelected]);
 
+    const rotationAngles = new THREE.Euler().setFromQuaternion(
+        new THREE.Quaternion().setFromUnitVectors(
+            new THREE.Vector3(0, 1, 0),
+            vector.clone().normalize(), // unit direction of vector
+        )
+    );
+
     return (
         <Cylinder
             position={spherePosition.toArray()}
@@ -33,7 +40,7 @@ const SpanLine: React.FC<SpanLineProps> = ({
                 0.01, // radiusTop
                 0.01, // radiusBottom
                 cylinderHeight,
-                16, // radialSegments
+                8, // radialSegments
             ]}
             material={span_line_material}
             renderOrder={0}

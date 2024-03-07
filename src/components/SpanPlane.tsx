@@ -4,16 +4,16 @@ import * as THREE from 'three';
 
 interface SpanPlaneProps {
     spherePosition: THREE.Vector3;
-    vec1: THREE.Vector3;
-    vec2: THREE.Vector3;
+    vector_u: THREE.Vector3;
+    vector_v: THREE.Vector3;
     planeWidth: number;
     color: THREE.Color;
 }
 
 const SpanPlane: React.FC<SpanPlaneProps> = ({
     spherePosition,
-    vec1,
-    vec2,
+    vector_u,
+    vector_v,
     planeWidth,
     color,
 }) => {
@@ -28,13 +28,13 @@ const SpanPlane: React.FC<SpanPlaneProps> = ({
     const plane_front = new THREE.Euler().setFromQuaternion(
         new THREE.Quaternion().setFromUnitVectors(
             new THREE.Vector3(0, 0, 1),
-            vec1.clone().cross(vec2.clone()).normalize()
+            vector_u.clone().cross(vector_v.clone()).normalize()
         )
     );
     const grid = new THREE.Euler().setFromQuaternion(
         new THREE.Quaternion().setFromUnitVectors(
             new THREE.Vector3(0, 1, 0),
-            vec1.clone().cross(vec2.clone()).normalize()
+            vector_u.clone().cross(vector_v.clone()).normalize()
         )
     );
 
