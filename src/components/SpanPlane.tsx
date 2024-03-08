@@ -1,11 +1,6 @@
 import React, { useMemo, useRef } from 'react';
-import { Plane, Cylinder, Instances, Instance, Merged } from '@react-three/drei';
+import { Plane } from '@react-three/drei';
 import * as THREE from 'three';
-// import { CylinderBufferGeometry } from 'three';
-import { extend } from '@react-three/fiber';
-
-// Extend CylinderBufferGeometry
-// extend({ CylinderBufferGeometry });
 
 interface SpanPlaneProps {
     spherePosition: THREE.Vector3;
@@ -15,9 +10,8 @@ interface SpanPlaneProps {
     color: THREE.Color;
 }
 
-const scratchObject3D = new THREE.Object3D();
 
-  
+
 const SpanPlane: React.FC<SpanPlaneProps> = ({
     spherePosition,
     vector_u,
@@ -25,12 +19,7 @@ const SpanPlane: React.FC<SpanPlaneProps> = ({
     planeWidth,
     color,
 }) => {
-    console.log(spherePosition,
-        vector_u,
-        vector_v,
-        planeWidth,
-        color,
-    );
+    const scratchObject3D = new THREE.Object3D();
     const span_plane_material = useMemo(() => new THREE.MeshToonMaterial({
         color: color,
         transparent: true,
@@ -39,45 +28,12 @@ const SpanPlane: React.FC<SpanPlaneProps> = ({
         side: THREE.DoubleSide,
     }), [color]);
 
-    const span_grid_material = useMemo(() => new THREE.MeshToonMaterial({
-        color: color,
-        transparent: true,
-        opacity: 0.8,
-        blending: THREE.NormalBlending,
-    }), [color]);
-    // const span_grid_mid = useMemo(() => new THREE.MeshToonMaterial({
-    //     color: color,
-    //     transparent: true,
-    //     opacity: 0.6,
-    //     blending: THREE.NormalBlending,
-    // }), [color]);
-    // const span_grid_far = useMemo(() => new THREE.MeshToonMaterial({
-    //     color: color,
-    //     transparent: true,
-    //     opacity: 0.4,
-    //     blending: THREE.NormalBlending,
-    // }), [color]);
-    // const span_grid_super_far = useMemo(() => new THREE.MeshToonMaterial({
-    //     color: color,
-    //     transparent: true,
-    //     opacity: 0.2,
-    //     blending: THREE.NormalBlending,
-    // }), [color]);
-
     const plane_front = new THREE.Euler().setFromQuaternion(
         new THREE.Quaternion().setFromUnitVectors(
             new THREE.Vector3(0, 0, 1),
             vector_u.clone().cross(vector_v.clone()).normalize()
         )
     );
-
-    // const grid = new THREE.Euler().setFromQuaternion(
-    //     new THREE.Quaternion().setFromUnitVectors(
-    //         new THREE.Vector3(0, 1, 0),
-    //         vector_u.clone().cross(vector_v.clone()).normalize()
-    //     )
-    // );
-
     const parallel_with_vector_u = new THREE.Euler().setFromQuaternion(
         new THREE.Quaternion().setFromUnitVectors(
             new THREE.Vector3(0, 1, 0),
@@ -92,86 +48,18 @@ const SpanPlane: React.FC<SpanPlaneProps> = ({
     );
 
 
-    const gridLines = [];
-
-    // // Create lines parallel with vector_u
-    // for (let i = -1000; i <= 1000; i++) {
-    //     gridLines.push(
-    //         <Cylinder
-    //             position={
-    //                 spherePosition.clone().add(vector_v.clone().multiplyScalar(i))
-    //             }
-    //             rotation={parallel_with_vector_u}
-    //             args={[
-    //                 0.01, // radiusTop
-    //                 0.01, // radiusBottom
-    //                 100,
-    //                 8, // radialSegments
-    //             ]}
-    //             material={span_grid_material}
-    //             renderOrder={0}
-    //         />
-    //     );
-    // }
-
-    // for (let i = -1000; i <= 1000; i++) {
-    //     gridLines.push(
-    //         <Cylinder
-    //             key={"span_plane_u_parallel_" + i}
-    //             position={
-    //                 spherePosition.clone().add(vector_v.clone().multiplyScalar(i))
-    //             }
-    //             rotation={parallel_with_vector_u}
-    //             args={[
-    //                 0.01, // radiusTop
-    //                 0.01, // radiusBottom
-    //                 100,
-    //                 8, // radialSegments
-    //             ]}
-    //             material={span_grid_material}
-    //             renderOrder={0}
-    //         />
-    //     );
-    //   }
-
-    // // Create lines parallel with vector_v
-    // for (let i = -100; i <= 100; i++) {
-    //     let distance_material = span_grid_material;
-
-    //     gridLines.push(
-    //         <Cylinder
-    //             position={
-    //                 spherePosition.clone().add(vector_u.clone().multiplyScalar(i))
-    //             }
-    //             rotation={parallel_with_vector_v}
-    //             args={[
-    //                 0.01, // radiusTop
-    //                 0.01, // radiusBottom
-    //                 100,
-    //                 8, // radialSegments
-    //             ]}
-    //             material={distance_material}
-    //             renderOrder={0}
-    //         />
-    //     );
-    // }
-    
-    
-    const data = new Array(2000).fill(0).map((_d, id) => ({id}));
-    
 
     const meshRef = useRef<THREE.InstancedMesh>(null);
-    // const numPoints = data.length;
-    const numPoints = 2000;
-
+    const numPoints = planeWidth*2;
     // update instance matrices only when needed
     React.useEffect(() => {
         const mesh = meshRef.current;
 
         // set the transform matrix for each instance
-        for (let i = 0; i <= numPoints; i += 2) {
+        for (let i = 0; i <= planeWidth; i += 1) {
 
-            const offset_u = spherePosition.clone().add(vector_u.clone().multiplyScalar(i - numPoints / 2))
+            // update lines parallel with v
+            const offset_u = spherePosition.clone().add(vector_u.clone().multiplyScalar(i - planeWidth/2))
             scratchObject3D.position.set(offset_u.x, offset_u.y, offset_u.z);
             scratchObject3D.rotation.set(
                 parallel_with_vector_v.x,
@@ -181,8 +69,8 @@ const SpanPlane: React.FC<SpanPlaneProps> = ({
             scratchObject3D.updateMatrix();
             if (mesh) mesh.setMatrixAt(i, scratchObject3D.matrix);
 
-
-            const offset_v = spherePosition.clone().add(vector_v.clone().multiplyScalar(i - numPoints / 2))
+            // update line parallel with u
+            const offset_v = spherePosition.clone().add(vector_v.clone().multiplyScalar(i - planeWidth/2))
             scratchObject3D.position.set(offset_v.x, offset_v.y, offset_v.z);
             scratchObject3D.rotation.set(
                 parallel_with_vector_u.x,
@@ -190,22 +78,20 @@ const SpanPlane: React.FC<SpanPlaneProps> = ({
                 parallel_with_vector_u.z
             );
             scratchObject3D.updateMatrix();
-            if (mesh) mesh.setMatrixAt(i + 1, scratchObject3D.matrix);
+            if (mesh) mesh.setMatrixAt(i + planeWidth, scratchObject3D.matrix);
         }
         
         if (mesh) mesh.instanceMatrix.needsUpdate = true;
-    }, [numPoints, spherePosition, vector_u, parallel_with_vector_v]);
+    }, [numPoints, spherePosition, vector_u, vector_v]);
 
-    const cylinder_geometry = new THREE.CylinderGeometry(0.5, 0.5, 0.15, 32);
-    const cylinder_material = new THREE.MeshStandardMaterial({ color: "#fff"});
     return (
         <>
             <Plane
                 position={spherePosition.toArray()}
                 rotation={plane_front}
                 args={[
-                    planeWidth,
-                    planeWidth,
+                    planeWidth * 10,
+                    planeWidth * 10,
                 ]}
                 material={span_plane_material}
                 renderOrder={1}
@@ -215,11 +101,20 @@ const SpanPlane: React.FC<SpanPlaneProps> = ({
                 ref={meshRef}
                 args={[undefined, undefined, numPoints]}
                 frustumCulled={true}
+                renderOrder={0}
             >
-                <cylinderGeometry attach="geometry" args={[0.01, 0.01, 100, 8]} />
-                <meshToonMaterial attach="material" color={color} transparent={true} opacity={0.8} blending={THREE.NormalBlending} />
+                <cylinderGeometry
+                    attach="geometry"
+                    args={[0.01, 0.01, planeWidth, 8]}
+                />
+                <meshToonMaterial
+                    attach="material"
+                    color={color}
+                    transparent={true}
+                    opacity={0.7}
+                    blending={THREE.NormalBlending}
+                />
             </instancedMesh>
-            {/* {gridLines} */}
         </>
     );
 };
