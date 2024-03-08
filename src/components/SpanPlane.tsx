@@ -157,30 +157,44 @@ const SpanPlane: React.FC<SpanPlaneProps> = ({
     // }
     
     
-    const data = new Array(100000).fill(0).map((_d, id) => ({id}));
+    const data = new Array(2000).fill(0).map((_d, id) => ({id}));
     
 
     const meshRef = useRef<THREE.InstancedMesh>(null);
-    const numPoints = data.length;
+    // const numPoints = data.length;
+    const numPoints = 2000;
 
     // update instance matrices only when needed
     React.useEffect(() => {
         const mesh = meshRef.current;
 
         // set the transform matrix for each instance
-        for (let i = 0; i < numPoints; i += 1) {
-            const x = (i % 30) * 1.05 + spherePosition.x;
-            const y = Math.floor(i / 30)* 1.05 + spherePosition.y;
-            const z = 0 + spherePosition.z;
+        for (let i = 0; i <= numPoints; i += 2) {
 
-            scratchObject3D.position.set(x, y, z);
-            scratchObject3D.rotation.set(0.5 * Math.PI, 0, 0);
+            const offset_u = spherePosition.clone().add(vector_u.clone().multiplyScalar(i - numPoints / 2))
+            scratchObject3D.position.set(offset_u.x, offset_u.y, offset_u.z);
+            scratchObject3D.rotation.set(
+                parallel_with_vector_v.x,
+                parallel_with_vector_v.y,
+                parallel_with_vector_v.z
+            );
             scratchObject3D.updateMatrix();
             if (mesh) mesh.setMatrixAt(i, scratchObject3D.matrix);
+
+
+            const offset_v = spherePosition.clone().add(vector_v.clone().multiplyScalar(i - numPoints / 2))
+            scratchObject3D.position.set(offset_v.x, offset_v.y, offset_v.z);
+            scratchObject3D.rotation.set(
+                parallel_with_vector_u.x,
+                parallel_with_vector_u.y,
+                parallel_with_vector_u.z
+            );
+            scratchObject3D.updateMatrix();
+            if (mesh) mesh.setMatrixAt(i + 1, scratchObject3D.matrix);
         }
         
         if (mesh) mesh.instanceMatrix.needsUpdate = true;
-    }, [numPoints, spherePosition]);
+    }, [numPoints, spherePosition, vector_u, parallel_with_vector_v]);
 
     const cylinder_geometry = new THREE.CylinderGeometry(0.5, 0.5, 0.15, 32);
     const cylinder_material = new THREE.MeshStandardMaterial({ color: "#fff"});
@@ -200,10 +214,10 @@ const SpanPlane: React.FC<SpanPlaneProps> = ({
             <instancedMesh
                 ref={meshRef}
                 args={[undefined, undefined, numPoints]}
-                frustumCulled={false}
+                frustumCulled={true}
             >
-                <cylinderGeometry attach="geometry" args={[0.5, 0.5, 0.15, 32]} />
-                <meshStandardMaterial attach="material" color="#fff" />
+                <cylinderGeometry attach="geometry" args={[0.01, 0.01, 100, 8]} />
+                <meshToonMaterial attach="material" color={color} transparent={true} opacity={0.8} blending={THREE.NormalBlending} />
             </instancedMesh>
             {/* {gridLines} */}
         </>
