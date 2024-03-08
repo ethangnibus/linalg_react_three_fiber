@@ -212,7 +212,7 @@ const VectorSphere: React.FC<VectorSphereProps> = ({ onToggleOrbitControls, vect
                     vector_a={v1}
                     vector_b={v2}
                     vector_c={v3}
-                    planeWidth={1000}
+                    planeWidth={3}
                     color={new THREE.Color(0.0, 0.3, 0.3)}
                 />
             )}
