@@ -34,7 +34,7 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
     const [lines, setLines] = useState<JSX.Element[]>([]);
 
     const direction = vector.clone().normalize();
-    
+
     const handleDragStart = () => {
         if (isHovered) {
             setDragStartPosition(spherePosition.clone());
@@ -135,6 +135,7 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
                             transparent: true,
                             opacity: isHovered ? 0.8 : (baseVectorIsSelected ? 1.0 : 0.5),
                         })}
+                        renderOrder={2}
                         
                         
                     />
@@ -152,7 +153,7 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
                             opacity: isHovered ? 0.8 : (baseVectorIsSelected ? 1.0 : 0.5),
                         })}
                         rotation={new THREE.Euler().setFromQuaternion(new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), direction))}
-                        
+                        renderOrder={2}
                     />
                 </DragControls>
             </group>

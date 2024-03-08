@@ -94,14 +94,14 @@ const SpanPlane: React.FC<SpanPlaneProps> = ({
                     planeWidth * 10,
                 ]}
                 material={span_plane_material}
-                renderOrder={1}
+                renderOrder={3}
             />
 
             <instancedMesh
                 ref={meshRef}
                 args={[undefined, undefined, numPoints]}
                 frustumCulled={true}
-                renderOrder={0}
+                renderOrder={1}
             >
                 <cylinderGeometry
                     attach="geometry"
