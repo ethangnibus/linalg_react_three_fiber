@@ -20,7 +20,7 @@ const SpanLine: React.FC<SpanLineProps> = ({
     const span_line_material = useMemo(() => new THREE.MeshToonMaterial({
         color: color,
         transparent: true,
-        opacity: 0.6,
+        opacity: 0.5,
         blending: THREE.NormalBlending,
         side: THREE.DoubleSide,
     }), [color, baseVectorIsSelected]);

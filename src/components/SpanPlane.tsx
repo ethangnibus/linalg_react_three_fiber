@@ -23,7 +23,7 @@ const SpanPlane: React.FC<SpanPlaneProps> = ({
     const span_plane_material = useMemo(() => new THREE.MeshToonMaterial({
         color: color,
         transparent: true,
-        opacity: 0.2,
+        opacity: 0.1,
         blending: THREE.NormalBlending,
         side: THREE.DoubleSide,
     }), [color]);
@@ -111,7 +111,7 @@ const SpanPlane: React.FC<SpanPlaneProps> = ({
                     attach="material"
                     color={color}
                     transparent={true}
-                    opacity={0.7}
+                    opacity={0.8}
                     blending={THREE.NormalBlending}
                 />
             </instancedMesh>

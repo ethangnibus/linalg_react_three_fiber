@@ -27,6 +27,7 @@ function App() {
           dampingFactor={0.1}
           rotateSpeed={0.5}
           target={cameraTarget}
+          maxDistance={80}
         />
         <ambientLight/>
         <directionalLight intensity={5} position={[0, 11, 11]} />
