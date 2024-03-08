@@ -1,5 +1,4 @@
-import React, { useMemo, useRef } from 'react';
-import { Plane } from '@react-three/drei';
+import React, { useRef } from 'react';
 import * as THREE from 'three';
 
 interface SpanPlaneProps {
@@ -22,13 +21,6 @@ const SpanPlane: React.FC<SpanPlaneProps> = ({
     color,
 }) => {
     const scratchObject3D = new THREE.Object3D();
-    const span_plane_material = useMemo(() => new THREE.MeshToonMaterial({
-        color: color,
-        transparent: true,
-        opacity: 0.2,
-        blending: THREE.NormalBlending,
-        side: THREE.DoubleSide,
-    }), [color]);
 
     const parallel_with_vector_a = new THREE.Euler().setFromQuaternion(
         new THREE.Quaternion().setFromUnitVectors(
@@ -58,7 +50,7 @@ const SpanPlane: React.FC<SpanPlaneProps> = ({
         const mesh = meshRef.current;
 
         // set the transform matrix for each instance
-        for (let i = 0; i <= numPoints; i += 6) {
+        for (let i = 0; i <= planeWidth; i += 1) {
 
             // parallel with a towards b
             const offset_a_b = spherePosition.clone().add(vector_b.clone().multiplyScalar(i - planeWidth/2))
@@ -80,7 +72,7 @@ const SpanPlane: React.FC<SpanPlaneProps> = ({
                 parallel_with_vector_a.z
             );
             scratchObject3D.updateMatrix();
-            if (mesh) mesh.setMatrixAt(i + 1, scratchObject3D.matrix);
+            if (mesh) mesh.setMatrixAt(i + planeWidth, scratchObject3D.matrix);
 
             // parallel with b towards a
             const offset_b_a = spherePosition.clone().add(vector_a.clone().multiplyScalar(i - planeWidth/2))
@@ -91,7 +83,7 @@ const SpanPlane: React.FC<SpanPlaneProps> = ({
                 parallel_with_vector_b.z
             );
             scratchObject3D.updateMatrix();
-            if (mesh) mesh.setMatrixAt(i + 1, scratchObject3D.matrix);
+            if (mesh) mesh.setMatrixAt(i + planeWidth*2, scratchObject3D.matrix);
 
             // parallel with b towards c
             const offset_b_c = spherePosition.clone().add(vector_c.clone().multiplyScalar(i - planeWidth/2))
@@ -102,7 +94,7 @@ const SpanPlane: React.FC<SpanPlaneProps> = ({
                 parallel_with_vector_b.z
             );
             scratchObject3D.updateMatrix();
-            if (mesh) mesh.setMatrixAt(i + 1, scratchObject3D.matrix);
+            if (mesh) mesh.setMatrixAt(i + planeWidth*3, scratchObject3D.matrix);
 
             // parallel with c towards a
             const offset_c_a = spherePosition.clone().add(vector_a.clone().multiplyScalar(i - planeWidth/2))
@@ -113,7 +105,7 @@ const SpanPlane: React.FC<SpanPlaneProps> = ({
                 parallel_with_vector_c.z
             );
             scratchObject3D.updateMatrix();
-            if (mesh) mesh.setMatrixAt(i + 1, scratchObject3D.matrix);
+            if (mesh) mesh.setMatrixAt(i + planeWidth*4, scratchObject3D.matrix);
 
             // parallel with c towards b
             const offset_c_b = spherePosition.clone().add(vector_b.clone().multiplyScalar(i - planeWidth/2))
@@ -124,7 +116,7 @@ const SpanPlane: React.FC<SpanPlaneProps> = ({
                 parallel_with_vector_c.z
             );
             scratchObject3D.updateMatrix();
-            if (mesh) mesh.setMatrixAt(i + 1, scratchObject3D.matrix);
+            if (mesh) mesh.setMatrixAt(i + planeWidth*5, scratchObject3D.matrix);
 
         }
         
@@ -147,7 +139,7 @@ const SpanPlane: React.FC<SpanPlaneProps> = ({
                     attach="material"
                     color={color}
                     transparent={true}
-                    opacity={0.7}
+                    opacity={0.5}
                     blending={THREE.NormalBlending}
                 />
             </instancedMesh>
