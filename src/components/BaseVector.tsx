@@ -85,15 +85,34 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
         setCurrentLine(updatedLine);
     };
 
+    const offsetFromSphere = direction.clone().multiplyScalar(0.3);
+    const visualVectorLength = vector.clone().sub(offsetFromSphere);
+
+    const visual_vector_center = spherePosition.clone()
+        .add(offsetFromSphere.clone())
+        .add(visualVectorLength.clone().multiplyScalar(0.5));
+    
+    const coneHeight = 0.35;
+    const coneCenterRelativeToVisualVectorCenter =
+        visualVectorLength.clone().multiplyScalar(0.5).sub(
+            direction.clone().multiplyScalar(coneHeight / 2)
+        );
+    
+    const cylinderHeight = visualVectorLength.clone().sub(
+        direction.clone().multiplyScalar(coneHeight)
+    ).length();
+    const cylinderCenterRelativeToVisualVectorCenter =
+        direction.clone().multiplyScalar(-coneHeight / 2);
+
     return (
         <>  
         {vectorSphereIsSelected && (
             <group
                 scale={isHovered ? 1.2 : 1.0 }
                 position={[
-                    spherePosition.x + vector.x - (direction.x  * 0.35),
-                    spherePosition.y + vector.y - (direction.y  * 0.35),
-                    spherePosition.z + vector.z - (direction.z  * 0.35),
+                    visual_vector_center.x,
+                    visual_vector_center.y,
+                    visual_vector_center.z,
                 ]}
                 onPointerDown={() => onToggleOrbitControls(false)}
                 onPointerUp={() => onToggleOrbitControls(true)}
@@ -115,18 +134,15 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
                 >
                     <Cylinder
                         position={[
-                            // direction.x * 0.475,
-                            // direction.y * 0.475,
-                            // direction.z * 0.475,
-                            direction.x * (-0.35/2),
-                            direction.y * (-0.35/2),
-                            direction.z * (-0.35/2),
+                            cylinderCenterRelativeToVisualVectorCenter.x,
+                            cylinderCenterRelativeToVisualVectorCenter.y,
+                            cylinderCenterRelativeToVisualVectorCenter.z,
                         ]}
                         rotation={new THREE.Euler().setFromQuaternion(new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), direction))}
                         args={[
                             0.02,
                             0.02,
-                            0.35,
+                            cylinderHeight,
                             16,
                             1,
                         ]}
@@ -142,9 +158,9 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
                     
                     <Cone
                         position={[
-                            direction.x * (0.35/2),
-                            direction.y * (0.35/2),
-                            direction.z * (0.35/2),
+                            coneCenterRelativeToVisualVectorCenter.x,
+                            coneCenterRelativeToVisualVectorCenter.y,
+                            coneCenterRelativeToVisualVectorCenter.z,
                         ]}
                         args={[0.09, 0.35, 16]}
                         material={new THREE.MeshToonMaterial({
