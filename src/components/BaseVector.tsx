@@ -91,9 +91,9 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
             <group
                 scale={isHovered ? 1.2 : 1.0 }
                 position={[
-                    spherePosition.x + direction.x * (1 - 0.35),
-                    spherePosition.y + direction.y * (1 - 0.35),
-                    spherePosition.z + direction.z * (1 - 0.35),
+                    spherePosition.x + vector.x - (direction.x  * 0.35),
+                    spherePosition.y + vector.y - (direction.y  * 0.35),
+                    spherePosition.z + vector.z - (direction.z  * 0.35),
                 ]}
                 onPointerDown={() => onToggleOrbitControls(false)}
                 onPointerUp={() => onToggleOrbitControls(true)}
