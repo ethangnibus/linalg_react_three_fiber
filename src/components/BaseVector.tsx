@@ -123,7 +123,6 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
         <>  
         {vectorSphereIsSelected && (
             <group
-                scale={isHovered ? scale_amount : 1.0 }
                 position={[
                     visualVectorCenter.x,
                     visualVectorCenter.y,
@@ -155,8 +154,8 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
                         ]}
                         rotation={new THREE.Euler().setFromQuaternion(new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), direction))}
                         args={[
-                            0.02,
-                            0.02,
+                            isHovered ? 0.03 : 0.02,
+                            isHovered ? 0.03 : 0.02,
                             cylinderHeight,
                             16,
                             1,
@@ -177,7 +176,11 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
                             coneCenterRelativeToVisualVectorCenter.y,
                             coneCenterRelativeToVisualVectorCenter.z,
                         ]}
-                        args={[0.09, 0.35, 16]}
+                        args={[
+                            isHovered ? 0.09*1.5 : 0.09,
+                            0.35,
+                            16,
+                        ]}
                         material={new THREE.MeshToonMaterial({
                             color: color,
                             transparent: true,
