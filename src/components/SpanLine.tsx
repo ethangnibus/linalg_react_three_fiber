@@ -34,30 +34,38 @@ const SpanLine: React.FC<SpanLineProps> = ({
     );
 
 
-    const { scale: spanScale } = useSpring({
-        from: { scale: 0.0 }, // Initial scale is 0
-        to: { scale: 1.0 }, // Final scale is 1
-        config: { duration: 1000, easing: easings.easeInExpo }, // Animation duration in milliseconds
+    // const { scale: spanScale } = useSpring({
+    //     from: { scale: 0.0 }, // Initial scale is 0
+    //     to: { scale: 1.0 }, // Final scale is 1
+    //     config: { duration: 1000, easing: easings.easeInExpo }, // Animation duration in milliseconds
+    // });
+    const { opacity: animatedLineOpacity } = useSpring({
+        from: { opacity: 0.0 },
+        to: { opacity: 0.5 },
+        config: {
+            duration: 1000,
+            easing: easings.easeOutCubic
+        },
     });
 
     return (
-        <animated.mesh
+        <mesh
             position={spherePosition.toArray()}
             rotation={rotationAngles}
-            scale-x={1.0}
-            scale-y={spanScale}
-            scale-z={1.0}
+            // scale-x={1.0}
+            // scale-y={spanScale}
+            // scale-z={1.0}
             renderOrder={0}
         >
             <cylinderGeometry args={[0.01, 0.01, cylinderHeight, 8]}/>
-            <meshToonMaterial
+            <animated.meshToonMaterial
                 color={color}
                 transparent={true}
-                opacity={0.5}
+                opacity={animatedLineOpacity}
                 blending={THREE.NormalBlending}
                 side={THREE.DoubleSide}
             />
-        </animated.mesh>
+        </mesh>
     );
 };
 

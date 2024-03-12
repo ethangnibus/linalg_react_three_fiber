@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import * as THREE from 'three';
+import { useSpring, animated, easings } from '@react-spring/three';
 
 interface SpanPlaneProps {
     spherePosition: THREE.Vector3;
@@ -92,23 +93,33 @@ const SpanPlane: React.FC<SpanPlaneProps> = ({
         if (mesh) mesh.instanceMatrix.needsUpdate = true;
     }, [pointsOnCube, spherePosition, vector_a, vector_b, vector_c, parallel_with_vector_a, parallel_with_vector_b, parallel_with_vector_c]);
 
+
+    const { opacity: animatedLinesOpacity } = useSpring({
+        from: { opacity: 0.0 },
+        to: { opacity: 0.3 },
+        config: {
+            duration: 1000,
+            // easing: easings.easeOutQuart
+        },
+    });
+
     return (
         <>
             <instancedMesh
                 ref={meshRef}
                 args={[undefined, undefined, pointsOnCube]}
                 frustumCulled={true}
-                renderOrder={1}
+                renderOrder={3}
             >
                 <cylinderGeometry
                     attach="geometry"
                     args={[0.01, 0.01, planeWidth, 8]}
                 />
-                <meshToonMaterial
+                <animated.meshToonMaterial
                     attach="material"
                     color={color}
                     transparent={true}
-                    opacity={0.3}
+                    opacity={animatedLinesOpacity}
                     blending={THREE.NormalBlending}
                 />
             </instancedMesh>
