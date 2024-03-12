@@ -36,11 +36,9 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
     const direction = vector.clone().normalize();
 
     const handleDragStart = () => {
-        if (isHovered) {
-            setDragStartPosition(spherePosition.clone());
-            setDragStartPoint(spherePosition.clone());
-            setIsDragging(true);
-        }
+        setDragStartPosition(spherePosition.clone());
+        setDragStartPoint(spherePosition.clone());
+        setIsDragging(true);
     };
 
     const handlePointerUp = () => {
