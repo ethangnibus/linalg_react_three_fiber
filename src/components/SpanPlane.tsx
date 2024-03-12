@@ -1,6 +1,7 @@
 import React, { useMemo, useRef } from 'react';
 import { Plane } from '@react-three/drei';
 import * as THREE from 'three';
+import { useFrame } from 'react-three-fiber';
 import { useSpring, animated, easings } from '@react-spring/three';
 
 interface SpanPlaneProps {
@@ -77,59 +78,57 @@ const SpanPlane: React.FC<SpanPlaneProps> = ({
     }, [numPoints, spherePosition, vector_u, vector_v]);
     
 
-
-    const { scale: spanPlaneScale } = useSpring({
-        from: { scale: 0.0 }, // Initial scale is 0
-        to: { scale: 1.0 }, // Final scale is 1
-        config: { duration: 1000, easing: easings.easeInCubic }, // Animation duration in milliseconds
+    const { opacity: animatedPlaneOpacity } = useSpring({
+        from: { opacity: 0.0 },
+        to: { opacity: 0.1 },
+        config: { duration: 2000, easing: easings.easeOutQuart },
+    });
+    const { opacity: animatedLinesOpacity } = useSpring({
+        from: { opacity: 0.0 },
+        to: { opacity: 0.8 },
+        config: { duration: 2000, easing: easings.easeOutQuart },
     });
 
-    const { scale: spanGridScale } = useSpring({
-        from: { scale: 0.0 }, // Initial scale is 0
-        to: { scale: 1.0 }, // Final scale is 1
-        config: { duration: 1000, easing: easings.easeInCubic }, // Animation duration in milliseconds
-    });
 
     return (
         <>
 
-            <animated.mesh
+            <mesh
                 position={spherePosition.toArray()}
                 rotation={plane_front}
-                scale={spanPlaneScale}
                 renderOrder={3}
             >
                 <planeGeometry args={[planeWidth * 10, planeWidth * 10]}/>
-                <meshToonMaterial
+                <animated.meshToonMaterial
                     color={color}
                     transparent={true}
-                    opacity={0.1}
+                    opacity={animatedPlaneOpacity} 
                     blending={THREE.NormalBlending}
                     side={THREE.DoubleSide}
                 />
-            </animated.mesh>
+            </mesh>
 
             
-                <instancedMesh
-                    ref={meshRef}
-                    args={[undefined, undefined, numPoints]}
-                    frustumCulled={true}
-                    renderOrder={1}
-                >
-                    <cylinderGeometry
-                        attach="geometry"
-                        args={[0.01, 0.01, planeWidth, 8]}
-                    />
-                    <meshToonMaterial
-                            attach="material"
-                            color={color}
-                            transparent={true}
-                            opacity={0.8}
-                            blending={THREE.NormalBlending}
-                        />
+            <instancedMesh
+                ref={meshRef}
+                args={[undefined, undefined, numPoints]}
+                frustumCulled={true}
+                renderOrder={1}
+            >
+                <cylinderGeometry
+                    attach="geometry"
+                    args={[0.01, 0.01, planeWidth, 8]}
+                />
+                <animated.meshToonMaterial
+                        attach="material"
+                        color={color}
+                        transparent={true}
+                        opacity={animatedLinesOpacity}
+                        blending={THREE.NormalBlending}
+                />
 
-                    
-                </instancedMesh>
+                
+            </instancedMesh>
             
         </>
     );
