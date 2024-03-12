@@ -1,6 +1,7 @@
 import React, { useMemo, useRef } from 'react';
 import { Plane } from '@react-three/drei';
 import * as THREE from 'three';
+import { useSpring, animated, easings } from '@react-spring/three';
 
 interface SpanPlaneProps {
     spherePosition: THREE.Vector3;
@@ -9,8 +10,6 @@ interface SpanPlaneProps {
     planeWidth: number;
     color: THREE.Color;
 }
-
-
 
 const SpanPlane: React.FC<SpanPlaneProps> = ({
     spherePosition,
@@ -84,37 +83,54 @@ const SpanPlane: React.FC<SpanPlaneProps> = ({
         if (mesh) mesh.instanceMatrix.needsUpdate = true;
     }, [numPoints, spherePosition, vector_u, vector_v]);
 
+
+    const { scale: spanPlaneScale } = useSpring({
+        from: { scale: 0.0 }, // Initial scale is 0
+        to: { scale: 1.0 }, // Final scale is 1
+        config: { duration: 5000, easing: easings.easeInCubic }, // Animation duration in milliseconds
+    });
+
     return (
         <>
-            <Plane
+
+            <animated.mesh
                 position={spherePosition.toArray()}
                 rotation={plane_front}
-                args={[
-                    planeWidth * 10,
-                    planeWidth * 10,
-                ]}
-                material={span_plane_material}
+                scale={spanPlaneScale}
                 renderOrder={3}
-            />
-
-            <instancedMesh
-                ref={meshRef}
-                args={[undefined, undefined, numPoints]}
-                frustumCulled={true}
-                renderOrder={1}
             >
-                <cylinderGeometry
-                    attach="geometry"
-                    args={[0.01, 0.01, planeWidth, 8]}
-                />
+                <planeGeometry args={[planeWidth * 10, planeWidth * 10]}/>
                 <meshToonMaterial
-                    attach="material"
                     color={color}
                     transparent={true}
-                    opacity={0.8}
+                    opacity={0.1}
                     blending={THREE.NormalBlending}
+                    side={THREE.DoubleSide}
                 />
-            </instancedMesh>
+            </animated.mesh>
+
+            <animated.mesh
+                scale={spanPlaneScale}
+            >
+                <instancedMesh
+                    ref={meshRef}
+                    args={[undefined, undefined, numPoints]}
+                    frustumCulled={true}
+                    renderOrder={1}
+                >
+                    <cylinderGeometry
+                        attach="geometry"
+                        args={[0.01, 0.01, planeWidth, 8]}
+                    />
+                    <meshToonMaterial
+                        attach="material"
+                        color={color}
+                        transparent={true}
+                        opacity={0.8}
+                        blending={THREE.NormalBlending}
+                    />
+                </instancedMesh>
+            </animated.mesh>
         </>
     );
 };

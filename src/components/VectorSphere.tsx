@@ -4,7 +4,7 @@ import * as THREE from 'three';
 import SpanLine from './SpanLine';
 import SpanPlane from './SpanPlane';
 import SpanCube from './SpanCube';
-import { useSpring, animated } from '@react-spring/three'
+import { useSpring, animated } from '@react-spring/three';
 
 
 interface VectorSphereProps {

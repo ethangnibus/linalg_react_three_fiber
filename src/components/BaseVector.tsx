@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { DragControls, Line } from '@react-three/drei';
-import { useSpring, animated } from '@react-spring/three'
+import { useSpring, animated } from '@react-spring/three';
 import * as THREE from 'three';
 
 interface BaseVectorsProps {
