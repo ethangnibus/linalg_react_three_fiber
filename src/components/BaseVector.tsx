@@ -104,21 +104,6 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
     const cylinderCenterRelativeToVisualVectorCenter =
         direction.clone().multiplyScalar(-coneHeight / 2);
     
-
-    // Find a vector perpendicular to the input vector
-    var perpendicular1;
-    if (Math.abs(direction.x) < Math.abs(direction.y)) {
-        perpendicular1 = new THREE.Vector3(0, -direction.z, direction.y).normalize();
-    } else {
-        perpendicular1 = new THREE.Vector3(-direction.z, 0, direction.x).normalize();
-    }
-
-    // Find another vector perpendicular to both the input vector and the first perpendicular vector
-    const perpendicular2 = direction.clone().cross(perpendicular1).normalize();
-    
-
-    const scale_amount = 1 / visualVectorLength.length();
-
     return (
         <>  
         {vectorSphereIsSelected && (

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Sphere } from '@react-three/drei';
-import { Vector3 } from 'three'; // Import Vector3 from three
 import BaseVector from './BaseVector';
 import * as THREE from 'three';
 import SpanLine from './SpanLine';
@@ -9,18 +8,23 @@ import SpanCube from './SpanCube';
 
 interface VectorSphereProps {
     onToggleOrbitControls: (enabled: boolean) => void;
-    vectorSpherePosition: Vector3;
-    setVectorSpherePosition: (new_position: Vector3) => void;
-    setCameraTarget: (new_position: Vector3) => void;
+    vectorSpherePosition: THREE.Vector3;
+    setVectorSpherePosition: (new_position: THREE.Vector3) => void;
+    setCameraTarget: (new_position: THREE.Vector3) => void;
+}
+
+function vectorsAreCollinear(v1: THREE.Vector3, v2: THREE.Vector3) {
+    const crossProduct = v1.clone().cross(v2);
+    return crossProduct.length() === 0;
 }
 
 const VectorSphere: React.FC<VectorSphereProps> = ({ onToggleOrbitControls, vectorSpherePosition, setVectorSpherePosition, setCameraTarget }) => {
     
     const [vectorSphereIsSelected, setVectorSphereIsSelected] = useState(false);
     const [vectorSphereIsHovered, setVectorSphereIsHovered] = useState(false);
-    const [v1, _setV1] = useState<Vector3>(new THREE.Vector3(1.0, 0.0, 0.0));
-    const [v2, _setV2] = useState<Vector3>(new THREE.Vector3(0.0, 1.0, 0.5));
-    const [v3, _setV3] = useState<Vector3>(new THREE.Vector3(0.1, 0.3, 3.0));
+    const [v1, _setV1] = useState<THREE.Vector3>(new THREE.Vector3(1.0, 0.1, 0.05));
+    const [v2, _setV2] = useState<THREE.Vector3>(new THREE.Vector3(0.1, 1.0, 0.1));
+    const [v3, _setV3] = useState<THREE.Vector3>(new THREE.Vector3(0.05, -0.05, 1.0));
     
     // states for when vectors are selected
     const [v1IsSelected, setV1IsSelected] = useState(false);
@@ -47,7 +51,7 @@ const VectorSphere: React.FC<VectorSphereProps> = ({ onToggleOrbitControls, vect
         onToggleOrbitControls(enabled);
     };
 
-    const updateSpherePosition = (newPosition: Vector3) => {
+    const updateSpherePosition = (newPosition: THREE.Vector3) => {
         setVectorSpherePosition(newPosition);
     };
 
@@ -55,7 +59,7 @@ const VectorSphere: React.FC<VectorSphereProps> = ({ onToggleOrbitControls, vect
         setShowV1Span(false);
         setShowV2Span(false);
         setShowV3Span(false);
-
+        
         setShowV1V2Span(false);
         setShowV1V3Span(false);
         setShowV2V3Span(false);
@@ -75,17 +79,46 @@ const VectorSphere: React.FC<VectorSphereProps> = ({ onToggleOrbitControls, vect
 
         // render span planes
         if (v1IsSelected && v2IsSelected && !v3IsSelected) {
-            setShowV1V2Span(true);
+            if (vectorsAreCollinear(v1, v2)) {
+                setShowV1Span(true);
+            } else {
+                setShowV1V2Span(true);
+            }
         }
         if (v1IsSelected && !v2IsSelected && v3IsSelected) {
-            setShowV1V3Span(true);
+            if (vectorsAreCollinear(v1, v3)) {
+                setShowV1Span(true);
+            } else {
+                setShowV1V3Span(true);
+            }
         }
         if (!v1IsSelected && v2IsSelected && v3IsSelected) {
-            setShowV2V3Span(true);
+            if (vectorsAreCollinear(v2, v3)) {
+                setShowV2Span(true);
+            } else {
+                setShowV2V3Span(true);
+            }
         }
 
+        const v1v2Collinear = vectorsAreCollinear(v1, v2);
+        const v1v3Collinear = vectorsAreCollinear(v1, v3);
+        const v2v3Collinear = vectorsAreCollinear(v2, v3);
+
         if (v1IsSelected && v2IsSelected && v3IsSelected) {
-            setShowV1V2V3Span(true);
+            if (!v1v2Collinear && !v1v3Collinear && !v2v3Collinear) {
+                setShowV1V2V3Span(true); // All vectors linearly independent
+            } else if (v1v2Collinear && !v1v3Collinear && !v2v3Collinear) {
+                // V1 and V2 are collinear
+                v1.length <= v2.length ? setShowV2V3Span(true) : setShowV1V3Span(true);
+            } else if (!v1v2Collinear && v1v3Collinear && !v2v3Collinear) {
+                // V1 and V3 are collinear
+                v1.length <= v3.length ? setShowV1V2Span(true) : setShowV2V3Span(true);
+            } else if (!v1v2Collinear && !v1v3Collinear && v2v3Collinear) {
+                // V2 and V3 are collinear
+                v2.length <= v3.length ? setShowV1V2Span(true) : setShowV1V3Span(true);
+            } else {
+                setShowV1Span(true); // All are collinear
+            }
         }
     }, [v1IsSelected, v2IsSelected, v3IsSelected]);
 
