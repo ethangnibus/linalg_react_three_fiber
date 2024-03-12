@@ -23,7 +23,7 @@ const VectorSphere: React.FC<VectorSphereProps> = ({ onToggleOrbitControls, vect
     const [vectorSphereIsSelected, setVectorSphereIsSelected] = useState(false);
     const [vectorSphereIsHovered, setVectorSphereIsHovered] = useState(false);
     const [v1, _setV1] = useState<THREE.Vector3>(new THREE.Vector3(1.0, 0.1, 0.05));
-    const [v2, _setV2] = useState<THREE.Vector3>(new THREE.Vector3(0.1, 3.0, 0.1));
+    const [v2, _setV2] = useState<THREE.Vector3>(new THREE.Vector3(0.1, 1.0, 0.1));
     const [v3, _setV3] = useState<THREE.Vector3>(new THREE.Vector3(0.05, -0.05, 1.0));
     
     // states for when vectors are selected
