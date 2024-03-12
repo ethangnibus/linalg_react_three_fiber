@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Cone, Cylinder, DragControls, Line } from '@react-three/drei';
+import { DragControls, Line } from '@react-three/drei';
 import { useSpring, animated } from '@react-spring/three'
 import * as THREE from 'three';
 

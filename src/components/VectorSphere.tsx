@@ -123,13 +123,13 @@ const VectorSphere: React.FC<VectorSphereProps> = ({ onToggleOrbitControls, vect
         }
     }, [v1IsSelected, v2IsSelected, v3IsSelected]);
 
-    const { scale } = useSpring({ scale: vectorSphereIsHovered ? 1.2 : 1.0 })
+    const { scale: vectorSphereScale } = useSpring({ scale: vectorSphereIsHovered ? 1.3 : 1.0 })
 
     return (
         <>
         <animated.mesh
             position={vectorSpherePosition.toArray()}
-            scale={scale}
+            scale={vectorSphereScale}
             onClick={handleToggleSelection}
             onPointerUp={() => handleToggleOrbitControls(true)}
             onPointerEnter={() => setVectorSphereIsHovered(true)}
