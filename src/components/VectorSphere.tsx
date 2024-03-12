@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Sphere } from '@react-three/drei';
 import BaseVector from './BaseVector';
 import * as THREE from 'three';
 import SpanLine from './SpanLine';
 import SpanPlane from './SpanPlane';
 import SpanCube from './SpanCube';
+import { useSpring, animated } from '@react-spring/three'
+
 
 interface VectorSphereProps {
     onToggleOrbitControls: (enabled: boolean) => void;
@@ -122,21 +123,22 @@ const VectorSphere: React.FC<VectorSphereProps> = ({ onToggleOrbitControls, vect
         }
     }, [v1IsSelected, v2IsSelected, v3IsSelected]);
 
+    const { scale } = useSpring({ scale: vectorSphereIsHovered ? 1.2 : 1.0 })
+
     return (
         <>
-           <Sphere
-              position={vectorSpherePosition.toArray()} // Convert Vector3 to array
-              scale={vectorSphereIsHovered ? 1.2 : 1.0}
-              args={[0.126, 32, 32]}
-              material={new THREE.MeshToonMaterial({
-                color: new THREE.Color(0.005, 0.05, 0.35)
-              })}
-              onClick={handleToggleSelection}
-              onPointerUp={() => handleToggleOrbitControls(true)}
-              onPointerEnter={() => setVectorSphereIsHovered(true)}
-              onPointerLeave={() => setVectorSphereIsHovered(false)}
-           />
-          
+        <animated.mesh
+            position={vectorSpherePosition.toArray()}
+            scale={scale}
+            onClick={handleToggleSelection}
+            onPointerUp={() => handleToggleOrbitControls(true)}
+            onPointerEnter={() => setVectorSphereIsHovered(true)}
+            onPointerLeave={() => setVectorSphereIsHovered(false)}
+        >
+            <sphereGeometry args={[0.126, 32, 32]}/>
+            <meshToonMaterial color={new THREE.Color(0.005, 0.05, 0.35)}/>
+        </animated.mesh>
+
             <>
                 <BaseVector // v1 - yellow
                     vector={v1}

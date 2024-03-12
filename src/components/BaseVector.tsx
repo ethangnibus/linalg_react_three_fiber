@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Cone, Cylinder, DragControls, Line } from '@react-three/drei';
+import { useSpring, animated } from '@react-spring/three'
 import * as THREE from 'three';
 
 interface BaseVectorsProps {
@@ -102,6 +103,15 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
     const cylinderCenterRelativeToVisualVectorCenter =
         direction.clone().multiplyScalar(-coneHeight / 2);
     
+    // Define a spring for the radius of the cylinder
+    const { scale: cylinderScale } = useSpring({
+        scale: isHovered ? 1.5 : 1.0, // Animate radius based on hover state
+    });
+
+    const { scale: coneScale } = useSpring({
+        scale: isHovered ? 1.3 : 1.0, // Animate radius based on hover state
+    });
+
     return (
         <>  
         {vectorSphereIsSelected && (
@@ -129,49 +139,38 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
                         handleDrag(localMatrix);
                     }}
                 >
-                    <Cylinder
+                    <animated.mesh
+                        scale-x={cylinderScale}
+                        scale-y={1.0}
+                        scale-z={cylinderScale}
                         position={[
                             cylinderCenterRelativeToVisualVectorCenter.x,
                             cylinderCenterRelativeToVisualVectorCenter.y,
                             cylinderCenterRelativeToVisualVectorCenter.z,
                         ]}
                         rotation={new THREE.Euler().setFromQuaternion(new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), direction))}
-                        args={[
-                            isHovered ? 0.03 : 0.02,
-                            isHovered ? 0.03 : 0.02,
-                            cylinderHeight,
-                            16,
-                            1,
-                        ]}
-                        material={new THREE.MeshToonMaterial({
-                            color: color,
-                            transparent: true,
-                            opacity: isHovered ? 0.8 : (baseVectorIsSelected ? 1.0 : 0.5),
-                        })}
                         renderOrder={2}
-                        
-                        
-                    />
-                    
-                    <Cone
+                    >
+                        <cylinderGeometry args={[0.02, 0.02, cylinderHeight, 16, 1]}/>
+                        <meshToonMaterial color={color} transparent={true} opacity={isHovered ? 0.8 : (baseVectorIsSelected ? 1.0 : 0.5)}/>
+                    </animated.mesh>
+
+                    <animated.mesh
+                        scale-x={coneScale}
+                        scale-y={1.0}
+                        scale-z={coneScale}
                         position={[
                             coneCenterRelativeToVisualVectorCenter.x,
                             coneCenterRelativeToVisualVectorCenter.y,
                             coneCenterRelativeToVisualVectorCenter.z,
                         ]}
-                        args={[
-                            isHovered ? 0.09*1.5 : 0.09,
-                            0.35,
-                            16,
-                        ]}
-                        material={new THREE.MeshToonMaterial({
-                            color: color,
-                            transparent: true,
-                            opacity: isHovered ? 0.8 : (baseVectorIsSelected ? 1.0 : 0.5),
-                        })}
                         rotation={new THREE.Euler().setFromQuaternion(new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), direction))}
                         renderOrder={2}
-                    />
+                    >
+                        <coneGeometry args={[0.09, 0.35, 16]}/>
+                        <meshToonMaterial color={color} transparent={true} opacity={isHovered ? 0.8 : (baseVectorIsSelected ? 1.0 : 0.5)}/>
+                    </animated.mesh>
+
                 </DragControls>
             </group>
         )}
