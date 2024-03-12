@@ -89,7 +89,7 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
     const visualVectorLength = vector.clone().sub(offsetFromSphere);
 
     const visualVectorCenter = spherePosition.clone()
-        .add(offsetFromSphere.clone())
+        .add(offsetFromSphere)
         .add(visualVectorLength.clone().multiplyScalar(0.5));
     
     const coneHeight = 0.35;
