@@ -1,8 +1,6 @@
-import React, { useMemo, useRef } from 'react';
-import { Plane } from '@react-three/drei';
+import React, { useRef } from 'react';
 import * as THREE from 'three';
-import { useFrame } from 'react-three-fiber';
-import { useSpring, animated, easings } from '@react-spring/three';
+import { useSpring, animated } from '@react-spring/three';
 
 interface SpanPlaneProps {
     spherePosition: THREE.Vector3;
@@ -20,13 +18,6 @@ const SpanPlane: React.FC<SpanPlaneProps> = ({
     color,
 }) => {
     const scratchObject3D = new THREE.Object3D();
-    const span_plane_material = useMemo(() => new THREE.MeshToonMaterial({
-        color: color,
-        transparent: true,
-        opacity: 0.1,
-        blending: THREE.NormalBlending,
-        side: THREE.DoubleSide,
-    }), [color]);
 
     const plane_front = new THREE.Euler().setFromQuaternion(
         new THREE.Quaternion().setFromUnitVectors(
@@ -81,7 +72,10 @@ const SpanPlane: React.FC<SpanPlaneProps> = ({
     const { opacity: animatedPlaneOpacity } = useSpring({
         from: { opacity: 0.0 },
         to: { opacity: 0.1 },
-        config: { duration: 2000, easing: easings.easeOutQuart },
+        config: {
+            duration: 1000,
+            // easing: easings.easeOutQuart
+        },
     });
     const { opacity: animatedLinesOpacity } = useSpring({
         from: { opacity: 0.0 },
@@ -98,7 +92,7 @@ const SpanPlane: React.FC<SpanPlaneProps> = ({
             <mesh
                 position={spherePosition.toArray()}
                 rotation={plane_front}
-                renderOrder={3}
+                renderOrder={4}
             >
                 <planeGeometry args={[planeWidth * 10, planeWidth * 10]}/>
                 <animated.meshToonMaterial
@@ -115,7 +109,7 @@ const SpanPlane: React.FC<SpanPlaneProps> = ({
                 ref={meshRef}
                 args={[undefined, undefined, numPoints]}
                 frustumCulled={true}
-                renderOrder={1}
+                renderOrder={3}
             >
                 <cylinderGeometry
                     attach="geometry"

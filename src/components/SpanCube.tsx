@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import * as THREE from 'three';
-import { useSpring, animated, easings } from '@react-spring/three';
+import { useSpring, animated } from '@react-spring/three';
 
 interface SpanPlaneProps {
     spherePosition: THREE.Vector3;
@@ -96,7 +96,7 @@ const SpanPlane: React.FC<SpanPlaneProps> = ({
 
     const { opacity: animatedLinesOpacity } = useSpring({
         from: { opacity: 0.0 },
-        to: { opacity: 0.3 },
+        to: { opacity: 0.4 },
         config: {
             duration: 1000,
             // easing: easings.easeOutQuart

@@ -1,5 +1,4 @@
-import React, { useMemo } from 'react';
-import { Cylinder } from '@react-three/drei';
+import React from 'react';
 import * as THREE from 'three';
 import { useSpring, animated, easings } from '@react-spring/three';
 
@@ -16,15 +15,7 @@ const SpanLine: React.FC<SpanLineProps> = ({
     vector,
     cylinderHeight,
     color,
-    baseVectorIsSelected
 }) => {
-    const span_line_material = useMemo(() => new THREE.MeshToonMaterial({
-        color: color,
-        transparent: true,
-        opacity: 0.5,
-        blending: THREE.NormalBlending,
-        side: THREE.DoubleSide,
-    }), [color, baseVectorIsSelected]);
 
     const rotationAngles = new THREE.Euler().setFromQuaternion(
         new THREE.Quaternion().setFromUnitVectors(
@@ -55,7 +46,7 @@ const SpanLine: React.FC<SpanLineProps> = ({
             // scale-x={1.0}
             // scale-y={spanScale}
             // scale-z={1.0}
-            renderOrder={0}
+            renderOrder={3}
         >
             <cylinderGeometry args={[0.01, 0.01, cylinderHeight, 8]}/>
             <animated.meshToonMaterial

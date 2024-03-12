@@ -152,7 +152,7 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
                         renderOrder={2}
                     >
                         <cylinderGeometry args={[0.02, 0.02, cylinderHeight, 16, 1]}/>
-                        <meshToonMaterial color={color} transparent={true} opacity={isHovered ? 0.8 : (baseVectorIsSelected ? 1.0 : 0.5)}/>
+                        <meshToonMaterial color={color} transparent={true} opacity={isHovered ? (baseVectorIsSelected ? 1.0 : 0.8) : (baseVectorIsSelected ? 1.0 : 0.5)}/>
                     </animated.mesh>
 
                     <animated.mesh
@@ -168,7 +168,7 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
                         renderOrder={2}
                     >
                         <coneGeometry args={[0.09, 0.35, 16]}/>
-                        <meshToonMaterial color={color} transparent={true} opacity={isHovered ? 0.8 : (baseVectorIsSelected ? 1.0 : 0.5)}/>
+                        <meshToonMaterial color={color} transparent={true} opacity={isHovered ? (baseVectorIsSelected ? 1.0 : 0.8) : (baseVectorIsSelected ? 1.0 : 0.5)}/>
                     </animated.mesh>
 
                 </DragControls>
