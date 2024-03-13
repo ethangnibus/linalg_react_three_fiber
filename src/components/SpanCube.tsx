@@ -96,7 +96,7 @@ const SpanPlane: React.FC<SpanPlaneProps> = ({
 
     const { opacity: animatedLinesOpacity } = useSpring({
         from: { opacity: 0.0 },
-        to: { opacity: 0.4 },
+        to: { opacity: 0.3 },
         config: {
             duration: 1000,
             // easing: easings.easeOutQuart

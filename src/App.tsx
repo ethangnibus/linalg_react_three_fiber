@@ -26,9 +26,11 @@ function App() {
     <MathJaxContext>
       <div className="w-full h-full fixed bg-white" onMouseMove={handleMouseMove}>
         {vectorSphereIsHovered && ( // Conditional rendering of infoBlock
-          <div className="z-10 w-32 h-32 absolute bg-red-500" style={{ left: infoBlockPosition.x, top: infoBlockPosition.y }}>
-            <p>Sphere Position</p>
-            <MathJax>{`\\begin{bmatrix} ${vectorSpherePosition.x.toFixed(3)} \\\\ ${vectorSpherePosition.y.toFixed(3)} \\\\ ${vectorSpherePosition.z.toFixed(3)} \\end{bmatrix}`}</MathJax>
+          <div className="z-40 w-32 h-32 absolute justify-center align-middle rounded-lg border-2 border-black bg-white" style={{ left: infoBlockPosition.x, top: infoBlockPosition.y }}>
+            {/* <div className="z-30 w-full h-full bg-white opacity-50 rounded-lg absolute"></div> */}
+            <p className="text-center select-none">Sphere Position</p>
+            <MathJax className="z-20">{`\\begin{bmatrix} ${vectorSpherePosition.x.toFixed(3)} \\\\ ${vectorSpherePosition.y.toFixed(3)} \\\\ ${vectorSpherePosition.z.toFixed(3)} \\end{bmatrix}`}</MathJax>
+
           </div>
         )}
         <Canvas camera={{
