@@ -28,8 +28,8 @@ function App() {
         {vectorSphereIsHovered && ( // Conditional rendering of infoBlock
         <>
           
-          <div className="z-20 w-32 h-32 absolute bg-white rounded-lg opacity-100 drop-shadow-2xl" style={{ left: infoBlockPosition.x, top: infoBlockPosition.y }}></div>
-          <div className="z-30 w-32 h-32 absolute justify-center align-middle rounded-lg border-2 border-black" style={{ left: infoBlockPosition.x, top: infoBlockPosition.y }}>
+          <div className="z-20 w-32 h-32 absolute bg-white rounded-lg opacity-95" style={{ left: infoBlockPosition.x, top: infoBlockPosition.y }}></div>
+          <div className="z-30 w-32 h-32 absolute justify-center align-middle rounded-lg border-2 border-black drop-shadow-2xl" style={{ left: infoBlockPosition.x, top: infoBlockPosition.y }}>
             <p className="text-center select-none">Sphere Position</p>
             <MathJax className="z-20">{`\\begin{bmatrix} ${vectorSpherePosition.x.toFixed(3)} \\\\ ${vectorSpherePosition.y.toFixed(3)} \\\\ ${vectorSpherePosition.z.toFixed(3)} \\end{bmatrix}`}</MathJax>
           </div>
