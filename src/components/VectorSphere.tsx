@@ -11,6 +11,8 @@ interface VectorSphereProps {
     onToggleOrbitControls: (enabled: boolean) => void;
     vectorSpherePosition: THREE.Vector3;
     setVectorSpherePosition: (new_position: THREE.Vector3) => void;
+    vectorSphereIsHovered: boolean;
+    setVectorSphereIsHovered: (enabled: boolean) => void;
     setCameraTarget: (new_position: THREE.Vector3) => void;
 }
 
@@ -19,10 +21,16 @@ function vectorsAreCollinear(v1: THREE.Vector3, v2: THREE.Vector3) {
     return crossProduct.length() === 0;
 }
 
-const VectorSphere: React.FC<VectorSphereProps> = ({ onToggleOrbitControls, vectorSpherePosition, setVectorSpherePosition, setCameraTarget }) => {
+const VectorSphere: React.FC<VectorSphereProps> = ({
+    onToggleOrbitControls,
+    vectorSpherePosition,
+    setVectorSpherePosition,
+    vectorSphereIsHovered,
+    setVectorSphereIsHovered,
+    setCameraTarget,
+}) => {
     
     const [vectorSphereIsSelected, setVectorSphereIsSelected] = useState(false);
-    const [vectorSphereIsHovered, setVectorSphereIsHovered] = useState(false);
     const [v1, _setV1] = useState<THREE.Vector3>(new THREE.Vector3(1.0, 0.1, 0.05));
     const [v2, _setV2] = useState<THREE.Vector3>(new THREE.Vector3(0.1, 1.0, 0.1));
     const [v3, _setV3] = useState<THREE.Vector3>(new THREE.Vector3(0.05, -0.05, 1.0));
