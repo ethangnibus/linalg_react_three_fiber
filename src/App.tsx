@@ -21,8 +21,10 @@ function App() {
     y: number;
   }>({ x: 0, y: 0 });
   const [showInfoBlock, setShowInfoBlock] = useState(false); // New state for hover
+  const [infoBlockText, setInfoBlockText] = useState<String>(`Info Block`);
 
-  const [infoBlockText, setInfoBlockText] = useState<String>(`Hello`);
+  const [showEditBlock, setShowEditBlock] = useState(false); // New state for hover
+  const [editBlockText, setEditBlockText] = useState<String>(`Click to visualize span`); // New state for hover
 
   const handleToggleOrbitControls = (enabled: boolean) => {
     setOrbitControlsEnabled(enabled);
@@ -45,6 +47,21 @@ function App() {
         className="w-full h-full fixed bg-white"
         onMouseMove={handleMouseMove}
       >
+        {/* Edit Block */}
+        {fadeInOut((style, item) =>
+          item ? (
+            <animated.div
+              className="z-30 px-2 absolute rounded-lg border-2 bg-white border-black drop-shadow-xl left-10 top-10"
+              style={{
+                ...style,
+              }}
+            >
+              <MathJax className="text-center">{editBlockText}</MathJax>
+            </animated.div>
+          ) : null
+        )}
+
+        {/* Info Block */}
         {fadeInOut((style, item) =>
           item ? (
             <animated.div
@@ -55,7 +72,7 @@ function App() {
                 top: infoBlockPosition.y,
               }}
             >
-              <MathJax className="z-20 text-center">{infoBlockText}</MathJax>
+              <MathJax className="text-center">{infoBlockText}</MathJax>
             </animated.div>
           ) : null
         )}
