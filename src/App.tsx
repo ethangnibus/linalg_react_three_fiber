@@ -51,7 +51,7 @@ function App() {
               className="z-30 px-2 absolute rounded-lg border-2 bg-white border-black drop-shadow-xl"
               style={{
                 ...style,
-                left: infoBlockPosition.x,
+                left: infoBlockPosition.x, // Fixme: Change to be in the bounds of the window
                 top: infoBlockPosition.y,
               }}
             >
