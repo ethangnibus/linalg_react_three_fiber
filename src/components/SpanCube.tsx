@@ -109,7 +109,7 @@ const SpanPlane: React.FC<SpanPlaneProps> = ({
                 ref={meshRef}
                 args={[undefined, undefined, pointsOnCube]}
                 frustumCulled={true}
-                renderOrder={3}
+                renderOrder={5}
             >
                 <cylinderGeometry
                     attach="geometry"

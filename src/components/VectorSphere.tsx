@@ -203,69 +203,61 @@ const VectorSphere: React.FC<VectorSphereProps> = ({
             </>
 
             {/* Render Span Lines */}
-            {(showV1Span) && (
-                <SpanLine
-                    spherePosition={vectorSpherePosition}
-                    vector={v1}
-                    cylinderHeight={1000}
-                    // color={new THREE.Color(0.35686275, 0.85882354, 0.85882354)}
-                    color={new THREE.Color(0.0, 0.3, 0.3)}
-                    baseVectorIsSelected={v1IsSelected}
-                />
-            )}
-            {(showV2Span) && (
-                <SpanLine
-                    spherePosition={vectorSpherePosition}
-                    vector={v2}
-                    cylinderHeight={1000}
-                    // color={new THREE.Color(0.35686275, 0.85882354, 0.85882354)}
-                    color={new THREE.Color(0.0, 0.3, 0.3)}
-                    baseVectorIsSelected={v2IsSelected}
-                />
-            )}
-            {(showV3Span) && (
-                <SpanLine
-                    spherePosition={vectorSpherePosition}
-                    vector={v3}
-                    cylinderHeight={1000}
-                    // color={new THREE.Color(0.35686275, 0.85882354, 0.85882354)}
-                    color={new THREE.Color(0.0, 0.3, 0.3)}
-                    baseVectorIsSelected={v2IsSelected}
-                />
-            )}
+            <SpanLine
+                spherePosition={vectorSpherePosition}
+                vector={v1}
+                cylinderHeight={1000}
+                // color={new THREE.Color(0.35686275, 0.85882354, 0.85882354)}
+                color={new THREE.Color(0.0, 0.3, 0.3)}
+                showSpanLine={showV1Span}
+            />
+            <SpanLine
+                spherePosition={vectorSpherePosition}
+                vector={v2}
+                cylinderHeight={1000}
+                // color={new THREE.Color(0.35686275, 0.85882354, 0.85882354)}
+                color={new THREE.Color(0.0, 0.3, 0.3)}
+                showSpanLine={showV2Span}
+            />
+            <SpanLine
+                spherePosition={vectorSpherePosition}
+                vector={v3}
+                cylinderHeight={1000}
+                // color={new THREE.Color(0.35686275, 0.85882354, 0.85882354)}
+                color={new THREE.Color(0.0, 0.3, 0.3)}
+                showSpanLine={showV3Span}
+            />
 
 
             {/* Render Span Planes */}
-            {(showV1V2Span) && (
-                <SpanPlane
-                    spherePosition={vectorSpherePosition}
-                    vector_u={v1}
-                    vector_v={v2}
-                    planeWidth={1000}
-                    // color={new THREE.Color(0.35686275, 0.85882354, 0.85882354)}
-                    color={new THREE.Color(0.0, 0.3, 0.3)}
-                />
-            )}
-            {(showV1V3Span) && (
-                <SpanPlane
-                    spherePosition={vectorSpherePosition}
-                    vector_u={v1}
-                    vector_v={v3}
-                    planeWidth={1000}
-                    // color={new THREE.Color(0.35686275, 0.85882354, 0.85882354)}
-                    color={new THREE.Color(0.0, 0.3, 0.3)}
-                />
-            )}
-            {(showV2V3Span) && (
-                <SpanPlane
-                    spherePosition={vectorSpherePosition}
-                    vector_u={v2}
-                    vector_v={v3}
-                    planeWidth={1000}
-                    // color={new THREE.Color(0.35686275, 0.85882354, 0.85882354)}
-                    color={new THREE.Color(0.0, 0.3, 0.3)}
-                />
-            )}
+            <SpanPlane
+                spherePosition={vectorSpherePosition}
+                vector_u={v1}
+                vector_v={v2}
+                planeWidth={1000}
+                // color={new THREE.Color(0.35686275, 0.85882354, 0.85882354)}
+                color={new THREE.Color(0.0, 0.3, 0.3)}
+                showSpanPlane={showV1V2Span}
+                
+            />
+            <SpanPlane
+                spherePosition={vectorSpherePosition}
+                vector_u={v1}
+                vector_v={v3}
+                planeWidth={1000}
+                // color={new THREE.Color(0.35686275, 0.85882354, 0.85882354)}
+                color={new THREE.Color(0.0, 0.3, 0.3)}
+                showSpanPlane={showV1V3Span}
+            />
+            <SpanPlane
+                spherePosition={vectorSpherePosition}
+                vector_u={v2}
+                vector_v={v3}
+                planeWidth={1000}
+                // color={new THREE.Color(0.35686275, 0.85882354, 0.85882354)}
+                color={new THREE.Color(0.0, 0.3, 0.3)}
+                showSpanPlane={showV2V3Span}
+            />
 
             {/* Render Span Cube */}
             {(showV1V2V3Span) && (
