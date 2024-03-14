@@ -12,7 +12,9 @@ function App() {
   const [vectorSpherePosition, setVectorSpherePosition] = useState<Vector3>(new Vector3(0, 0, 0));
   const [cameraTarget, setCameraTarget] = useState<Vector3>(new Vector3(0, 0, 0));
   const [infoBlockPosition, setInfoBlockPosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
-  const [vectorSphereIsHovered, setVectorSphereIsHovered] = useState(false); // New state for hover
+  const [showInfoBlock, setShowInfoBlock] = useState(false); // New state for hover
+
+  const [infoBlockText, setInfoBlockText] = useState<String>(`Hello`);
 
   const handleToggleOrbitControls = (enabled: boolean) => {
     setOrbitControlsEnabled(enabled);
@@ -25,16 +27,16 @@ function App() {
   return (
     <MathJaxContext>
       <div className="w-full h-full fixed bg-white" onMouseMove={handleMouseMove}>
-        {vectorSphereIsHovered && ( // Conditional rendering of infoBlock
+        {showInfoBlock && ( // Conditional rendering of infoBlock
         <>
           
-          <div className="z-20 w-32 h-32 absolute bg-white rounded-lg opacity-95" style={{ left: infoBlockPosition.x, top: infoBlockPosition.y }}></div>
-          <div className="z-30 w-32 h-32 absolute justify-center align-middle rounded-lg border-2 border-black drop-shadow-2xl" style={{ left: infoBlockPosition.x, top: infoBlockPosition.y }}>
-            <p className="text-center select-none">Sphere Position</p>
-            <MathJax className="z-20">{`\\begin{bmatrix} ${vectorSpherePosition.x.toFixed(3)} \\\\ ${vectorSpherePosition.y.toFixed(3)} \\\\ ${vectorSpherePosition.z.toFixed(3)} \\end{bmatrix}`}</MathJax>
+          {/* <div className="z-20 absolute bg-white rounded-lg opacity-95" style={{ left: infoBlockPosition.x, top: infoBlockPosition.y }}></div> */}
+          <div className="z-30 px-2 absolute rounded-lg border-2 bg-white border-black drop-shadow-xl" style={{ left: infoBlockPosition.x, top: infoBlockPosition.y }}>
+            <MathJax className="z-20 text-center">{infoBlockText}</MathJax>
           </div>
         </>)}
-        <Canvas camera={{
+
+        <Canvas className="select-none" camera={{
           fov: 90,
           position: [2.5, 2, 1.5]
         }}>
@@ -58,9 +60,9 @@ function App() {
             onToggleOrbitControls={handleToggleOrbitControls}
             vectorSpherePosition={vectorSpherePosition}
             setVectorSpherePosition={setVectorSpherePosition}
-            vectorSphereIsHovered={vectorSphereIsHovered} 
-            setVectorSphereIsHovered={setVectorSphereIsHovered} 
             setCameraTarget={setCameraTarget}
+            setShowInfoBlock={setShowInfoBlock}
+            setInfoBlockText={setInfoBlockText}
           />
         </Canvas>
       </div>

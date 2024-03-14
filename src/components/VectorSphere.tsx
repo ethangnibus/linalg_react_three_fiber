@@ -10,10 +10,10 @@ import { useSpring, animated } from '@react-spring/three';
 interface VectorSphereProps {
     onToggleOrbitControls: (enabled: boolean) => void;
     vectorSpherePosition: THREE.Vector3;
-    setVectorSpherePosition: (new_position: THREE.Vector3) => void;
-    vectorSphereIsHovered: boolean;
-    setVectorSphereIsHovered: (enabled: boolean) => void;
-    setCameraTarget: (new_position: THREE.Vector3) => void;
+    setVectorSpherePosition: (newPosition: THREE.Vector3) => void;
+    setCameraTarget: (newPosition: THREE.Vector3) => void;
+    setShowInfoBlock: (enabled: boolean) => void;
+    setInfoBlockText: (newString: String) => void;
 }
 
 function vectorsAreCollinear(v1: THREE.Vector3, v2: THREE.Vector3) {
@@ -25,10 +25,12 @@ const VectorSphere: React.FC<VectorSphereProps> = ({
     onToggleOrbitControls,
     vectorSpherePosition,
     setVectorSpherePosition,
-    vectorSphereIsHovered,
-    setVectorSphereIsHovered,
     setCameraTarget,
+    setShowInfoBlock,
+    setInfoBlockText,
 }) => {
+    const [vectorSphereIsHovered, setVectorSphereIsHovered] = useState(false); // New state for hover
+
     
     const [vectorSphereIsSelected, setVectorSphereIsSelected] = useState(false);
     const [v1, _setV1] = useState<THREE.Vector3>(new THREE.Vector3(1.0, 0.1, 0.05));
@@ -140,8 +142,16 @@ const VectorSphere: React.FC<VectorSphereProps> = ({
             scale={vectorSphereScale}
             onClick={handleToggleSelection}
             onPointerUp={() => handleToggleOrbitControls(true)}
-            onPointerEnter={() => setVectorSphereIsHovered(true)}
-            onPointerLeave={() => setVectorSphereIsHovered(false)}
+            onPointerEnter={() => {
+                setVectorSphereIsHovered(true)
+
+                setInfoBlockText(`$$Sphere Position = \\begin{bmatrix} ${vectorSpherePosition.x.toFixed(3)} \\\\ ${vectorSpherePosition.y.toFixed(3)} \\\\ ${vectorSpherePosition.z.toFixed(3)} \\end{bmatrix}$$`)
+                setShowInfoBlock(true)
+            }}
+            onPointerLeave={() => {
+                setVectorSphereIsHovered(false)
+                setShowInfoBlock(false)
+            }}
         >
             <sphereGeometry args={[0.126, 32, 32]}/>
             <meshToonMaterial color={new THREE.Color(0.005, 0.05, 0.35)}/>
@@ -150,6 +160,7 @@ const VectorSphere: React.FC<VectorSphereProps> = ({
             <>
                 <BaseVector // v1 - yellow
                     vector={v1}
+                    vectorInfo={`$$v_1 = \\begin{bmatrix} ${v1.x.toFixed(3)} \\\\ ${v1.y.toFixed(3)} \\\\ ${v1.z.toFixed(3)} \\end{bmatrix}$$`}
                     color={new THREE.Color(0.45, 0.23, 0.005)}
                     line_color={new THREE.Color(1.0, 0.6, 0.01)}
                     onToggleOrbitControls={handleToggleOrbitControls}
@@ -158,9 +169,12 @@ const VectorSphere: React.FC<VectorSphereProps> = ({
                     vectorSphereIsSelected={vectorSphereIsSelected}
                     baseVectorIsSelected={v1IsSelected}
                     setBaseVectorIsSelected={setV1IsSelected}
+                    setShowInfoBlock={setShowInfoBlock}
+                    setInfoBlockText={setInfoBlockText}
                 />
                 <BaseVector // v2 teal
                     vector={v2}
+                    vectorInfo={`$$v_2 = \\begin{bmatrix} ${v2.x.toFixed(3)} \\\\ ${v2.y.toFixed(3)} \\\\ ${v2.z.toFixed(3)} \\end{bmatrix}$$`}
                     color={new THREE.Color(0.005, 0.4, 0.3)}
                     line_color={new THREE.Color(0.005, 0.7, 0.7)}
                     onToggleOrbitControls={handleToggleOrbitControls}
@@ -169,9 +183,12 @@ const VectorSphere: React.FC<VectorSphereProps> = ({
                     vectorSphereIsSelected={vectorSphereIsSelected}
                     baseVectorIsSelected={v2IsSelected}
                     setBaseVectorIsSelected={setV2IsSelected}
+                    setShowInfoBlock={setShowInfoBlock}
+                    setInfoBlockText={setInfoBlockText}
                 />
                 <BaseVector // v3 off red
                     vector={v3}
+                    vectorInfo={`$$v_3 = \\begin{bmatrix} ${v3.x.toFixed(3)} \\\\ ${v3.y.toFixed(3)} \\\\ ${v3.z.toFixed(3)} \\end{bmatrix}$$`}
                     color={new THREE.Color(0.3, 0.028, 0.028)}
                     line_color={new THREE.Color(0.8, 0.08, 0.08)}
                     onToggleOrbitControls={handleToggleOrbitControls}
@@ -180,6 +197,8 @@ const VectorSphere: React.FC<VectorSphereProps> = ({
                     vectorSphereIsSelected={vectorSphereIsSelected}
                     baseVectorIsSelected={v3IsSelected}
                     setBaseVectorIsSelected={setV3IsSelected}
+                    setShowInfoBlock={setShowInfoBlock}
+                    setInfoBlockText={setInfoBlockText}
                 />
             </>
 

@@ -5,6 +5,7 @@ import * as THREE from 'three';
 
 interface BaseVectorsProps {
     vector: THREE.Vector3; // Direction of the arrow
+    vectorInfo: String;
     color: THREE.Color;
     line_color: THREE.Color;
     onToggleOrbitControls: (enabled: boolean) => void;
@@ -13,10 +14,13 @@ interface BaseVectorsProps {
     vectorSphereIsSelected: boolean;
     baseVectorIsSelected: boolean;
     setBaseVectorIsSelected: (enabled: boolean) => void;
+    setShowInfoBlock: (enabled: boolean) => void;
+    setInfoBlockText: (newString: String) => void;
 }
 
 const BaseVector: React.FC<BaseVectorsProps> = ({
     vector,
+    vectorInfo,
     color,
     line_color,
     onToggleOrbitControls,
@@ -25,6 +29,8 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
     vectorSphereIsSelected,
     baseVectorIsSelected,
     setBaseVectorIsSelected,
+    setShowInfoBlock,
+    setInfoBlockText,
 }) => {
     const [isHovered, setIsHovered] = useState(false);
     const [isDragging, setIsDragging] = useState(false);
@@ -123,8 +129,15 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
                 ]}
                 onPointerDown={() => onToggleOrbitControls(false)}
                 onPointerUp={() => onToggleOrbitControls(true)}
-                onPointerEnter={() => setIsHovered(true)}
-                onPointerLeave={() => setIsHovered(false)}
+                onPointerEnter={() => {
+                    setIsHovered(true)
+                    setInfoBlockText(vectorInfo)
+                    setShowInfoBlock(true)
+                }}
+                onPointerLeave={() => {
+                    setIsHovered(false)
+                    setShowInfoBlock(false)
+                }}
                 onClick={() => {
                     if (!isDragging) {
                         setBaseVectorIsSelected(!baseVectorIsSelected)
