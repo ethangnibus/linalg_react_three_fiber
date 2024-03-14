@@ -6,6 +6,7 @@ import GridLines from './components/GridLines';
 import VectorSphere from './components/VectorSphere';
 import { Vector3 } from 'three'; // Import Vector3 from three
 import { MathJax, MathJaxContext } from "better-react-mathjax";
+import { useSpring, animated } from '@react-spring/web'
 
 function App() {
   const [orbitControlsEnabled, setOrbitControlsEnabled] = useState(true);
@@ -24,6 +25,12 @@ function App() {
     setInfoBlockPosition({ x: e.clientX + 50, y: e.clientY + 50 });
   };
 
+  const fadeInOut = useSpring({
+    opacity: showInfoBlock ? 1.0 : 0.0,
+    config: { duration: 700 },
+
+  });
+
   return (
     <MathJaxContext>
       <div className="w-full h-full fixed bg-white" onMouseMove={handleMouseMove}>
@@ -31,9 +38,9 @@ function App() {
         <>
           
           {/* <div className="z-20 absolute bg-white rounded-lg opacity-95" style={{ left: infoBlockPosition.x, top: infoBlockPosition.y }}></div> */}
-          <div className="z-30 px-2 absolute rounded-lg border-2 bg-white border-black drop-shadow-xl" style={{ left: infoBlockPosition.x, top: infoBlockPosition.y }}>
+          <animated.div className="z-30 px-2 absolute rounded-lg border-2 bg-white border-black drop-shadow-xl" style={{ ...fadeInOut, left: infoBlockPosition.x, top: infoBlockPosition.y}}>
             <MathJax className="z-20 text-center">{infoBlockText}</MathJax>
-          </div>
+          </animated.div>
         </>)}
 
         <Canvas className="select-none" camera={{
