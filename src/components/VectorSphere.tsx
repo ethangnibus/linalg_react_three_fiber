@@ -266,7 +266,7 @@ const VectorSphere: React.FC<VectorSphereProps> = ({
                     vector_a={v1}
                     vector_b={v2}
                     vector_c={v3}
-                    planeWidth={32}
+                    planeWidth={50}
                     color={new THREE.Color(0.0, 0.3, 0.3)}
                 />
             )}

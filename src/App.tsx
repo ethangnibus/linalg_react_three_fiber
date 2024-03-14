@@ -33,9 +33,9 @@ function App() {
   };
 
   const fadeInOut = useTransition(showInfoBlock, {
-    from: { opacity: 0 },
-    enter: { opacity: 1 },
-    leave: { opacity: 0 },
+    from: { opacity: 0.0 },
+    enter: { opacity: 0.95 },
+    leave: { opacity: 0.0 },
     config: { duration: 500, easing: easings.easeInOutQuad }, // 1 second duration
   });
 

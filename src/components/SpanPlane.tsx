@@ -90,7 +90,7 @@ const SpanPlane: React.FC<SpanPlaneProps> = ({
                     <animated.mesh
                         position={spherePosition.toArray()}
                         rotation={plane_front}
-                        renderOrder={6}
+                        renderOrder={5}
                         {...props}
                     >
                         <planeGeometry args={[planeWidth * 10, planeWidth * 10]} />
@@ -114,7 +114,7 @@ const SpanPlane: React.FC<SpanPlaneProps> = ({
                         renderOrder={4}
                         {...props}
                     >
-                        <cylinderGeometry attach="geometry" args={[0.01, 0.01, planeWidth, 8]} />
+                        <cylinderGeometry attach="geometry" args={[0.011, 0.011, planeWidth, 6]} />
                         <animated.meshToonMaterial
                             attach="material"
                             color={color}
