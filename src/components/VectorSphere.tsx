@@ -14,6 +14,22 @@ interface VectorSphereProps {
     setCameraTarget: (newPosition: THREE.Vector3) => void;
     setShowInfoBlock: (enabled: boolean) => void;
     setInfoBlockText: (newString: String) => void;
+    setShowEditBlock: (enabled: boolean) => void;
+    setEditBlockText: (newString: String) => void;
+    showV1Span: boolean;
+    setShowV1Span: (enabled: boolean) => void;
+    showV2Span: boolean;
+    setShowV2Span: (enabled: boolean) => void;
+    showV3Span: boolean;
+    setShowV3Span: (enabled: boolean) => void;
+    showV1V2Span: boolean;
+    setShowV1V2Span: (enabled: boolean) => void;
+    showV1V3Span: boolean;
+    setShowV1V3Span: (enabled: boolean) => void;
+    showV2V3Span: boolean;
+    setShowV2V3Span: (enabled: boolean) => void;
+    showV1V2V3Span: boolean;
+    setShowV1V2V3Span: (enabled: boolean) => void;
 }
 
 function vectorsAreCollinear(v1: THREE.Vector3, v2: THREE.Vector3) {
@@ -28,6 +44,22 @@ const VectorSphere: React.FC<VectorSphereProps> = ({
     setCameraTarget,
     setShowInfoBlock,
     setInfoBlockText,
+    setShowEditBlock,
+    setEditBlockText,
+    showV1Span,
+    setShowV1Span,
+    showV2Span,
+    setShowV2Span,
+    showV3Span,
+    setShowV3Span,
+    showV1V2Span,
+    setShowV1V2Span,
+    showV1V3Span,
+    setShowV1V3Span,
+    showV2V3Span,
+    setShowV2V3Span,
+    showV1V2V3Span,
+    setShowV1V2V3Span,
 }) => {
     const [vectorSphereIsHovered, setVectorSphereIsHovered] = useState(false); // New state for hover
 
@@ -42,14 +74,7 @@ const VectorSphere: React.FC<VectorSphereProps> = ({
     const [v2IsSelected, setV2IsSelected] = useState(false);
     const [v3IsSelected, setV3IsSelected] = useState(false);
 
-    // states to show span components
-    const [showV1Span, setShowV1Span] = useState(false);
-    const [showV2Span, setShowV2Span] = useState(false);
-    const [showV3Span, setShowV3Span] = useState(false);
-    const [showV1V2Span, setShowV1V2Span] = useState(false);
-    const [showV1V3Span, setShowV1V3Span] = useState(false);
-    const [showV2V3Span, setShowV2V3Span] = useState(false);
-    const [showV1V2V3Span, setShowV1V2V3Span] = useState(false);
+    const [numScaledVectors, setNumScaledVectors] = useState(1);
 
     const handleToggleSelection = () => {
         setVectorSphereIsSelected(!vectorSphereIsSelected);
@@ -77,33 +102,39 @@ const VectorSphere: React.FC<VectorSphereProps> = ({
 
         setShowV1V2V3Span(false);
 
+        const v1v2Collinear = vectorsAreCollinear(v1, v2);
+        const v1v3Collinear = vectorsAreCollinear(v1, v3);
+        const v2v3Collinear = vectorsAreCollinear(v2, v3);
+
         // render span lines
         if (v1IsSelected && !v2IsSelected && !v3IsSelected) {
+            setEditBlockText(`$$\\text{Span } \\{ \\mathbf{v}_1 \\}$$`)
             setShowV1Span(true);
-        }
-        if (!v1IsSelected && v2IsSelected && !v3IsSelected) {
+        } else if (!v1IsSelected && v2IsSelected && !v3IsSelected) {
+            setEditBlockText(`$$\\text{Span } \\{ \\mathbf{v}_2 \\}$$`)
             setShowV2Span(true);
-        }
-        if (!v1IsSelected && !v2IsSelected && v3IsSelected) {
+        } else if (!v1IsSelected && !v2IsSelected && v3IsSelected) {
+            setEditBlockText(`$$\\text{Span } \\{ \\mathbf{v}_3 \\}$$`)
             setShowV3Span(true);
         }
 
         // render span planes
-        if (v1IsSelected && v2IsSelected && !v3IsSelected) {
+        else if (v1IsSelected && v2IsSelected && !v3IsSelected) {
+            setEditBlockText(`$$\\text{Span } \\{ \\mathbf{v}_1, \\mathbf{v}_2 \\}$$`)
             if (vectorsAreCollinear(v1, v2)) {
                 setShowV1Span(true);
             } else {
                 setShowV1V2Span(true);
             }
-        }
-        if (v1IsSelected && !v2IsSelected && v3IsSelected) {
+        } else if (v1IsSelected && !v2IsSelected && v3IsSelected) {
+            setEditBlockText(`$$\\text{Span } \\{ \\mathbf{v}_1, \\mathbf{v}_3 \\}$$`)
             if (vectorsAreCollinear(v1, v3)) {
                 setShowV1Span(true);
             } else {
                 setShowV1V3Span(true);
             }
-        }
-        if (!v1IsSelected && v2IsSelected && v3IsSelected) {
+        } else if (!v1IsSelected && v2IsSelected && v3IsSelected) {
+            setEditBlockText(`$$\\text{Span }  \\{ \\mathbf{v}_2, \\mathbf{v}_3 \\}$$`)
             if (vectorsAreCollinear(v2, v3)) {
                 setShowV2Span(true);
             } else {
@@ -111,11 +142,8 @@ const VectorSphere: React.FC<VectorSphereProps> = ({
             }
         }
 
-        const v1v2Collinear = vectorsAreCollinear(v1, v2);
-        const v1v3Collinear = vectorsAreCollinear(v1, v3);
-        const v2v3Collinear = vectorsAreCollinear(v2, v3);
-
-        if (v1IsSelected && v2IsSelected && v3IsSelected) {
+        else if (v1IsSelected && v2IsSelected && v3IsSelected) {
+            setEditBlockText(`$$\\text{Span }  \\{ \\mathbf{v}_1, \\mathbf{v}_2, \\mathbf{v}_3 \\}$$`)
             if (!v1v2Collinear && !v1v3Collinear && !v2v3Collinear) {
                 setShowV1V2V3Span(true); // All vectors linearly independent
             } else if (v1v2Collinear && !v1v3Collinear && !v2v3Collinear) {
@@ -131,6 +159,12 @@ const VectorSphere: React.FC<VectorSphereProps> = ({
                 setShowV1Span(true); // All are collinear
             }
         }
+
+        // no vectors are selected
+        else {
+            setEditBlockText(`$$\\text{Span } \\{ \\}$$`)
+
+        }
     }, [v1IsSelected, v2IsSelected, v3IsSelected]);
 
     const { scale: vectorSphereScale } = useSpring({ scale: vectorSphereIsHovered ? 1.3 : 1.0 })
@@ -145,7 +179,7 @@ const VectorSphere: React.FC<VectorSphereProps> = ({
             onPointerEnter={() => {
                 setVectorSphereIsHovered(true)
 
-                setInfoBlockText(`$$Sphere Position = \\begin{bmatrix} ${vectorSpherePosition.x.toFixed(3)} \\\\ ${vectorSpherePosition.y.toFixed(3)} \\\\ ${vectorSpherePosition.z.toFixed(3)} \\end{bmatrix}$$`)
+                setInfoBlockText(`$$\\text{Sphere Position} = \\begin{bmatrix} ${vectorSpherePosition.x.toFixed(3)} \\\\ ${vectorSpherePosition.y.toFixed(3)} \\\\ ${vectorSpherePosition.z.toFixed(3)} \\end{bmatrix}$$`)
                 setShowInfoBlock(true)
             }}
             onPointerLeave={() => {
@@ -160,7 +194,7 @@ const VectorSphere: React.FC<VectorSphereProps> = ({
             <>
                 <BaseVector // v1 - yellow
                     vector={v1}
-                    vectorInfo={`$$v_1 = \\begin{bmatrix} ${v1.x.toFixed(3)} \\\\ ${v1.y.toFixed(3)} \\\\ ${v1.z.toFixed(3)} \\end{bmatrix}$$`}
+                    vectorNumber={1}
                     color={new THREE.Color(0.45, 0.23, 0.005)}
                     line_color={new THREE.Color(1.0, 0.6, 0.01)}
                     onToggleOrbitControls={handleToggleOrbitControls}
@@ -171,10 +205,13 @@ const VectorSphere: React.FC<VectorSphereProps> = ({
                     setBaseVectorIsSelected={setV1IsSelected}
                     setShowInfoBlock={setShowInfoBlock}
                     setInfoBlockText={setInfoBlockText}
+                    numScaledVectors={numScaledVectors}
+                    setNumScaledVectors={setNumScaledVectors}
+                    setShowEditBlock={setShowEditBlock}
                 />
                 <BaseVector // v2 teal
                     vector={v2}
-                    vectorInfo={`$$v_2 = \\begin{bmatrix} ${v2.x.toFixed(3)} \\\\ ${v2.y.toFixed(3)} \\\\ ${v2.z.toFixed(3)} \\end{bmatrix}$$`}
+                    vectorNumber={2}
                     color={new THREE.Color(0.005, 0.4, 0.3)}
                     line_color={new THREE.Color(0.005, 0.7, 0.7)}
                     onToggleOrbitControls={handleToggleOrbitControls}
@@ -185,10 +222,13 @@ const VectorSphere: React.FC<VectorSphereProps> = ({
                     setBaseVectorIsSelected={setV2IsSelected}
                     setShowInfoBlock={setShowInfoBlock}
                     setInfoBlockText={setInfoBlockText}
+                    numScaledVectors={numScaledVectors}
+                    setNumScaledVectors={setNumScaledVectors}
+                    setShowEditBlock={setShowEditBlock}
                 />
                 <BaseVector // v3 off red
                     vector={v3}
-                    vectorInfo={`$$v_3 = \\begin{bmatrix} ${v3.x.toFixed(3)} \\\\ ${v3.y.toFixed(3)} \\\\ ${v3.z.toFixed(3)} \\end{bmatrix}$$`}
+                    vectorNumber={3}
                     color={new THREE.Color(0.3, 0.028, 0.028)}
                     line_color={new THREE.Color(0.8, 0.08, 0.08)}
                     onToggleOrbitControls={handleToggleOrbitControls}
@@ -199,6 +239,9 @@ const VectorSphere: React.FC<VectorSphereProps> = ({
                     setBaseVectorIsSelected={setV3IsSelected}
                     setShowInfoBlock={setShowInfoBlock}
                     setInfoBlockText={setInfoBlockText}
+                    numScaledVectors={numScaledVectors}
+                    setNumScaledVectors={setNumScaledVectors}
+                    setShowEditBlock={setShowEditBlock}
                 />
             </>
 

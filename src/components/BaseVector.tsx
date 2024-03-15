@@ -5,7 +5,7 @@ import * as THREE from 'three';
 
 interface BaseVectorsProps {
     vector: THREE.Vector3; // Direction of the arrow
-    vectorInfo: String;
+    vectorNumber: number;
     color: THREE.Color;
     line_color: THREE.Color;
     onToggleOrbitControls: (enabled: boolean) => void;
@@ -16,11 +16,14 @@ interface BaseVectorsProps {
     setBaseVectorIsSelected: (enabled: boolean) => void;
     setShowInfoBlock: (enabled: boolean) => void;
     setInfoBlockText: (newString: String) => void;
+    numScaledVectors: number;
+    setNumScaledVectors: (number: number) => void;
+    setShowEditBlock: (enabled: boolean) => void;
 }
 
 const BaseVector: React.FC<BaseVectorsProps> = ({
     vector,
-    vectorInfo,
+    vectorNumber,
     color,
     line_color,
     onToggleOrbitControls,
@@ -31,6 +34,9 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
     setBaseVectorIsSelected,
     setShowInfoBlock,
     setInfoBlockText,
+    numScaledVectors,
+    setNumScaledVectors,
+    setShowEditBlock,
 }) => {
     const [isHovered, setIsHovered] = useState(false);
     const [isDragging, setIsDragging] = useState(false);
@@ -54,6 +60,7 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
             onToggleOrbitControls(true);
             if (currentLine) {
                 setLines([...lines, currentLine]); // Save the current line to the lines array
+                setNumScaledVectors(numScaledVectors + 1);
             }
             setCurrentLine(null); // Reset the current line
         }
@@ -85,6 +92,14 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
                 // transparent={true}
                 dashOffset={0.5}
                 dashScale={20}
+                onPointerOver={() => {
+                    console.log(numScaledVectors + " Line number")
+                    setInfoBlockText(`$$a_${numScaledVectors}v_${vectorNumber}$$`)
+                    setShowInfoBlock(true)
+                }}
+                onPointerLeave={() => {
+                    setShowInfoBlock(false)
+                }}
             />
         );
         setCurrentLine(updatedLine);
@@ -131,7 +146,7 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
                 onPointerUp={() => onToggleOrbitControls(true)}
                 onPointerEnter={() => {
                     setIsHovered(true)
-                    setInfoBlockText(vectorInfo)
+                    setInfoBlockText(`$$v_${vectorNumber} = \\begin{bmatrix} ${vector.x.toFixed(3)} \\\\ ${vector.y.toFixed(3)} \\\\ ${vector.z.toFixed(3)} \\end{bmatrix}$$`)
                     setShowInfoBlock(true)
                 }}
                 onPointerLeave={() => {
@@ -141,6 +156,8 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
                 onClick={() => {
                     if (!isDragging) {
                         setBaseVectorIsSelected(!baseVectorIsSelected)
+                        setShowEditBlock(true)
+                        // setEditBlockText(`$$Edit \\\\ v_${vectorNumber}$$`)
                     }
                     
                 }}
