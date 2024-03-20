@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Canvas } from "@react-three/fiber";
-import { OrbitControls } from "@react-three/drei";
+import { OrbitControls, Stats } from "@react-three/drei";
 import AxisLines from "./components/AxisLines";
 import GridLines from "./components/GridLines";
 import VectorSphere from "./components/VectorSphere";
@@ -67,7 +67,7 @@ function App() {
   });
 
   return (
-    <MathJaxContext>
+    // <MathJaxContext>
       <div
         className="w-full h-full fixed bg-white"
         onMouseMove={handleMouseMove}
@@ -91,9 +91,11 @@ function App() {
 
               <div className="h-12 w-50 mb-2 flex justify-center">
                 <div className="h-full w-40 px-5 flex justify-center rounded-sm  bg-white drop-shadow">
-                  <MathJax className="text-center self-center px-1 ">
+                  {/* <MathJax className="text-center self-center px-1 ">
                     {editBlockText}
-                  </MathJax>
+                  </MathJax> */}
+                  <p> FIXME</p>
+
                 </div>
                 
               </div>
@@ -103,15 +105,20 @@ function App() {
                   className="h-8 w-auto px-2 flex rounded drop-shadow-sm bg-white border-2 border-white hover:border-yellow-300"
                   onClick={() => console.log("hello")}
                 >
-                  <MathJax className="self-center">{`$$\\small{\\text{Edit } \\mathbf{v}_1}$$`}</MathJax>
+                  {/* <MathJax className="self-center">{`$$\\small{\\text{Edit } \\mathbf{v}_1}$$`}</MathJax> */}
+                  <p> FIXME</p>
+
                 </button>
 
                 <button className="h-8 w-auto px-2 ml-1 mr-1 flex drop-shadow-sm rounded bg-white border-2 border-white hover:border-teal-300">
-                  <MathJax className="self-center">{`$$\\small{\\text{Edit } \\mathbf{v}_2}$$`}</MathJax>
+                  {/* <MathJax className="self-center">{`$$\\small{\\text{Edit } \\mathbf{v}_2}$$`}</MathJax> */}
+                  <p> FIXME</p>
+
                 </button>
 
                 <button className="h-8 w-auto px-2 flex drop-shadow rounded bg-white border-2 border-white hover:border-red-400">
-                  <MathJax className="self-center">{`$$\\small{\\text{Edit } \\mathbf{v}_3}$$`}</MathJax>
+                  {/* <MathJax className="self-center">{`$$\\small{\\text{Edit } \\mathbf{v}_3}$$`}</MathJax> */}
+                  <p> FIXME</p>
                 </button>
               </div>
 
@@ -130,7 +137,8 @@ function App() {
                 top: infoBlockPosition.y,
               }}
             >
-              <MathJax className="text-center">{infoBlockText}</MathJax>
+              {/* <MathJax className="text-center">{infoBlockText}</MathJax> */}
+              <p> FIXME</p>
             </animated.div>
           ) : null
         )}
@@ -182,9 +190,10 @@ function App() {
             showV1V2V3Span={showV1V2V3Span}
             setShowV1V2V3Span={setShowV1V2V3Span}
           />
+          <Stats />
         </Canvas>
       </div>
-    </MathJaxContext>
+    // </MathJaxContext>
   );
 }
 
