@@ -113,7 +113,7 @@ function App() {
 
               <div className="h-12 w-50 mb-2 flex justify-center">
                 <div className="h-full w-40 px-5 flex justify-center rounded-sm  bg-white drop-shadow">
-                  <MathJax className="text-center self-center px-1" dynamic={true} hideUntilTypeset={"first"}>
+                  <MathJax className="text-center self-center px-1" dynamic={true} hideUntilTypeset={"every"}>
                     {editBlockText}
                     {/* Edit Block Text */}
                   </MathJax>
@@ -127,7 +127,7 @@ function App() {
                   className="h-8 w-auto px-2 flex rounded drop-shadow-sm bg-white border-2 border-white hover:border-yellow-300"
                   onClick={() => console.log("hello")}
                 >
-                  <MathJax className="self-center" dynamic={true} hideUntilTypeset={"first"}>
+                  <MathJax className="self-center" dynamic={true} hideUntilTypeset={"every"}>
                     {`$$\\small{\\text{Edit } \\mathbf{v}_1}$$`}
                     {/* help2 */}
                   </MathJax>
@@ -135,14 +135,14 @@ function App() {
                 </button>
 
                 <button className="h-8 w-auto px-2 ml-1 mr-1 flex drop-shadow-sm rounded bg-white border-2 border-white hover:border-teal-300">
-                  <MathJax className="self-center" dynamic={true} hideUntilTypeset={"first"}>
+                  <MathJax className="self-center" dynamic={true} hideUntilTypeset={"every"}>
                     {`$$\\small{\\text{Edit } \\mathbf{v}_2}$$`}
                     {/* help3 */}
                     </MathJax>
                 </button>
 
                 <button className="h-8 w-auto px-2 flex drop-shadow rounded bg-white border-2 border-white hover:border-red-400">
-                  <MathJax className="self-center" dynamic={true} hideUntilTypeset={"first"}>
+                  <MathJax className="self-center" dynamic={true} hideUntilTypeset={"every"}>
                     {`$$\\small{\\text{Edit } \\mathbf{v}_3}$$`}
                     {/* help4 */}
                   </MathJax>
@@ -164,7 +164,7 @@ function App() {
                 top: infoBlockPosition.y,
               }}
             >
-              <MathJax className="text-center" dynamic={true} hideUntilTypeset={"first"}>
+              <MathJax className="text-center" dynamic={true} hideUntilTypeset={"every"}>
                 {infoBlockText}
                 {/* Help5 */}
               </MathJax>
