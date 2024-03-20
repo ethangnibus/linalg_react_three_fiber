@@ -94,7 +94,7 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
                 dashScale={20}
                 onPointerOver={() => {
                     console.log(numScaledVectors + " Line number")
-                    setInfoBlockText(`$$a_${numScaledVectors}v_${vectorNumber}$$`)
+                    setInfoBlockText(`$$a_${numScaledVectors} v_${vectorNumber}$$`)
                     setShowInfoBlock(true)
                 }}
                 onPointerLeave={() => {
@@ -146,7 +146,11 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
                 onPointerUp={() => onToggleOrbitControls(true)}
                 onPointerEnter={() => {
                     setIsHovered(true)
-                    setInfoBlockText(`$$v_${vectorNumber} = \\begin{bmatrix} ${vector.x.toFixed(3)} \\\\ ${vector.y.toFixed(3)} \\\\ ${vector.z.toFixed(3)} \\end{bmatrix}$$`)
+                    setInfoBlockText(`
+                        This arrow represents the vector
+                        $$v_${vectorNumber} = \\begin{bmatrix} ${vector.x.toFixed(3)} \\\\ ${vector.y.toFixed(3)} \\\\ ${vector.z.toFixed(3)} \\end{bmatrix}$$
+                        Click on it to add it to the collection of vectors on the upper left
+                    `)
                     setShowInfoBlock(true)
                 }}
                 onPointerLeave={() => {

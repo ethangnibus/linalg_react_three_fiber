@@ -65,9 +65,9 @@ const VectorSphere: React.FC<VectorSphereProps> = ({
 
     
     const [vectorSphereIsSelected, setVectorSphereIsSelected] = useState(false);
-    const [v1, _setV1] = useState<THREE.Vector3>(new THREE.Vector3(1.0, 0.1, 0.05));
-    const [v2, _setV2] = useState<THREE.Vector3>(new THREE.Vector3(0.1, 1.0, 0.1));
-    const [v3, _setV3] = useState<THREE.Vector3>(new THREE.Vector3(0.05, -0.05, 1.0));
+    const [v1, _setV1] = useState<THREE.Vector3>(new THREE.Vector3(1.0, 0.0, 0.0));
+    const [v2, _setV2] = useState<THREE.Vector3>(new THREE.Vector3(-1.0, 0.0, 0.0));
+    const [v3, _setV3] = useState<THREE.Vector3>(new THREE.Vector3(1.05, -0.05, 1.0));
     
     // states for when vectors are selected
     const [v1IsSelected, setV1IsSelected] = useState(false);
@@ -179,7 +179,11 @@ const VectorSphere: React.FC<VectorSphereProps> = ({
             onPointerEnter={() => {
                 setVectorSphereIsHovered(true)
 
-                setInfoBlockText(`$$\\text{Sphere Position} = \\begin{bmatrix} ${vectorSpherePosition.x.toFixed(3)} \\\\ ${vectorSpherePosition.y.toFixed(3)} \\\\ ${vectorSpherePosition.z.toFixed(3)} \\end{bmatrix}$$`)
+                setInfoBlockText(`
+                    Here we're showing a vector given by
+                    $$\\text{Sphere Position} = \\begin{bmatrix} ${vectorSpherePosition.x.toFixed(3)} \\\\ ${vectorSpherePosition.y.toFixed(3)} \\\\ ${vectorSpherePosition.z.toFixed(3)} \\end{bmatrix}$$
+                    Click on this vector to show it's movement vectors
+                `)
                 setShowInfoBlock(true)
             }}
             onPointerLeave={() => {

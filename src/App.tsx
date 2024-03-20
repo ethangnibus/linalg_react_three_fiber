@@ -111,6 +111,8 @@ function App() {
                 </button>
               </div>
 
+              <p>Now we visualize the following colleciton in blue</p>
+
               <div className="h-12 w-50 mb-2 flex justify-center">
                 <div className="h-full w-40 px-5 flex justify-center rounded-sm  bg-white drop-shadow">
                   <MathJax className="text-center self-center px-1" dynamic={true} hideUntilTypeset={"every"}>
@@ -119,10 +121,9 @@ function App() {
                   </MathJax>
 
                 </div>
-                
               </div>
 
-              <div className="h-auto w-full flex flex-row">
+              <div className="h-auto w-full flex flex-row justify-evenly">
                 <button
                   className="h-8 w-auto px-2 flex rounded drop-shadow-sm bg-white border-2 border-white hover:border-yellow-300"
                   onClick={() => console.log("hello")}
