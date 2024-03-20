@@ -8,6 +8,23 @@ import { Vector3 } from "three"; // Import Vector3 from three
 import { MathJax, MathJaxContext } from "better-react-mathjax";
 import { useTransition, animated, easings } from "@react-spring/web";
 
+const config = {
+  "fast-preview": {
+    disabled: true
+  },
+  tex2jax: {
+    inlineMath: [
+      ["$", "$"],
+      ["\\(", "\\)"]
+    ],
+    displayMath: [
+      ["$$", "$$"],
+      ["\\[", "\\]"]
+    ]
+  },
+  messageStyle: "none"
+};
+
 function App() {
   const [orbitControlsEnabled, setOrbitControlsEnabled] = useState(true);
   const [vectorSpherePosition, setVectorSpherePosition] = useState<Vector3>(
@@ -67,7 +84,12 @@ function App() {
   });
 
   return (
-    // <MathJaxContext>
+    <MathJaxContext
+      version={2}
+      config={config}
+      onStartup={(mathJax) => (mathJax.Hub.processSectionDelay = 0)}
+    
+    >
       <div
         className="w-full h-full fixed bg-white"
         onMouseMove={handleMouseMove}
@@ -91,10 +113,10 @@ function App() {
 
               <div className="h-12 w-50 mb-2 flex justify-center">
                 <div className="h-full w-40 px-5 flex justify-center rounded-sm  bg-white drop-shadow">
-                  {/* <MathJax className="text-center self-center px-1 ">
+                  <MathJax className="text-center self-center px-1" dynamic={true} hideUntilTypeset={"first"}>
                     {editBlockText}
-                  </MathJax> */}
-                  <p> FIXME</p>
+                    {/* Edit Block Text */}
+                  </MathJax>
 
                 </div>
                 
@@ -105,20 +127,25 @@ function App() {
                   className="h-8 w-auto px-2 flex rounded drop-shadow-sm bg-white border-2 border-white hover:border-yellow-300"
                   onClick={() => console.log("hello")}
                 >
-                  {/* <MathJax className="self-center">{`$$\\small{\\text{Edit } \\mathbf{v}_1}$$`}</MathJax> */}
-                  <p> FIXME</p>
+                  <MathJax className="self-center" dynamic={true} hideUntilTypeset={"first"}>
+                    {`$$\\small{\\text{Edit } \\mathbf{v}_1}$$`}
+                    {/* help2 */}
+                  </MathJax>
 
                 </button>
 
                 <button className="h-8 w-auto px-2 ml-1 mr-1 flex drop-shadow-sm rounded bg-white border-2 border-white hover:border-teal-300">
-                  {/* <MathJax className="self-center">{`$$\\small{\\text{Edit } \\mathbf{v}_2}$$`}</MathJax> */}
-                  <p> FIXME</p>
-
+                  <MathJax className="self-center" dynamic={true} hideUntilTypeset={"first"}>
+                    {`$$\\small{\\text{Edit } \\mathbf{v}_2}$$`}
+                    {/* help3 */}
+                    </MathJax>
                 </button>
 
                 <button className="h-8 w-auto px-2 flex drop-shadow rounded bg-white border-2 border-white hover:border-red-400">
-                  {/* <MathJax className="self-center">{`$$\\small{\\text{Edit } \\mathbf{v}_3}$$`}</MathJax> */}
-                  <p> FIXME</p>
+                  <MathJax className="self-center" dynamic={true} hideUntilTypeset={"first"}>
+                    {`$$\\small{\\text{Edit } \\mathbf{v}_3}$$`}
+                    {/* help4 */}
+                  </MathJax>
                 </button>
               </div>
 
@@ -137,8 +164,10 @@ function App() {
                 top: infoBlockPosition.y,
               }}
             >
-              {/* <MathJax className="text-center">{infoBlockText}</MathJax> */}
-              <p> FIXME</p>
+              <MathJax className="text-center" dynamic={true} hideUntilTypeset={"first"}>
+                {infoBlockText}
+                {/* Help5 */}
+              </MathJax>
             </animated.div>
           ) : null
         )}
@@ -193,7 +222,7 @@ function App() {
           <Stats />
         </Canvas>
       </div>
-    // </MathJaxContext>
+    </MathJaxContext>
   );
 }
 
