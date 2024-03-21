@@ -7,6 +7,29 @@ import VectorSphere from "./components/VectorSphere";
 import { Vector3 } from "three"; // Import Vector3 from three
 import { MathJax, MathJaxContext } from "better-react-mathjax";
 import { useTransition, animated, easings } from "@react-spring/web";
+import { Button } from "@/components/ui/button"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import {
+  Menubar,
+  MenubarContent,
+  MenubarItem,
+  MenubarMenu,
+  MenubarSeparator,
+  MenubarShortcut,
+  MenubarTrigger,
+} from "@/components/ui/menubar"
+import { X } from "lucide-react"
+
+
+
+
 
 const config = {
   "fast-preview": {
@@ -38,7 +61,10 @@ function App() {
     y: number;
   }>({ x: 0, y: 0 });
 
-
+  // states for when vectors are selected
+  const [v1IsSelected, setV1IsSelected] = useState(false);
+  const [v2IsSelected, setV2IsSelected] = useState(false);
+  const [v3IsSelected, setV3IsSelected] = useState(false);
 
   // states to show span components
   const [showV1Span, setShowV1Span] = useState(false);
@@ -90,6 +116,7 @@ function App() {
       onStartup={(mathJax) => (mathJax.Hub.processSectionDelay = 0)}
     
     >
+
       <div
         className="w-full h-full fixed bg-white"
         onMouseMove={handleMouseMove}
@@ -98,58 +125,90 @@ function App() {
         {fadeEditBlock((style, item) =>
           item ? (
             <animated.div
-              className="z-30 absolute w-auto rounded-md flex flex-col align-start p-2 border-2 border-gray-300 bg-gray-200 left-10 top-10"
+              className="z-30 absolute top-10"
               style={{
                 ...style,
               }}
             >
-              <div className="h-auto w-full left-0 flex justify-end">
-                <button
-                  className=" h-4 aspect-square rounded-xl bg-red-500 border-2 hover:border-red-300 flex items-center justify-center drop-shadow-sm select-none "
-                  onClick={() => setShowEditBlock(false)}
-                >
-                </button>
-              </div>
+              <Card className=" max-w-[380px] mx-10">
+                <CardHeader>
+                  <X className="h-4 w-4 self-end"
+                    onClick={() => setShowEditBlock(false)}
+                  />
+                  <CardTitle>What does this example visualize?</CardTitle>
+                  <CardDescription>
+                    We are visualizing the span of a collection of vectors
+                    given by the equation below.
+                    You can click on base vectors to add/subtract them from
+                    the collection. In the viewport, the combined span
+                    of every vector in our collection will be visualized in
+                    transparent blue.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {/* <p></p> */}
+                  {/* <p className="mb-2">Our current collection is:</p> */}
+                  <div className="h-12 w-50 mb-2 flex justify-center">
+                    <Card className="h-full w-40 px-5 flex justify-center drop-shadow">
+                      <MathJax className="text-center self-center px-1" dynamic={true} hideUntilTypeset={"every"}>
+                        {editBlockText}
+                        {/* Edit Block Text */}
+                      </MathJax>
+                    </Card>
+                  </div>
+                </CardContent>
+                <CardFooter className="flex flex-col">
+                  <p className="mb-2 self-start">You can edit our collection below:</p>
 
-              <p>Now we visualize the following colleciton in blue</p>
+                  <Menubar>
+                    {/* v1 */}
+                    <MenubarMenu>
+                      <MenubarTrigger className="h-8">
+                        <MathJax className="h-10 self-center" dynamic={true} hideUntilTypeset={"every"}>
+                              {`$$\\small{\\text{Edit } \\mathbf{v}_1}$$`}
+                        </MathJax>
+                      </MenubarTrigger>
+                      <MenubarContent>
+                        <MenubarItem onClick={() => setV1IsSelected(!v1IsSelected)}>Toggle Selected</MenubarItem>
+                        <MenubarSeparator />
+                        <MenubarItem>Rotate</MenubarItem>
+                        <MenubarItem>Scale</MenubarItem>
+                        
+                      </MenubarContent>
+                    </MenubarMenu>
 
-              <div className="h-12 w-50 mb-2 flex justify-center">
-                <div className="h-full w-40 px-5 flex justify-center rounded-sm  bg-white drop-shadow">
-                  <MathJax className="text-center self-center px-1" dynamic={true} hideUntilTypeset={"every"}>
-                    {editBlockText}
-                    {/* Edit Block Text */}
-                  </MathJax>
+                    {/* v2 */}
+                    <MenubarMenu>
+                      <MenubarTrigger className="h-8">
+                        <MathJax className="h-10 self-center" dynamic={true} hideUntilTypeset={"every"}>
+                              {`$$\\small{\\text{Edit } \\mathbf{v}_2}$$`}
+                        </MathJax>
+                      </MenubarTrigger>
+                      <MenubarContent>
+                        <MenubarItem onClick={() => setV2IsSelected(!v2IsSelected)}>Toggle Selected</MenubarItem>
+                        <MenubarSeparator />
+                        <MenubarItem>Rotate</MenubarItem>
+                        <MenubarItem>Scale</MenubarItem>
+                      </MenubarContent>
+                    </MenubarMenu>
 
-                </div>
-              </div>
-
-              <div className="h-auto w-full flex flex-row justify-evenly">
-                <button
-                  className="h-8 w-auto px-2 flex rounded drop-shadow-sm bg-white border-2 border-white hover:border-yellow-300"
-                  onClick={() => console.log("hello")}
-                >
-                  <MathJax className="self-center" dynamic={true} hideUntilTypeset={"every"}>
-                    {`$$\\small{\\text{Edit } \\mathbf{v}_1}$$`}
-                    {/* help2 */}
-                  </MathJax>
-
-                </button>
-
-                <button className="h-8 w-auto px-2 ml-1 mr-1 flex drop-shadow-sm rounded bg-white border-2 border-white hover:border-teal-300">
-                  <MathJax className="self-center" dynamic={true} hideUntilTypeset={"every"}>
-                    {`$$\\small{\\text{Edit } \\mathbf{v}_2}$$`}
-                    {/* help3 */}
-                    </MathJax>
-                </button>
-
-                <button className="h-8 w-auto px-2 flex drop-shadow rounded bg-white border-2 border-white hover:border-red-400">
-                  <MathJax className="self-center" dynamic={true} hideUntilTypeset={"every"}>
-                    {`$$\\small{\\text{Edit } \\mathbf{v}_3}$$`}
-                    {/* help4 */}
-                  </MathJax>
-                </button>
-              </div>
-
+                    {/* v3 */}
+                    <MenubarMenu>
+                      <MenubarTrigger className="h-8">
+                        <MathJax className="h-10 self-center" dynamic={true} hideUntilTypeset={"every"}>
+                              {`$$\\small{\\text{Edit } \\mathbf{v}_3}$$`}
+                        </MathJax>
+                      </MenubarTrigger>
+                      <MenubarContent>
+                        <MenubarItem onClick={() => setV3IsSelected(!v3IsSelected)}>Toggle Selected</MenubarItem>
+                        <MenubarSeparator />
+                        <MenubarItem>Rotate</MenubarItem>
+                        <MenubarItem>Scale</MenubarItem>
+                      </MenubarContent>
+                    </MenubarMenu>
+                  </Menubar>
+                </CardFooter>
+              </Card>
             </animated.div>
           ) : null
         )}
@@ -205,6 +264,12 @@ function App() {
             setInfoBlockText={setInfoBlockText}
             setShowEditBlock={setShowEditBlock}
             setEditBlockText={setEditBlockText}
+            v1IsSelected={v1IsSelected}
+            setV1IsSelected={setV1IsSelected}
+            v2IsSelected={v2IsSelected}
+            setV2IsSelected={setV2IsSelected}
+            v3IsSelected={v3IsSelected}
+            setV3IsSelected={setV3IsSelected}
             showV1Span={showV1Span}
             setShowV1Span={setShowV1Span}
             showV2Span={showV2Span}
@@ -220,7 +285,7 @@ function App() {
             showV1V2V3Span={showV1V2V3Span}
             setShowV1V2V3Span={setShowV1V2V3Span}
           />
-          <Stats />
+          {/* <Stats /> */}
         </Canvas>
       </div>
     </MathJaxContext>

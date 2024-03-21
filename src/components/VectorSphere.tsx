@@ -16,6 +16,12 @@ interface VectorSphereProps {
     setInfoBlockText: (newString: String) => void;
     setShowEditBlock: (enabled: boolean) => void;
     setEditBlockText: (newString: String) => void;
+    v1IsSelected: boolean;
+    setV1IsSelected: (enabled: boolean) => void;
+    v2IsSelected: boolean;
+    setV2IsSelected: (enabled: boolean) => void;
+    v3IsSelected: boolean;
+    setV3IsSelected: (enabled: boolean) => void;
     showV1Span: boolean;
     setShowV1Span: (enabled: boolean) => void;
     showV2Span: boolean;
@@ -46,6 +52,12 @@ const VectorSphere: React.FC<VectorSphereProps> = ({
     setInfoBlockText,
     setShowEditBlock,
     setEditBlockText,
+    v1IsSelected,
+    setV1IsSelected,
+    v2IsSelected,
+    setV2IsSelected,
+    v3IsSelected,
+    setV3IsSelected,
     showV1Span,
     setShowV1Span,
     showV2Span,
@@ -65,23 +77,11 @@ const VectorSphere: React.FC<VectorSphereProps> = ({
 
     
     const [vectorSphereIsSelected, setVectorSphereIsSelected] = useState(false);
-    const [v1, _setV1] = useState<THREE.Vector3>(new THREE.Vector3(1.0, 0.0, 0.0));
-    const [v2, _setV2] = useState<THREE.Vector3>(new THREE.Vector3(-1.0, 0.0, 0.0));
-    const [v3, _setV3] = useState<THREE.Vector3>(new THREE.Vector3(1.05, -0.05, 1.0));
-    
-    // states for when vectors are selected
-    const [v1IsSelected, setV1IsSelected] = useState(false);
-    const [v2IsSelected, setV2IsSelected] = useState(false);
-    const [v3IsSelected, setV3IsSelected] = useState(false);
+    const [v1, _setV1] = useState<THREE.Vector3>(new THREE.Vector3(1.0, 0.1, 0.2));
+    const [v2, _setV2] = useState<THREE.Vector3>(new THREE.Vector3(0.1, 1.0, 0.2));
+    const [v3, _setV3] = useState<THREE.Vector3>(new THREE.Vector3(0.1, -0.1, 1.0));
 
     const [numScaledVectors, setNumScaledVectors] = useState(1);
-
-    const handleToggleSelection = () => {
-        setVectorSphereIsSelected(!vectorSphereIsSelected);
-        if (vectorSphereIsSelected) {
-            setCameraTarget(vectorSpherePosition);
-        }
-    };
 
     const handleToggleOrbitControls = (enabled: boolean) => {
         onToggleOrbitControls(enabled);
@@ -174,7 +174,13 @@ const VectorSphere: React.FC<VectorSphereProps> = ({
         <animated.mesh
             position={vectorSpherePosition.toArray()}
             scale={vectorSphereScale}
-            onClick={handleToggleSelection}
+            onClick={() => {
+                setShowEditBlock(true)
+                setVectorSphereIsSelected(!vectorSphereIsSelected);
+                if (vectorSphereIsSelected) {
+                    setCameraTarget(vectorSpherePosition);
+                }
+            }}
             onPointerUp={() => handleToggleOrbitControls(true)}
             onPointerEnter={() => {
                 setVectorSphereIsHovered(true)

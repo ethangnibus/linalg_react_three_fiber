@@ -149,7 +149,7 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
                     setInfoBlockText(`
                         This arrow represents the vector
                         $$v_${vectorNumber} = \\begin{bmatrix} ${vector.x.toFixed(3)} \\\\ ${vector.y.toFixed(3)} \\\\ ${vector.z.toFixed(3)} \\end{bmatrix}$$
-                        Click on it to add it to the collection of vectors on the upper left
+                        Click on it to add it to the collection of vectors shown on up the popup
                     `)
                     setShowInfoBlock(true)
                 }}
