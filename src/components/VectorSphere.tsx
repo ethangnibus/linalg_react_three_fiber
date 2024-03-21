@@ -200,7 +200,7 @@ const VectorSphere: React.FC<VectorSphereProps> = ({
                 setInfoBlockText(`
                     This point represents the vector
                     $$\\text{p} = \\begin{bmatrix} ${vectorSpherePosition.x.toFixed(3)} \\\\ ${vectorSpherePosition.y.toFixed(3)} \\\\ ${vectorSpherePosition.z.toFixed(3)} \\end{bmatrix}$$
-                    Click on this point to show the collection of \n
+                    Click on this point to toggle the collection of \n
                     arrow vectors that we will use to visualize span
                 `)
                 setShowInfoBlock(true)
