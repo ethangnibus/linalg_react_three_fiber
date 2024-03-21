@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { DragControls, Line, Sphere } from '@react-three/drei';
+import { DragControls, Line } from '@react-three/drei';
 import { useSpring, animated } from '@react-spring/three';
 import * as THREE from 'three';
-import { buffer } from 'stream/consumers';
 
 interface BaseVectorsProps {
     vector: THREE.Vector3; // Direction of the arrow
@@ -45,6 +44,7 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
     isRotating,
     isScaling,
 }) => {
+    console.log(isRotating) // FIXME
 
     // base vector interactions
     const [baseVectorIsHovered, setBaseVectorIsHovered] = useState(false);
@@ -243,7 +243,7 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
                     setInfoBlockText(`
                         This arrow represents the vector
                         $$v_${vectorNumber} = \\begin{bmatrix} ${vector.x.toFixed(3)} \\\\ ${vector.y.toFixed(3)} \\\\ ${vector.z.toFixed(3)} \\end{bmatrix}$$
-                        Click on it to add it to the collection of vectors shown on up the popup
+                        Click to add/remove this vector from our collection. See the popup to view our current collection
                     `)
                     setShowInfoBlock(true)
                 }}
