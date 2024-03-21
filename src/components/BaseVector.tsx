@@ -193,15 +193,7 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
     });
 
     return (
-        <>  
-        {/* {isScaling && (
-            <animated.mesh
-                scale={scalePointScale}
-            >
-                <sphereGeometry args={[0.05, 16, 16]} />
-                <meshToonMaterial color="black" />
-            </animated.mesh>
-        )} */}
+        <>
 
         {/* Scale Point */}
         {isScaling && vectorSphereIsSelected && (

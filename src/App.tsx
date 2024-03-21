@@ -21,7 +21,7 @@ import {
   MenubarItem,
   MenubarMenu,
   MenubarSeparator,
-  // MenubarShortcut,
+  MenubarShortcut,
   MenubarTrigger,
 } from "@/components/ui/menubar"
 import { X } from "lucide-react"
@@ -184,7 +184,9 @@ function App() {
                           {v1IsSelected ? "Remove this vector from our collection" : "Add this vector to our collection"}
                         </MenubarItem>
                         <MenubarSeparator />
-                        <MenubarItem onClick={() => setV1IsRotating(!v1IsRotating)}>Rotate</MenubarItem>
+                        <MenubarItem onClick={() => setV1IsRotating(!v1IsRotating)}>
+                          {v1IsScaling ? "Add the rotation angles" : "Remove the rotation angles"} <MenubarShortcut>Not implemented</MenubarShortcut>
+                        </MenubarItem>
                         <MenubarItem onClick={() => setV1IsScaling(!v1IsScaling)}>
                           {v1IsScaling ? "Remove the scaling point" : "Add the scaling point"}
                         </MenubarItem>
@@ -204,7 +206,9 @@ function App() {
                           {v2IsSelected ? "Remove this vector from our collection" : "Add this vector to our collection"}
                         </MenubarItem>
                         <MenubarSeparator />
-                        <MenubarItem onClick={() => setV2IsRotating(!v2IsRotating)}>Rotate</MenubarItem>
+                        <MenubarItem onClick={() => setV2IsRotating(!v2IsRotating)}>
+                          {v2IsScaling ? "Add the rotation angles" : "Remove the rotation angles"} <MenubarShortcut>Not implemented</MenubarShortcut>
+                        </MenubarItem>
                         <MenubarItem onClick={() => setV2IsScaling(!v2IsScaling)}>
                           {v2IsScaling ? "Remove the scaling point" : "Add the scaling point"}
                         </MenubarItem>
@@ -223,7 +227,9 @@ function App() {
                           {v3IsSelected ? "Remove this vector from our collection" : "Add this vector to our collection"}
                         </MenubarItem>
                         <MenubarSeparator />
-                        <MenubarItem onClick={() => setV3IsRotating(!v3IsRotating)}>Rotate</MenubarItem>
+                        <MenubarItem onClick={() => setV3IsRotating(!v3IsRotating)}>
+                          {v3IsScaling ? "Add the rotation angles" : "Remove the rotation angles"} <MenubarShortcut>Not implemented</MenubarShortcut>
+                        </MenubarItem>
                         <MenubarItem onClick={() => setV3IsScaling(!v3IsScaling)}>
                           {v3IsScaling ? "Remove the scaling point" : "Add the scaling point"}
                         </MenubarItem>
