@@ -7,7 +7,6 @@ import VectorSphere from "./components/VectorSphere";
 import { Vector3 } from "three"; // Import Vector3 from three
 import { MathJax, MathJaxContext } from "better-react-mathjax";
 import { useTransition, animated, easings } from "@react-spring/web";
-import { Button } from "@/components/ui/button"
 import {
   Card,
   CardContent,
@@ -22,7 +21,7 @@ import {
   MenubarItem,
   MenubarMenu,
   MenubarSeparator,
-  MenubarShortcut,
+  // MenubarShortcut,
   MenubarTrigger,
 } from "@/components/ui/menubar"
 import { X } from "lucide-react"
@@ -74,6 +73,18 @@ function App() {
   const [showV1V3Span, setShowV1V3Span] = useState(false);
   const [showV2V3Span, setShowV2V3Span] = useState(false);
   const [showV1V2V3Span, setShowV1V2V3Span] = useState(false);
+
+  // states for when we are rotating vectors
+  const [v1IsRotating, setV1IsRotating] = useState(false);
+  const [v2IsRotating, setV2IsRotating] = useState(false);
+  const [v3IsRotating, setV3IsRotating] = useState(false);
+
+  // states for when we are scaling vectors
+  const [v1IsScaling, setV1IsScaling] = useState(true);
+  const [v2IsScaling, setV2IsScaling] = useState(true);
+  const [v3IsScaling, setV3IsScaling] = useState(true);
+
+
 
 
 
@@ -169,10 +180,14 @@ function App() {
                         </MathJax>
                       </MenubarTrigger>
                       <MenubarContent>
-                        <MenubarItem onClick={() => setV1IsSelected(!v1IsSelected)}>Toggle Selected</MenubarItem>
+                        <MenubarItem onClick={() => setV1IsSelected(!v1IsSelected)}>
+                          {v1IsSelected ? "Remove this vector from our collection" : "Add this vector to our collection"}
+                        </MenubarItem>
                         <MenubarSeparator />
-                        <MenubarItem>Rotate</MenubarItem>
-                        <MenubarItem>Scale</MenubarItem>
+                        <MenubarItem onClick={() => setV1IsRotating(!v1IsRotating)}>Rotate</MenubarItem>
+                        <MenubarItem onClick={() => setV1IsScaling(!v1IsScaling)}>
+                          {v1IsScaling ? "Remove the scaling point" : "Add the scaling point"}
+                        </MenubarItem>
                         
                       </MenubarContent>
                     </MenubarMenu>
@@ -185,10 +200,14 @@ function App() {
                         </MathJax>
                       </MenubarTrigger>
                       <MenubarContent>
-                        <MenubarItem onClick={() => setV2IsSelected(!v2IsSelected)}>Toggle Selected</MenubarItem>
+                        <MenubarItem onClick={() => setV2IsSelected(!v2IsSelected)}>
+                          {v2IsSelected ? "Remove this vector from our collection" : "Add this vector to our collection"}
+                        </MenubarItem>
                         <MenubarSeparator />
-                        <MenubarItem>Rotate</MenubarItem>
-                        <MenubarItem>Scale</MenubarItem>
+                        <MenubarItem onClick={() => setV2IsRotating(!v2IsRotating)}>Rotate</MenubarItem>
+                        <MenubarItem onClick={() => setV2IsScaling(!v2IsScaling)}>
+                          {v2IsScaling ? "Remove the scaling point" : "Add the scaling point"}
+                        </MenubarItem>
                       </MenubarContent>
                     </MenubarMenu>
 
@@ -200,10 +219,14 @@ function App() {
                         </MathJax>
                       </MenubarTrigger>
                       <MenubarContent>
-                        <MenubarItem onClick={() => setV3IsSelected(!v3IsSelected)}>Toggle Selected</MenubarItem>
+                        <MenubarItem onClick={() => setV3IsSelected(!v3IsSelected)}>
+                          {v3IsSelected ? "Remove this vector from our collection" : "Add this vector to our collection"}
+                        </MenubarItem>
                         <MenubarSeparator />
-                        <MenubarItem>Rotate</MenubarItem>
-                        <MenubarItem>Scale</MenubarItem>
+                        <MenubarItem onClick={() => setV3IsRotating(!v3IsRotating)}>Rotate</MenubarItem>
+                        <MenubarItem onClick={() => setV3IsScaling(!v3IsScaling)}>
+                          {v3IsScaling ? "Remove the scaling point" : "Add the scaling point"}
+                        </MenubarItem>
                       </MenubarContent>
                     </MenubarMenu>
                   </Menubar>
@@ -217,17 +240,18 @@ function App() {
         {fadeInfoBlock((style, item) =>
           item ? (
             <animated.div
-              className="z-30 px-2 absolute rounded-lg border-2 bg-white border-black"
+              className="z-30 absolute max-w-[300px]"
               style={{
                 ...style,
                 left: infoBlockPosition.x, // Fixme: Change to be in the bounds of the window
                 top: infoBlockPosition.y,
               }}
             >
-              <MathJax className="text-center" dynamic={true} hideUntilTypeset={"every"}>
-                {infoBlockText}
-                {/* Help5 */}
-              </MathJax>
+              <Card className="p-2">
+                  <MathJax className="text-center" dynamic={true} hideUntilTypeset={"every"}>
+                    {infoBlockText}
+                  </MathJax>
+              </Card>
             </animated.div>
           ) : null
         )}
@@ -284,8 +308,14 @@ function App() {
             setShowV2V3Span={setShowV2V3Span}
             showV1V2V3Span={showV1V2V3Span}
             setShowV1V2V3Span={setShowV1V2V3Span}
+            v1IsRotating={v1IsRotating}
+            v2IsRotating={v2IsRotating}
+            v3IsRotating={v3IsRotating}
+            v1IsScaling={v1IsScaling}
+            v2IsScaling={v2IsScaling}
+            v3IsScaling={v3IsScaling}
           />
-          {/* <Stats /> */}
+          <Stats />
         </Canvas>
       </div>
     </MathJaxContext>

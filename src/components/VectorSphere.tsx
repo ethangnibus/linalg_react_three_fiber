@@ -36,6 +36,12 @@ interface VectorSphereProps {
     setShowV2V3Span: (enabled: boolean) => void;
     showV1V2V3Span: boolean;
     setShowV1V2V3Span: (enabled: boolean) => void;
+    v1IsRotating: boolean,
+    v2IsRotating: boolean,
+    v3IsRotating: boolean,
+    v1IsScaling: boolean,
+    v2IsScaling: boolean,
+    v3IsScaling: boolean,
 }
 
 function vectorsAreCollinear(v1: THREE.Vector3, v2: THREE.Vector3) {
@@ -72,14 +78,20 @@ const VectorSphere: React.FC<VectorSphereProps> = ({
     setShowV2V3Span,
     showV1V2V3Span,
     setShowV1V2V3Span,
+    v1IsRotating,
+    v2IsRotating,
+    v3IsRotating,
+    v1IsScaling,
+    v2IsScaling,
+    v3IsScaling,
 }) => {
     const [vectorSphereIsHovered, setVectorSphereIsHovered] = useState(false); // New state for hover
 
     
     const [vectorSphereIsSelected, setVectorSphereIsSelected] = useState(false);
-    const [v1, _setV1] = useState<THREE.Vector3>(new THREE.Vector3(1.0, 0.1, 0.2));
-    const [v2, _setV2] = useState<THREE.Vector3>(new THREE.Vector3(0.1, 1.0, 0.2));
-    const [v3, _setV3] = useState<THREE.Vector3>(new THREE.Vector3(0.1, -0.1, 1.0));
+    const [v1, setV1] = useState<THREE.Vector3>(new THREE.Vector3(1.0, 0.1, 0.2));
+    const [v2, setV2] = useState<THREE.Vector3>(new THREE.Vector3(0.1, 1.0, 0.2));
+    const [v3, setV3] = useState<THREE.Vector3>(new THREE.Vector3(0.1, -0.1, 1.0));
 
     const [numScaledVectors, setNumScaledVectors] = useState(1);
 
@@ -186,9 +198,10 @@ const VectorSphere: React.FC<VectorSphereProps> = ({
                 setVectorSphereIsHovered(true)
 
                 setInfoBlockText(`
-                    Here we're showing a vector given by
-                    $$\\text{Sphere Position} = \\begin{bmatrix} ${vectorSpherePosition.x.toFixed(3)} \\\\ ${vectorSpherePosition.y.toFixed(3)} \\\\ ${vectorSpherePosition.z.toFixed(3)} \\end{bmatrix}$$
-                    Click on this vector to show it's movement vectors
+                    This point represents the vector
+                    $$\\text{p} = \\begin{bmatrix} ${vectorSpherePosition.x.toFixed(3)} \\\\ ${vectorSpherePosition.y.toFixed(3)} \\\\ ${vectorSpherePosition.z.toFixed(3)} \\end{bmatrix}$$
+                    Click on this point to show the collection of \n
+                    arrow vectors that we will use to visualize span
                 `)
                 setShowInfoBlock(true)
             }}
@@ -204,6 +217,7 @@ const VectorSphere: React.FC<VectorSphereProps> = ({
             <>
                 <BaseVector // v1 - yellow
                     vector={v1}
+                    setVector={setV1}
                     vectorNumber={1}
                     color={new THREE.Color(0.45, 0.23, 0.005)}
                     line_color={new THREE.Color(1.0, 0.6, 0.01)}
@@ -218,9 +232,12 @@ const VectorSphere: React.FC<VectorSphereProps> = ({
                     numScaledVectors={numScaledVectors}
                     setNumScaledVectors={setNumScaledVectors}
                     setShowEditBlock={setShowEditBlock}
+                    isRotating={v1IsRotating}
+                    isScaling={v1IsScaling}
                 />
                 <BaseVector // v2 teal
                     vector={v2}
+                    setVector={setV2}
                     vectorNumber={2}
                     color={new THREE.Color(0.005, 0.4, 0.3)}
                     line_color={new THREE.Color(0.005, 0.7, 0.7)}
@@ -235,9 +252,12 @@ const VectorSphere: React.FC<VectorSphereProps> = ({
                     numScaledVectors={numScaledVectors}
                     setNumScaledVectors={setNumScaledVectors}
                     setShowEditBlock={setShowEditBlock}
+                    isRotating={v2IsRotating}
+                    isScaling={v2IsScaling}
                 />
                 <BaseVector // v3 off red
                     vector={v3}
+                    setVector={setV3}
                     vectorNumber={3}
                     color={new THREE.Color(0.3, 0.028, 0.028)}
                     line_color={new THREE.Color(0.8, 0.08, 0.08)}
@@ -252,6 +272,8 @@ const VectorSphere: React.FC<VectorSphereProps> = ({
                     numScaledVectors={numScaledVectors}
                     setNumScaledVectors={setNumScaledVectors}
                     setShowEditBlock={setShowEditBlock}
+                    isRotating={v3IsRotating}
+                    isScaling={v3IsScaling}
                 />
             </>
 
@@ -319,7 +341,7 @@ const VectorSphere: React.FC<VectorSphereProps> = ({
                     vector_a={v1}
                     vector_b={v2}
                     vector_c={v3}
-                    planeWidth={50}
+                    planeWidth={64}
                     color={new THREE.Color(0.0, 0.3, 0.3)}
                 />
             )}

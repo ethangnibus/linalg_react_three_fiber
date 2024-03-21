@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { DragControls, Line } from '@react-three/drei';
+import { DragControls, Line, Sphere } from '@react-three/drei';
 import { useSpring, animated } from '@react-spring/three';
 import * as THREE from 'three';
+import { buffer } from 'stream/consumers';
 
 interface BaseVectorsProps {
     vector: THREE.Vector3; // Direction of the arrow
+    setVector: (newVector: THREE.Vector3) => void;
     vectorNumber: number;
     color: THREE.Color;
     line_color: THREE.Color;
@@ -19,10 +21,13 @@ interface BaseVectorsProps {
     numScaledVectors: number;
     setNumScaledVectors: (number: number) => void;
     setShowEditBlock: (enabled: boolean) => void;
+    isRotating: boolean;
+    isScaling: boolean;
 }
 
 const BaseVector: React.FC<BaseVectorsProps> = ({
     vector,
+    setVector,
     vectorNumber,
     color,
     line_color,
@@ -37,32 +42,43 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
     numScaledVectors,
     setNumScaledVectors,
     setShowEditBlock,
+    isRotating,
+    isScaling,
 }) => {
-    const [isHovered, setIsHovered] = useState(false);
-    const [isDragging, setIsDragging] = useState(false);
-    const [dragStartPosition, setDragStartPosition] = useState<THREE.Vector3>(new THREE.Vector3(0, 0, 0));
-    const [dragStartPoint, setDragStartPoint] = useState<THREE.Vector3>(new THREE.Vector3(0, 0, 0));
+
+    // base vector interactions
+    const [baseVectorIsHovered, setBaseVectorIsHovered] = useState(false);
+    const [baseVectorIsDragging, setBaseVectorIsDragging] = useState(false);
+    const [baseVectorDragStartPosition, setBaseVectorDragStartPosition] = useState<THREE.Vector3>(new THREE.Vector3(0, 0, 0));
     const [_dragEndPoint, setDragEndPoint] = useState<THREE.Vector3>(new THREE.Vector3(0, 0, 0));
     const [currentLine, setCurrentLine] = useState<JSX.Element | null>(null);
     const [lines, setLines] = useState<JSX.Element[]>([]);
 
+    // scale ball interactions
+    const [scalePointIsHovered, setScalePointIsHovered] = useState(false);
+    const [scalePointIsDragging, setScalePointIsDragging] = useState(false);
+    const [scalePointDragStartPosition, setScalePointDragStartPosition] = useState<THREE.Vector3>(new THREE.Vector3(0, 0, 0));
+    const [vectorBeforeScalePointDrag, setVectorBeforeScalePointDrag] = useState<THREE.Vector3>(new THREE.Vector3(0, 0, 0));
+    const [bufferOrbitControlToggle, setBufferOrbitControlToggle] = useState(false);
+
     const direction = vector.clone().normalize();
 
-    const handleDragStart = () => {
-        setDragStartPosition(spherePosition.clone());
-        setDragStartPoint(spherePosition.clone());
-        setIsDragging(true);
-    };
-
     const handlePointerUp = () => {
-        if (isDragging) {
-            setIsDragging(false);
+        if (baseVectorIsDragging) {
+            setBaseVectorIsDragging(false);
             onToggleOrbitControls(true);
             if (currentLine) {
                 setLines([...lines, currentLine]); // Save the current line to the lines array
                 setNumScaledVectors(numScaledVectors + 1);
             }
             setCurrentLine(null); // Reset the current line
+        }
+        else if (scalePointIsDragging) {
+            setScalePointIsDragging(false);
+            onToggleOrbitControls(true);
+        } else if (bufferOrbitControlToggle) {
+            onToggleOrbitControls(true);
+            setBufferOrbitControlToggle(false);
         }
     };
 
@@ -72,19 +88,26 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
         return () => {
             document.removeEventListener('pointerup', handlePointerUp);
         };
-    }, [isDragging, onToggleOrbitControls]);
+    }, [baseVectorIsDragging, onToggleOrbitControls]);
 
-    const handleDrag = (localMatrix: THREE.Matrix4) => {
-        if (!isDragging) return; // Do nothing if not dragging
+
+    
+    const handleBaseVectorDragStart = () => {
+        setBaseVectorDragStartPosition(spherePosition.clone());
+        setBaseVectorIsDragging(true);
+    };
+
+    const handleBaseVectorDrag = (localMatrix: THREE.Matrix4) => {
+        if (!baseVectorIsDragging) return; // Do nothing if not dragging
         const dragDelta = new THREE.Vector3().setFromMatrixPosition(localMatrix);
-        const newPosition = dragDelta.projectOnVector(direction).add(dragStartPosition);
+        const newPosition = dragDelta.projectOnVector(direction).add(baseVectorDragStartPosition);
         updateSpherePosition(newPosition);
         setDragEndPoint(newPosition);
         // Update the endpoint of the current line
         const updatedLine = (
             <Line
                 key={Math.random()}
-                points={[dragStartPoint, newPosition]}
+                points={[baseVectorDragStartPosition, newPosition]}
                 color={line_color}
                 dashed={true}
                 lineWidth={5}
@@ -103,6 +126,37 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
             />
         );
         setCurrentLine(updatedLine);
+    };
+
+
+
+    const handleScalePointDragStart = () => {
+        setScalePointDragStartPosition(spherePosition.clone().add(vector));
+        setVectorBeforeScalePointDrag(vector.clone().normalize());
+        setScalePointIsDragging(true);
+    };
+
+    const handleScalePointDrag = (localMatrix: THREE.Matrix4) => {
+        if (!scalePointIsDragging) return; // Do nothing if not dragging
+        let dragDelta = new THREE.Vector3().setFromMatrixPosition(localMatrix);
+        const newPosition = dragDelta.clone().projectOnVector(direction)
+            .add(scalePointDragStartPosition);
+        
+        // update arrow vector to be scale ball - sphere position
+        if (newPosition.clone().sub(spherePosition).length() > 0.4) {
+            setVector(newPosition.sub(spherePosition));
+        } else {
+            handlePointerUp();
+            onToggleOrbitControls(false);
+            setBufferOrbitControlToggle(true);
+
+            setVector(vectorBeforeScalePointDrag.multiplyScalar(-1.0));
+        }
+        
+        // updateSpherePosition(newPosition);
+        // setDragEndPoint(newPosition);
+        // Update the endpoint of the current line
+        
     };
 
     const offsetFromSphere = direction.clone().multiplyScalar(0.3);
@@ -126,15 +180,63 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
     
     // Define a spring for the radius of the cylinder
     const { scale: cylinderScale } = useSpring({
-        scale: isHovered ? 1.5 : 1.0, // Animate radius based on hover state
+        scale: baseVectorIsHovered ? 1.5 : 1.0, // Animate radius based on hover state
     });
 
     const { scale: coneScale } = useSpring({
-        scale: isHovered ? 1.3 : 1.0, // Animate radius based on hover state
+        scale: baseVectorIsHovered ? 1.3 : 1.0, // Animate radius based on hover state
+    });
+
+
+    const { scale: scalePointScale } = useSpring({
+        scale: scalePointIsHovered ? 1.0 : 0.8,
     });
 
     return (
         <>  
+        {/* {isScaling && (
+            <animated.mesh
+                scale={scalePointScale}
+            >
+                <sphereGeometry args={[0.05, 16, 16]} />
+                <meshToonMaterial color="black" />
+            </animated.mesh>
+        )} */}
+
+        {/* Scale Point */}
+        {isScaling && vectorSphereIsSelected && (
+            <DragControls
+                autoTransform={false}
+                onDragStart={handleScalePointDragStart}
+                onDrag={(localMatrix, _deltaLocalMatrix, _worldMatrix, _deltaWorldMatrix) => {
+                    handleScalePointDrag(localMatrix);
+                }}
+            >
+                <animated.mesh
+                    scale={scalePointScale}
+                    position={spherePosition.clone().add(vector).toArray()}
+                    onPointerEnter={() => {
+                        setScalePointIsHovered(true)
+                        setInfoBlockText(`
+                            Drag this point to scale $v_${vectorNumber}$
+                        `)
+                        setShowInfoBlock(true)
+                    }}
+                    onPointerLeave={() => {
+                        setScalePointIsHovered(false)
+                        setShowInfoBlock(false)
+                    }}
+                    onPointerDown={() => onToggleOrbitControls(false)}
+                    onPointerUp={() => onToggleOrbitControls(true)}
+                >
+                    <sphereGeometry args={[0.09, 16, 16]}/>
+                    <meshToonMaterial color={color}/>
+                </animated.mesh>
+            </DragControls>
+        )}
+
+
+
         {vectorSphereIsSelected && (
             <group
                 position={[
@@ -145,7 +247,7 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
                 onPointerDown={() => onToggleOrbitControls(false)}
                 onPointerUp={() => onToggleOrbitControls(true)}
                 onPointerEnter={() => {
-                    setIsHovered(true)
+                    setBaseVectorIsHovered(true)
                     setInfoBlockText(`
                         This arrow represents the vector
                         $$v_${vectorNumber} = \\begin{bmatrix} ${vector.x.toFixed(3)} \\\\ ${vector.y.toFixed(3)} \\\\ ${vector.z.toFixed(3)} \\end{bmatrix}$$
@@ -154,11 +256,11 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
                     setShowInfoBlock(true)
                 }}
                 onPointerLeave={() => {
-                    setIsHovered(false)
+                    setBaseVectorIsHovered(false)
                     setShowInfoBlock(false)
                 }}
                 onClick={() => {
-                    if (!isDragging) {
+                    if (!baseVectorIsDragging) {
                         setBaseVectorIsSelected(!baseVectorIsSelected)
                         setShowEditBlock(true)
                         // setEditBlockText(`$$Edit \\\\ v_${vectorNumber}$$`)
@@ -168,9 +270,9 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
             >
                 <DragControls
                     autoTransform={false}
-                    onDragStart={handleDragStart}
+                    onDragStart={handleBaseVectorDragStart}
                     onDrag={(localMatrix, _deltaLocalMatrix, _worldMatrix, _deltaWorldMatrix) => {
-                        handleDrag(localMatrix);
+                        handleBaseVectorDrag(localMatrix);
                     }}
                 >
                     <animated.mesh
@@ -186,7 +288,7 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
                         renderOrder={2}
                     >
                         <cylinderGeometry args={[0.02, 0.02, cylinderHeight, 16, 1]}/>
-                        <meshToonMaterial color={color} transparent={true} opacity={isHovered ? (baseVectorIsSelected ? 1.0 : 0.8) : (baseVectorIsSelected ? 1.0 : 0.5)}/>
+                        <meshToonMaterial color={color} transparent={true} opacity={baseVectorIsHovered ? (baseVectorIsSelected ? 1.0 : 0.8) : (baseVectorIsSelected ? 1.0 : 0.5)}/>
                     </animated.mesh>
 
                     <animated.mesh
@@ -202,7 +304,7 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
                         renderOrder={2}
                     >
                         <coneGeometry args={[0.09, 0.35, 16]}/>
-                        <meshToonMaterial color={color} transparent={true} opacity={isHovered ? (baseVectorIsSelected ? 1.0 : 0.8) : (baseVectorIsSelected ? 1.0 : 0.5)}/>
+                        <meshToonMaterial color={color} transparent={true} opacity={baseVectorIsHovered ? (baseVectorIsSelected ? 1.0 : 0.8) : (baseVectorIsSelected ? 1.0 : 0.5)}/>
                     </animated.mesh>
 
                 </DragControls>
