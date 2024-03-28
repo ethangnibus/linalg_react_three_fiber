@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { DragControls, Line } from '@react-three/drei';
+import { DragControls, Line, Ring } from '@react-three/drei';
 import { useSpring, animated } from '@react-spring/three';
 import * as THREE from 'three';
+import { negate } from 'three/examples/jsm/nodes/Nodes.js';
 
 interface BaseVectorsProps {
     vector: THREE.Vector3; // Direction of the arrow
@@ -192,8 +193,118 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
         scale: scalePointIsHovered ? 1.0 : 0.8,
     });
 
+     // Rotation Brackets: [X, Y] interactions
+    const [rotationBracketXIsHovered, setRotationBracketXIsHovered] = useState(false);
+    const [rotationBracketYIsHovered, setRotationBracketYIsHovered] = useState(false);
+    const { scale: rotationBracketXScale } = useSpring({
+        scale: rotationBracketXIsHovered ? 1.0 : 0.8,
+    });
+    const { scale: rotationBracketYScale } = useSpring({
+        scale: rotationBracketYIsHovered ? 1.0 : 0.8,
+    }); // Fixme: Change these scales to something that conveys rotation better.
+
+
+
+
+    const vertices = [
+        new THREE.Vector3(0, 3, 0),
+        new THREE.Vector3(0, 0, 0),
+        new THREE.Vector3(3, 0, 0)
+    ];
+    
+    const EulerX = new THREE.Euler().setFromQuaternion(new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), direction));
+    const EulerY = new THREE.Euler().setFromQuaternion(
+        new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), direction)
+        .multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI / 2))
+    );
+
+    // const vectorX = vector.clone();
+    // const axis = new THREE.Vector3().crossVectors(vector.clone(), new THREE.Vector3(0, 1, 0)).normalize();
+    // const quaternion = new THREE.Quaternion().setFromAxisAngle(axis, Math.PI/2);
+    // const quaternion2 = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 0, 1), direction);
+    // vectorX.applyQuaternion(quaternion2);
+
+    // const rotationBracketXArrowPosition = spherePosition.clone().add(vectorX).toArray();
+    const quatX = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), direction);
+    const rotationBracketXEuler = new THREE.Euler().setFromQuaternion(quatX);
+    const vectorX = direction.clone();
+    // vectorX.applyEuler(rotationBracketXEuler);
+
+    const quat2 = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(1, 0, 0), new THREE.Vector3(0, 1, 0));
+    const euler2 = new THREE.Euler().setFromQuaternion(quat2);
+    vectorX.applyEuler(euler2)
+    vectorX.normalize()
+    // vectorX.applyAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI * 0.5)
+    const rotationBracketXArrowPosition = spherePosition.clone().add(vectorX).toArray();
+    
+    
+    
     return (
         <>
+            {/* Rotation Bracket X */}
+            {/* Ring Interactions */}
+            <animated.mesh
+                scale={vector.length()}
+                position={spherePosition.clone().toArray()}
+                rotation={rotationBracketXEuler}
+                onPointerEnter={() => {
+                    setRotationBracketXIsHovered(true);
+                }}
+                onPointerLeave={() => {
+                    setRotationBracketXIsHovered(false);
+                }}
+            >
+                <ringGeometry args={[1.0, 1.1, 16, 2, 0.0, Math.PI/2]}/>
+                <meshToonMaterial color={"black"} side={THREE.DoubleSide} transparent opacity={0.1}/>
+            </animated.mesh>
+
+            {/* Torus Interactions */}
+            <animated.mesh
+                scale={vector.length()}
+                position={spherePosition.clone().toArray()}
+                rotation={new THREE.Euler().setFromQuaternion(new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), direction))}
+            >
+                <torusGeometry args={[1.0, 0.01, 16, 64, Math.PI/2]}/>
+                <meshToonMaterial color={color} side={THREE.DoubleSide} transparent opacity={rotationBracketXIsHovered? 1.0 : 0.4}/>
+            </animated.mesh>
+
+            {/* Arrow Interactions */}
+            <animated.mesh
+                scale={1.0}
+                position={rotationBracketXArrowPosition}
+                // rotation={EulerX.clone()}
+            >
+                <coneGeometry args={[0.09 / 2, 0.35 / 2, 16]}/>
+                <meshToonMaterial color={color} side={THREE.DoubleSide} transparent opacity={rotationBracketXIsHovered? 1.0 : 0.4}/>
+            </animated.mesh>
+            
+            {/* Rotation Bracket Y */}
+            <DragControls
+                autoTransform={false}
+                // onDragStart={handleScalePointDragStart}
+                // onDrag={(localMatrix, _deltaLocalMatrix, _worldMatrix, _deltaWorldMatrix) => {
+                //     handleScalePointDrag(localMatrix);
+                // }}
+            >
+                <animated.mesh
+                    scale={rotationBracketYScale}
+                    position={spherePosition.clone().toArray()}
+                    rotation={new THREE.Euler().setFromQuaternion(
+                        new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), direction)
+                        .multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI / 2))
+                    )}
+                    onPointerEnter={() => {
+                        setRotationBracketYIsHovered(true);
+                    }}
+                    onPointerLeave={() => {
+                        setRotationBracketYIsHovered(false);
+                    }}
+                >
+                    <ringGeometry args={[0.4, 0.6, 16, 2, 0.0, Math.PI/2]}/>
+                    <meshToonMaterial color={color} side={THREE.DoubleSide} transparent opacity={0.5}/>
+                </animated.mesh>
+            </DragControls>
+
 
         {/* Scale Point */}
         {isScaling && vectorSphereIsSelected && (
