@@ -239,6 +239,7 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
     
     
     
+    
     return (
         <>
             {/* Rotation Bracket X */}
