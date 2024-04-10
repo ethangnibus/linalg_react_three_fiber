@@ -278,6 +278,7 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
                 <coneGeometry args={[0.09 / 2, 0.35 / 2, 16]}/>
                 <meshToonMaterial color={color} side={THREE.DoubleSide} transparent opacity={rotationBracketXIsHovered? 1.0 : 0.4}/>
             </animated.mesh>
+            {/* Remove me */}
             
             {/* Rotation Bracket Y */}
             <DragControls
