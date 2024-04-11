@@ -185,7 +185,7 @@ function App() {
                         </MenubarItem>
                         <MenubarSeparator />
                         <MenubarItem onClick={() => setV1IsRotating(!v1IsRotating)}>
-                          {v1IsScaling ? "Add the rotation angles" : "Remove the rotation angles"} <MenubarShortcut>Not implemented</MenubarShortcut>
+                          {v1IsRotating ? "Remove the rotation angles" : "Add the rotation angles"}
                         </MenubarItem>
                         <MenubarItem onClick={() => setV1IsScaling(!v1IsScaling)}>
                           {v1IsScaling ? "Remove the scaling point" : "Add the scaling point"}
@@ -207,7 +207,7 @@ function App() {
                         </MenubarItem>
                         <MenubarSeparator />
                         <MenubarItem onClick={() => setV2IsRotating(!v2IsRotating)}>
-                          {v2IsScaling ? "Add the rotation angles" : "Remove the rotation angles"} <MenubarShortcut>Not implemented</MenubarShortcut>
+                          {v2IsRotating ? "Remove the rotation angles" : "Add the rotation angles"}
                         </MenubarItem>
                         <MenubarItem onClick={() => setV2IsScaling(!v2IsScaling)}>
                           {v2IsScaling ? "Remove the scaling point" : "Add the scaling point"}
@@ -228,7 +228,7 @@ function App() {
                         </MenubarItem>
                         <MenubarSeparator />
                         <MenubarItem onClick={() => setV3IsRotating(!v3IsRotating)}>
-                          {v3IsScaling ? "Add the rotation angles" : "Remove the rotation angles"} <MenubarShortcut>Not implemented</MenubarShortcut>
+                          {v3IsRotating ? "Remove the rotation angles" : "Add the rotation angles"}
                         </MenubarItem>
                         <MenubarItem onClick={() => setV3IsScaling(!v3IsScaling)}>
                           {v3IsScaling ? "Remove the scaling point" : "Add the scaling point"}

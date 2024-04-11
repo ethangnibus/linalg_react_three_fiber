@@ -235,77 +235,97 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
     vectorX.applyEuler(euler2)
     vectorX.normalize()
     // vectorX.applyAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI * 0.5)
-    const rotationBracketXArrowPosition = spherePosition.clone().add(vectorX).toArray();
+    const rotationBracketXArrowPosition = spherePosition.clone().add(
+        direction.clone().cross(new THREE.Vector3(0, 0, 1)).clone()
+    ).toArray();
     
     
     
     
     return (
         <>
-            {/* Rotation Bracket X */}
-            {/* Ring Interactions */}
-            <animated.mesh
-                scale={vector.length()}
-                position={spherePosition.clone().toArray()}
-                rotation={rotationBracketXEuler}
-                onPointerEnter={() => {
-                    setRotationBracketXIsHovered(true);
-                }}
-                onPointerLeave={() => {
-                    setRotationBracketXIsHovered(false);
-                }}
-            >
-                <ringGeometry args={[1.0, 1.1, 16, 2, 0.0, Math.PI/2]}/>
-                <meshToonMaterial color={"black"} side={THREE.DoubleSide} transparent opacity={0.1}/>
-            </animated.mesh>
+            {isRotating && vectorSphereIsSelected && (
+                <>
+                {/* Rotation Bracket X */}
+                {/* Transparent handle for Rotation Bracket X */}
+                {/* <animated.mesh
+                    scale={vector.length()}
+                    position={spherePosition.clone().toArray()}
+                    rotation={rotationBracketXEuler}
+                    onPointerEnter={() => {
+                        setRotationBracketXIsHovered(true);
+                    }}
+                    onPointerLeave={() => {
+                        setRotationBracketXIsHovered(false);
+                    }}
+                >
+                    <ringGeometry args={[1.0, 1.1, 16, 2, 0.0, Math.PI*2]}/>
+                    <meshToonMaterial color={"black"} side={THREE.DoubleSide} transparent opacity={0.1}/>
+                </animated.mesh>
 
-            {/* Torus Interactions */}
-            <animated.mesh
-                scale={vector.length()}
-                position={spherePosition.clone().toArray()}
-                rotation={new THREE.Euler().setFromQuaternion(new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), direction))}
-            >
-                <torusGeometry args={[1.0, 0.01, 16, 64, Math.PI/2]}/>
-                <meshToonMaterial color={color} side={THREE.DoubleSide} transparent opacity={rotationBracketXIsHovered? 1.0 : 0.4}/>
-            </animated.mesh>
-
-            {/* Arrow Interactions */}
-            <animated.mesh
-                scale={1.0}
-                position={rotationBracketXArrowPosition}
-                // rotation={EulerX.clone()}
-            >
-                <coneGeometry args={[0.09 / 2, 0.35 / 2, 16]}/>
-                <meshToonMaterial color={color} side={THREE.DoubleSide} transparent opacity={rotationBracketXIsHovered? 1.0 : 0.4}/>
-            </animated.mesh>
-            {/* Remove me */}
-            
-            {/* Rotation Bracket Y */}
-            <DragControls
-                autoTransform={false}
-                // onDragStart={handleScalePointDragStart}
-                // onDrag={(localMatrix, _deltaLocalMatrix, _worldMatrix, _deltaWorldMatrix) => {
-                //     handleScalePointDrag(localMatrix);
-                // }}
-            >
+                {/* Color Torus for Rotation Bracket X */}
                 <animated.mesh
-                    scale={rotationBracketYScale}
+                    scale={vector.length()}
+                    position={spherePosition.clone().toArray()}
+                    rotation={new THREE.Euler().setFromQuaternion(new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), direction))}
+                >
+                    <torusGeometry args={[1.0, 0.01, 16, 64, Math.PI/2]}/>
+                    <meshToonMaterial color={color} side={THREE.DoubleSide} transparent opacity={rotationBracketXIsHovered? 1.0 : 0.4}/>
+                </animated.mesh>
+
+                {/* Arrow Interactions for Rotation Bracket X */}
+                <animated.mesh
+                    scale={vector.length()}
+                    position={rotationBracketXArrowPosition}
+                    // rotation={EulerX.clone()}
+                >
+                    <coneGeometry args={[0.09 / 2, 0.35 / 2, 16]}/>
+                    <meshToonMaterial color={color} side={THREE.DoubleSide} transparent opacity={rotationBracketXIsHovered? 1.0 : 0.4}/>
+                </animated.mesh>
+                
+
+
+                {/* Rotation Bracket Y */}
+                <DragControls
+                    autoTransform={false}
+                    // onDragStart={handleScalePointDragStart}
+                    // onDrag={(localMatrix, _deltaLocalMatrix, _worldMatrix, _deltaWorldMatrix) => {
+                    //     handleScalePointDrag(localMatrix);
+                    // }}
+                >
+                    <animated.mesh
+                        scale={vector.length()}
+                        position={spherePosition.clone().toArray()}
+                        rotation={new THREE.Euler().setFromQuaternion(
+                            new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), direction)
+                            .multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI / 2))
+                        )}
+                        onPointerEnter={() => {
+                            setRotationBracketYIsHovered(true);
+                        }}
+                        onPointerLeave={() => {
+                            setRotationBracketYIsHovered(false);
+                        }}
+                    >
+                        <ringGeometry args={[1.0, 1.1, 16, 2, 0.0, Math.PI*2]}/>
+                        <meshToonMaterial color={color} side={THREE.DoubleSide} transparent opacity={0.5}/>
+                    </animated.mesh>
+                </DragControls>
+
+                {/* Color Torus for Rotation Bracket Y */}
+                <animated.mesh
+                    scale={vector.length()}
                     position={spherePosition.clone().toArray()}
                     rotation={new THREE.Euler().setFromQuaternion(
                         new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), direction)
                         .multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI / 2))
                     )}
-                    onPointerEnter={() => {
-                        setRotationBracketYIsHovered(true);
-                    }}
-                    onPointerLeave={() => {
-                        setRotationBracketYIsHovered(false);
-                    }}
                 >
-                    <ringGeometry args={[0.4, 0.6, 16, 2, 0.0, Math.PI/2]}/>
-                    <meshToonMaterial color={color} side={THREE.DoubleSide} transparent opacity={0.5}/>
+                    <torusGeometry args={[1.0, 0.01, 16, 64, Math.PI/2]}/>
+                    <meshToonMaterial color={color} side={THREE.DoubleSide} transparent opacity={rotationBracketXIsHovered? 1.0 : 0.4}/>
                 </animated.mesh>
-            </DragControls>
+                </>
+            )}
 
 
         {/* Scale Point */}
