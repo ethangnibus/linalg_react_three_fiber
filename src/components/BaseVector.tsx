@@ -45,7 +45,7 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
     isRotating,
     isScaling,
 }) => {
-    console.log(isRotating) // FIXME
+    const direction = vector.clone().normalize();
 
     // base vector interactions
     const [baseVectorIsHovered, setBaseVectorIsHovered] = useState(false);
@@ -62,7 +62,27 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
     const [vectorBeforeScalePointDrag, setVectorBeforeScalePointDrag] = useState<THREE.Vector3>(new THREE.Vector3(0, 0, 0));
     const [bufferOrbitControlToggle, setBufferOrbitControlToggle] = useState(false);
 
-    const direction = vector.clone().normalize();
+     // Rotation Brackets: [X, Y] interactions
+     const [rotationBracketXIsHovered, setRotationBracketXIsHovered] = useState(false);
+     const [rotationBracketYIsHovered, setRotationBracketYIsHovered] = useState(false);
+     const [rotationBracketXIsDragging, setRotationBracketXIsDragging] = useState(false);
+     const [rotationBracketYIsDragging, setRotationBracketYIsDragging] = useState(false);
+     const [rotationBracketXDragStartPosition, setRotationBracketXDragStartPosition] = useState<THREE.Vector3>(new THREE.Vector3(0, 0, 0));
+     const [rotationBracketYDragStartPosition, setRotationBracketYDragStartPosition] = useState<THREE.Vector3>(new THREE.Vector3(0, 0, 0));
+     const [rotationBracketXSpherePosition, setRotationBracketXSpherePosition] = useState<THREE.Vector3>(new THREE.Vector3(0, 0, 0));
+     const [rotationBracketYSpherePosition, setRotationBracketYSpherePosition] = useState<THREE.Vector3>(new THREE.Vector3(0, 0, 0));
+
+
+
+     const { scale: rotationBracketXScale } = useSpring({
+         scale: rotationBracketXIsHovered ? 1.0 : 0.8,
+     });
+     const { scale: rotationBracketYScale } = useSpring({
+         scale: rotationBracketYIsHovered ? 1.0 : 0.8,
+     }); // Fixme: Change these scales to something that conveys rotation better.
+
+     
+    
 
     const handlePointerUp = () => {
         if (baseVectorIsDragging) {
@@ -73,9 +93,11 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
                 setNumScaledVectors(numScaledVectors + 1);
             }
             setCurrentLine(null); // Reset the current line
-        }
-        else if (scalePointIsDragging) {
+        } else if (scalePointIsDragging) {
             setScalePointIsDragging(false);
+            onToggleOrbitControls(true);
+        } else if (rotationBracketYIsDragging) {
+            setRotationBracketYIsDragging(false);
             onToggleOrbitControls(true);
         } else if (bufferOrbitControlToggle) {
             onToggleOrbitControls(true);
@@ -141,6 +163,36 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
         if (!scalePointIsDragging) return; // Do nothing if not dragging
         let dragDelta = new THREE.Vector3().setFromMatrixPosition(localMatrix);
         const newPosition = dragDelta.clone().projectOnVector(direction)
+            .add(rotationBracketXDragStartPosition);
+        
+        // update arrow vector to be scale ball - sphere position
+        if (newPosition.clone().sub(spherePosition).length() > 0.4) {
+            setVector(newPosition.sub(spherePosition));
+        } else {
+            handlePointerUp();
+            onToggleOrbitControls(false);
+            setBufferOrbitControlToggle(true);
+
+            setVector(vectorBeforeScalePointDrag.multiplyScalar(-1.0));
+        }
+        
+        // updateSpherePosition(newPosition);
+        // setDragEndPoint(newPosition);
+        // Update the endpoint of the current line
+        
+    };
+
+
+
+    const handleRotationBracketYDragStart = () => {
+        setRotationBracketYDragStartPosition(spherePosition.clone().add(vector));
+        setRotationBracketYIsDragging(true);
+    };
+
+    const handleRotationBracketYDrag = (localMatrix: THREE.Matrix4) => {
+        if (!rotationBracketYIsDragging) return; // Do nothing if not dragging
+        let dragDelta = new THREE.Vector3().setFromMatrixPosition(localMatrix);
+        const newPosition = dragDelta.clone().projectOnVector(direction)
             .add(scalePointDragStartPosition);
         
         // update arrow vector to be scale ball - sphere position
@@ -193,16 +245,7 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
         scale: scalePointIsHovered ? 1.0 : 0.8,
     });
 
-     // Rotation Brackets: [X, Y] interactions
-    const [rotationBracketXIsHovered, setRotationBracketXIsHovered] = useState(false);
-    const [rotationBracketYIsHovered, setRotationBracketYIsHovered] = useState(false);
-    const { scale: rotationBracketXScale } = useSpring({
-        scale: rotationBracketXIsHovered ? 1.0 : 0.8,
-    });
-    const { scale: rotationBracketYScale } = useSpring({
-        scale: rotationBracketYIsHovered ? 1.0 : 0.8,
-    }); // Fixme: Change these scales to something that conveys rotation better.
-
+    
 
 
 
@@ -264,34 +307,41 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
                 </animated.mesh>
 
                 {/* Color Torus for Rotation Bracket X */}
-                <animated.mesh
+                {/* <animated.mesh
                     scale={vector.length()}
                     position={spherePosition.clone().toArray()}
                     rotation={new THREE.Euler().setFromQuaternion(new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), direction))}
                 >
-                    <torusGeometry args={[1.0, 0.01, 16, 64, Math.PI/2]}/>
+                    <torusGeometry args={[1.0, 0.01, 16, 64, Math.PI*2]}/>
                     <meshToonMaterial color={color} side={THREE.DoubleSide} transparent opacity={rotationBracketXIsHovered? 1.0 : 0.4}/>
-                </animated.mesh>
+                </animated.mesh> */}
 
                 {/* Arrow Interactions for Rotation Bracket X */}
-                <animated.mesh
+                {/* <animated.mesh
                     scale={vector.length()}
                     position={rotationBracketXArrowPosition}
                     // rotation={EulerX.clone()}
                 >
                     <coneGeometry args={[0.09 / 2, 0.35 / 2, 16]}/>
                     <meshToonMaterial color={color} side={THREE.DoubleSide} transparent opacity={rotationBracketXIsHovered? 1.0 : 0.4}/>
-                </animated.mesh>
+                </animated.mesh> */}
                 
 
+                <animated.mesh
+                    position={rotationBracketYSpherePosition}
+                >
+                    <sphereGeometry args={[0.09, 16, 16]}/>
+                    <meshToonMaterial color={color}/>
+                </animated.mesh>
 
                 {/* Rotation Bracket Y */}
                 <DragControls
-                    autoTransform={false}
-                    // onDragStart={handleScalePointDragStart}
-                    // onDrag={(localMatrix, _deltaLocalMatrix, _worldMatrix, _deltaWorldMatrix) => {
-                    //     handleScalePointDrag(localMatrix);
-                    // }}
+                    autoTransform={false} 
+                    onDragStart={handleRotationBracketYDragStart}
+                    onDrag={(localMatrix, _deltaLocalMatrix, _worldMatrix, _deltaWorldMatrix) => {
+                        handleRotationBracketYDrag(localMatrix);
+                    }}
+                    onHover={() => setRotationBracketYSpherePosition(new THREE.Vector3(0, 1, 0))}
                 >
                     <animated.mesh
                         scale={vector.length()}
@@ -302,28 +352,24 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
                         )}
                         onPointerEnter={() => {
                             setRotationBracketYIsHovered(true);
+                            setInfoBlockText(`
+                                Drag this torus to rotate $v_${vectorNumber}$
+                            `)
+                            setShowInfoBlock(true)
                         }}
                         onPointerLeave={() => {
                             setRotationBracketYIsHovered(false);
+                            setShowInfoBlock(false)
                         }}
+                        onPointerDown={() => onToggleOrbitControls(false)}
+                        onPointerUp={() => onToggleOrbitControls(true)}
                     >
-                        <ringGeometry args={[1.0, 1.1, 16, 2, 0.0, Math.PI*2]}/>
-                        <meshToonMaterial color={color} side={THREE.DoubleSide} transparent opacity={0.5}/>
+                        <torusGeometry args={[1.0, 0.01, 16, 64, Math.PI*2]}/>
+                        <meshToonMaterial color={color} side={THREE.DoubleSide} transparent opacity={rotationBracketYIsHovered? 1.0 : 0.4}/>
                     </animated.mesh>
                 </DragControls>
 
                 {/* Color Torus for Rotation Bracket Y */}
-                <animated.mesh
-                    scale={vector.length()}
-                    position={spherePosition.clone().toArray()}
-                    rotation={new THREE.Euler().setFromQuaternion(
-                        new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), direction)
-                        .multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI / 2))
-                    )}
-                >
-                    <torusGeometry args={[1.0, 0.01, 16, 64, Math.PI/2]}/>
-                    <meshToonMaterial color={color} side={THREE.DoubleSide} transparent opacity={rotationBracketXIsHovered? 1.0 : 0.4}/>
-                </animated.mesh>
                 </>
             )}
 
