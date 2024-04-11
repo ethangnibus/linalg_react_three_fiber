@@ -163,7 +163,7 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
         if (!scalePointIsDragging) return; // Do nothing if not dragging
         let dragDelta = new THREE.Vector3().setFromMatrixPosition(localMatrix);
         const newPosition = dragDelta.clone().projectOnVector(direction)
-            .add(rotationBracketXDragStartPosition);
+            .add(scalePointDragStartPosition);
         
         // update arrow vector to be scale ball - sphere position
         if (newPosition.clone().sub(spherePosition).length() > 0.4) {
@@ -191,20 +191,33 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
 
     const handleRotationBracketYDrag = (localMatrix: THREE.Matrix4) => {
         if (!rotationBracketYIsDragging) return; // Do nothing if not dragging
-        let dragDelta = new THREE.Vector3().setFromMatrixPosition(localMatrix);
-        const newPosition = dragDelta.clone().projectOnVector(direction)
-            .add(scalePointDragStartPosition);
-        
-        // update arrow vector to be scale ball - sphere position
-        if (newPosition.clone().sub(spherePosition).length() > 0.4) {
-            setVector(newPosition.sub(spherePosition));
-        } else {
-            handlePointerUp();
-            onToggleOrbitControls(false);
-            setBufferOrbitControlToggle(true);
+        // let dragDelta = new THREE.Vector3().setFromMatrixPosition(localMatrix);
+        // const newPosition = dragDelta.clone().projectOnVector(direction)
+        //     .add(rotationBracketYDragStartPosition);
 
-            setVector(vectorBeforeScalePointDrag.multiplyScalar(-1.0));
-        }
+        const quat = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), direction)
+            .multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI / 2))
+        const axis = new THREE.Vector3().fromArray(quat.toArray().slice(0, 3)); // Rotation axis
+        
+        
+        // const axis = new THREE.Vector3(0, 1, 0); // Rotation axis
+        const angle = 0.01; // Rotation angle per frame
+
+        const newPosition = vector.clone().applyAxisAngle(axis, angle);
+        setVector(newPosition);
+
+
+
+        // // update arrow vector to be scale ball - sphere position
+        // if (newPosition.clone().sub(spherePosition).length() > 0.4) {
+        //     setVector(newPosition.sub(spherePosition));
+        // } else {
+        //     handlePointerUp();
+        //     onToggleOrbitControls(false);
+        //     setBufferOrbitControlToggle(true);
+
+        //     setVector(vectorBeforeScalePointDrag.multiplyScalar(-1.0));
+        // }
         
         // updateSpherePosition(newPosition);
         // setDragEndPoint(newPosition);
