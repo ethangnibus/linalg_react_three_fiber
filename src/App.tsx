@@ -185,7 +185,7 @@ function App() {
                         </MenubarItem>
                         <MenubarSeparator />
                         <MenubarItem onClick={() => setV1IsRotating(!v1IsRotating)}>
-                          {v1IsRotating ? "Remove the rotation angles" : "Add the rotation angles"}
+                          {v1IsRotating ? "Remove the rotation sphere" : "Add the rotation sphere"}
                         </MenubarItem>
                         <MenubarItem onClick={() => setV1IsScaling(!v1IsScaling)}>
                           {v1IsScaling ? "Remove the scaling point" : "Add the scaling point"}
