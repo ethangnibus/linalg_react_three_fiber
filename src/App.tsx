@@ -21,7 +21,7 @@ import {
   MenubarItem,
   MenubarMenu,
   MenubarSeparator,
-  MenubarShortcut,
+  // MenubarShortcut,
   MenubarTrigger,
 } from "@/components/ui/menubar"
 import { X } from "lucide-react"

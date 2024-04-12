@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { DragControls, Line, Ring } from '@react-three/drei';
+import { DragControls, Line } from '@react-three/drei';
 import { useSpring, animated } from '@react-spring/three';
 import * as THREE from 'three';
-import { negate } from 'three/examples/jsm/nodes/Nodes.js';
 
 interface BaseVectorsProps {
     vector: THREE.Vector3; // Direction of the arrow
@@ -65,13 +64,7 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
     // Rotation Brackets: [X, Y] interactions
     const [rotationBracketYIsHovered, setRotationBracketYIsHovered] = useState(false);
     const [rotationBracketYIsDragging, setRotationBracketYIsDragging] = useState(false);
-    const [rotationBracketYDragStartPosition, setRotationBracketYDragStartPosition] = useState<THREE.Vector3>(new THREE.Vector3(0, 0, 0));
     const [rotationBracketYSpherePosition, setRotationBracketYSpherePosition] = useState<THREE.Vector3>(new THREE.Vector3(0, 0, 0));
-    const [interactionIsBlocked, setInteractionIsBlocked] = useState(false);
-
-     const { scale: rotationBracketYScale } = useSpring({
-         scale: rotationBracketYIsHovered ? 1.0 : 0.8,
-     }); // Fixme: Change these scales to something that conveys rotation better.
 
      
     
@@ -176,46 +169,7 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
 
 
 
-    const handleRotationBracketYDragStart = () => {
-        setRotationBracketYDragStartPosition(spherePosition.clone().add(vector));
-        setRotationBracketYIsDragging(true);
-    };
-
-    const handleRotationBracketYDrag = (localMatrix: THREE.Matrix4) => {
-        if (!rotationBracketYIsDragging) return; // Do nothing if not dragging
-        // let dragDelta = new THREE.Vector3().setFromMatrixPosition(localMatrix);
-        // const newPosition = dragDelta.clone().projectOnVector(direction)
-        //     .add(rotationBracketYDragStartPosition);
-
-        const quat = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), direction)
-            .multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI / 2))
-        const axis = new THREE.Vector3().fromArray(quat.toArray().slice(0, 3)); // Rotation axis
-        
-        
-        // const axis = new THREE.Vector3(0, 1, 0); // Rotation axis
-        const angle = 0.01; // Rotation angle per frame
-
-        const newPosition = vector.clone().applyAxisAngle(axis, angle);
-        setVector(newPosition);
-
-
-
-        // // update arrow vector to be scale ball - sphere position
-        // if (newPosition.clone().sub(spherePosition).length() > 0.4) {
-        //     setVector(newPosition.sub(spherePosition));
-        // } else {
-        //     handlePointerUp();
-        //     onToggleOrbitControls(false);
-        //     setBufferOrbitControlToggle(true);
-
-        //     setVector(vectorBeforeScalePointDrag.multiplyScalar(-1.0));
-        // }
-        
-        // updateSpherePosition(newPosition);
-        // setDragEndPoint(newPosition);
-        // Update the endpoint of the current line
-        
-    };
+    
 
     const offsetFromSphere = direction.clone().multiplyScalar(0.3);
     const visualVectorLength = vector.clone().sub(offsetFromSphere);
@@ -254,17 +208,9 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
 
 
 
-    const vertices = [
-        new THREE.Vector3(0, 3, 0),
-        new THREE.Vector3(0, 0, 0),
-        new THREE.Vector3(3, 0, 0)
-    ];
     
-    const EulerX = new THREE.Euler().setFromQuaternion(new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), direction));
-    const EulerY = new THREE.Euler().setFromQuaternion(
-        new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), direction)
-        .multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI / 2))
-    );
+    
+    
 
     // const vectorX = vector.clone();
     // const axis = new THREE.Vector3().crossVectors(vector.clone(), new THREE.Vector3(0, 1, 0)).normalize();
@@ -273,8 +219,6 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
     // vectorX.applyQuaternion(quaternion2);
 
     // const rotationBracketXArrowPosition = spherePosition.clone().add(vectorX).toArray();
-    const quatX = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), direction);
-    const rotationBracketXEuler = new THREE.Euler().setFromQuaternion(quatX);
     const vectorX = direction.clone();
     // vectorX.applyEuler(rotationBracketXEuler);
 
@@ -283,9 +227,7 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
     vectorX.applyEuler(euler2)
     vectorX.normalize()
     // vectorX.applyAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI * 0.5)
-    const rotationBracketXArrowPosition = spherePosition.clone().add(
-        direction.clone().cross(new THREE.Vector3(0, 0, 1)).clone()
-    ).toArray();
+    
     
     
     
