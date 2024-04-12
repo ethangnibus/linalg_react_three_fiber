@@ -344,26 +344,33 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
                     position={rotationBracketYSpherePosition}
                 >
                     <sphereGeometry args={[0.09, 16, 16]}/>
-                    <meshToonMaterial color={color}/>
+                    <meshToonMaterial color={"gray"} transparent={true} opacity={0.1}/>
                 </animated.mesh>
 
                 {/* Rotation Bracket Y */}
-                <DragControls
-                    autoTransform={false} 
-                    onDragStart={handleRotationBracketYDragStart}
-                    onDrag={(localMatrix, _deltaLocalMatrix, _worldMatrix, _deltaWorldMatrix) => {
-                        handleRotationBracketYDrag(localMatrix);
-                    }}
-                    onHover={() => setRotationBracketYSpherePosition(new THREE.Vector3(0, 1, 0))}
-                >
+                
                     <animated.mesh
                         scale={vector.length()}
                         position={spherePosition.clone().toArray()}
-                        rotation={new THREE.Euler().setFromQuaternion(
-                            new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), direction)
-                            .multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI / 2))
-                        )}
-                        onPointerEnter={() => {
+                        onPointerMove={(e) => {
+                            // Raycast to find intersection point
+                            const intersection = e.intersections[0];
+                            if (!intersection) return;
+                            const intersection_array = intersection.point.toArray();
+                            const rotatedVector = new THREE.Vector3(
+                                intersection_array[0],
+                                intersection_array[1],
+                                intersection_array[2],
+                            ).normalize().multiplyScalar(vector.clone().length())
+
+                            if (rotationBracketYIsDragging) {
+                                setVector(rotatedVector); // Update sphere position to intersection point
+                            } else {
+                                setRotationBracketYSpherePosition(rotatedVector); // Update sphere position to intersection point
+                            }
+                        }}
+                        onPointerEnter={e => {
+                            e.stopPropagation();
                             setRotationBracketYIsHovered(true);
                             setInfoBlockText(`
                                 Drag this torus to rotate $v_${vectorNumber}$
@@ -374,13 +381,34 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
                             setRotationBracketYIsHovered(false);
                             setShowInfoBlock(false)
                         }}
-                        onPointerDown={() => onToggleOrbitControls(false)}
-                        onPointerUp={() => onToggleOrbitControls(true)}
+                        onPointerDown={e => {
+                            e.stopPropagation()
+                            
+                            // if (e.target) {e.target.setPointerCapture(e.pointerId)}
+                            setRotationBracketYIsDragging(true);
+                            onToggleOrbitControls(false)
+                        }}
+                        onPointerUp={e => {
+                            e.stopPropagation();
+                            // e.target.releasePointerCapture(e.pointerId);
+                            onToggleOrbitControls(true)}
+                        }
+                        onClick={(e) => {
+                            // Raycast to find intersection point
+                            const intersection = e.intersections[0];
+                            if (!intersection) return;
+                            const intersection_array = intersection.point.toArray();
+                            const rotatedVector = new THREE.Vector3(
+                                intersection_array[0],
+                                intersection_array[1],
+                                intersection_array[2],
+                            ).normalize().multiplyScalar(vector.clone().length())
+                            setVector(rotatedVector);
+                        }}
                     >
-                        <torusGeometry args={[1.0, 0.01, 16, 64, Math.PI*2]}/>
-                        <meshToonMaterial color={color} side={THREE.DoubleSide} transparent opacity={rotationBracketYIsHovered? 1.0 : 0.4}/>
+                        <sphereGeometry args={[1.0, 32, 16, 0, Math.PI*2]}/>
+                        <meshToonMaterial color={color} side={THREE.DoubleSide} wireframe transparent opacity={rotationBracketYIsHovered? 1.0 : 0.4}/>
                     </animated.mesh>
-                </DragControls>
 
                 {/* Color Torus for Rotation Bracket Y */}
                 </>
@@ -399,16 +427,17 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
                 <animated.mesh
                     scale={scalePointScale}
                     position={spherePosition.clone().add(vector).toArray()}
-                    onPointerEnter={() => {
-                        setScalePointIsHovered(true)
+                    onPointerEnter={e => {
+                        e.stopPropagation();
+                        setScalePointIsHovered(true);
                         setInfoBlockText(`
                             Drag this point to scale $v_${vectorNumber}$
-                        `)
-                        setShowInfoBlock(true)
+                        `);
+                        setShowInfoBlock(true);
                     }}
                     onPointerLeave={() => {
-                        setScalePointIsHovered(false)
-                        setShowInfoBlock(false)
+                        setScalePointIsHovered(false);
+                        setShowInfoBlock(false);
                     }}
                     onPointerDown={() => onToggleOrbitControls(false)}
                     onPointerUp={() => onToggleOrbitControls(true)}
@@ -430,7 +459,8 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
                 ]}
                 onPointerDown={() => onToggleOrbitControls(false)}
                 onPointerUp={() => onToggleOrbitControls(true)}
-                onPointerEnter={() => {
+                onPointerEnter={e => {
+                    e.stopPropagation();
                     setBaseVectorIsHovered(true)
                     setInfoBlockText(`
                         This arrow represents the vector
