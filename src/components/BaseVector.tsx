@@ -383,7 +383,6 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
                         }}
                         onPointerDown={e => {
                             e.stopPropagation()
-                            
                             // if (e.target) {e.target.setPointerCapture(e.pointerId)}
                             setRotationBracketYIsDragging(true);
                             onToggleOrbitControls(false)
