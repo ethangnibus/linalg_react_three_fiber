@@ -370,7 +370,7 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
                         // }}
                     >
                         <sphereGeometry args={[1.0, 64, 32, 0, Math.PI*2]}/>
-                        <meshToonMaterial color={color} side={THREE.DoubleSide} wireframe transparent opacity={rotationBracketYIsHovered? 1.0 : 0.4}/>
+                        <meshToonMaterial color={color} side={THREE.DoubleSide} wireframe transparent opacity={0.1}/>
                     </animated.mesh>
 
                 {/* Color Torus for Rotation Bracket Y */}
