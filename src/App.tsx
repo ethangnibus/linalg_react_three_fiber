@@ -7,6 +7,8 @@ import VectorSphere from "./components/VectorSphere";
 import { Vector3 } from "three"; // Import Vector3 from three
 import { MathJax, MathJaxContext } from "better-react-mathjax";
 import { useTransition, animated, easings } from "@react-spring/web";
+import { ChevronRightIcon, ChevronLeftIcon } from "@radix-ui/react-icons"
+
 import {
   Card,
   CardContent,
@@ -107,6 +109,7 @@ function App() {
   const [showInfoBlock, setShowInfoBlock] = useState(false); // New state for hover
   const [infoBlockText, setInfoBlockText] = useState<String>(`Info Block`);
 
+  const [showEditPanel, setShowEditPanel] = useState(true);
   const [editBlockText, setEditBlockText] = useState<String>(`
   $$\\text{Span } \\{ \\}$$
   `); // New state for hover
@@ -160,9 +163,23 @@ function App() {
         className="w-full h-full fixed bg-white"
         onMouseMove={handleMouseMove}
       >
-        <ResizablePanelGroup direction="horizontal">
-          <ResizablePanel>
-          <ScrollArea className="h-full w-full p-4">
+        <ResizablePanelGroup direction="horizontal" autoSaveId="persistence">
+          {showEditPanel && (
+            <>
+            <ResizablePanel collapsible={true} id="left" order={1} collapsedSize={30} minSize={30}>
+          <ScrollArea className="h-full w-full px-4">
+            <div className="w-full h-auto flex justify-end">
+                <Button
+                variant="outline" size="icon"
+                className="m-8"
+                onClick={() => setShowEditPanel(!showEditPanel)}
+              >
+                <ChevronLeftIcon className="h-4 w-4" />
+              </Button>
+            </div>
+          
+          
+
           This experiment aims to explore and visualize the concept of the span of vectors in three-dimensional space. The span of vectors represents all possible linear combinations of those vectors, effectively forming a subspace in the three-dimensional coordinate system. Through interactive graphics and animations, this experiment will illustrate how the span of three given vectors is represented geometrically. By manipulating the vectors and observing their combinations, participants will gain insights into the fundamental concepts of linear algebra, such as linear independence, basis, and subspaces. This visual exploration promises to provide an intuitive understanding of abstract mathematical concepts and their real-world applications, offering a dynamic learning experience for students and enthusiasts alike.
       <Card className="mt-4 mb-4">
         <CardHeader>
@@ -276,7 +293,23 @@ function App() {
 
           </ResizablePanel>
           <ResizableHandle withHandle/>
-          <ResizablePanel>
+          </>
+          )}
+          
+          
+          <ResizablePanel collapsible={true} id="right" order={2} collapsedSize={5} minSize={5}>
+<div className="w-full h-full">
+  {!showEditPanel && (
+    <Button
+      variant="outline" size="icon"
+      className="m-8"
+      onClick={() => setShowEditPanel(!showEditPanel)}
+    >
+      <ChevronRightIcon className="h-4 w-4" />
+    
+    </Button>
+  )}
+  
           <Canvas
   className="select-none"
   camera={{
@@ -344,11 +377,15 @@ function App() {
     setShowV2ContextMenu={setShowV2ContextMenu}
     setShowV3ContextMenu={setShowV3ContextMenu}
   />
-  <Stats />
+  <Stats/>
+  
+  
 </Canvas>
+
+</div>
+
           </ResizablePanel>
         </ResizablePanelGroup>
-
 
 
 
