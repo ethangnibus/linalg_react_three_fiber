@@ -302,7 +302,7 @@ function App() {
   {!showEditPanel && (
     <Button
       variant="outline" size="icon"
-      className="m-8"
+      className="absolute z-50 m-8"
       onClick={() => setShowEditPanel(!showEditPanel)}
     >
       <ChevronRightIcon className="h-4 w-4" />
