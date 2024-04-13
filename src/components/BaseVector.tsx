@@ -287,9 +287,8 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
                         <Line
                             points={[
                                 spherePosition.toArray(),
-                                spherePosition.clone()
-                                    .add(rotationBracketYSpherePosition)
-                                    .sub(rotationBracketYSpherePosition.clone().multiplyScalar(0.09 / 2)).toArray()
+                                rotationBracketYSpherePosition.clone()
+                                    .sub(rotationBracketYSpherePosition.clone().sub(spherePosition).multiplyScalar(0.09 / 2)).toArray()
                                 ]}
                             color="grey"
                             transparent={true}
@@ -311,15 +310,15 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
                             if (!intersection) return;
                             const intersection_array = intersection.point.toArray();
                             const rotatedVector = new THREE.Vector3(
-                                intersection_array[0],
-                                intersection_array[1],
-                                intersection_array[2],
+                                intersection_array[0] - spherePosition.x,
+                                intersection_array[1] - spherePosition.y,
+                                intersection_array[2] - spherePosition.z,
                             ).normalize().multiplyScalar(vector.clone().length())
 
                             if (rotationBracketYIsDragging) {
                                 setVector(rotatedVector); // Update sphere position to intersection point
                             } else {
-                                setRotationBracketYSpherePosition(rotatedVector); // Update sphere position to intersection point
+                                setRotationBracketYSpherePosition(spherePosition.clone().add(rotatedVector)); // Update sphere position to intersection point
                             }
                         }}
                         onPointerEnter={e => {
@@ -344,9 +343,9 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
                             if (!intersection) return;
                             const intersection_array = intersection.point.toArray();
                             const rotatedVector = new THREE.Vector3(
-                                intersection_array[0],
-                                intersection_array[1],
-                                intersection_array[2],
+                                intersection_array[0] - spherePosition.x,
+                                intersection_array[1] - spherePosition.y,
+                                intersection_array[2] - spherePosition.z,
                             ).normalize().multiplyScalar(vector.clone().length())
                             setVector(rotatedVector);
                         }}
