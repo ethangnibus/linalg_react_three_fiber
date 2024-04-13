@@ -3,6 +3,7 @@ import { DragControls, Line } from "@react-three/drei";
 import { useSpring, animated } from "@react-spring/three";
 import * as THREE from "three";
 
+
 interface BaseVectorsProps {
   vector: THREE.Vector3; // Direction of the arrow
   setVector: (newVector: THREE.Vector3) => void;
@@ -391,6 +392,7 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
               // setEditBlockText(`$$Edit \\\\ v_${vectorNumber}$$`)
             }
           }}
+          onContextMenu={() => console.log("LETS GO")}
         >
           <DragControls
             autoTransform={false}

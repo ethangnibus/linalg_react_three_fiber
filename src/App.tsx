@@ -25,6 +25,12 @@ import {
   MenubarTrigger,
 } from "@/components/ui/menubar"
 import { X } from "lucide-react"
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger,
+} from "@/components/ui/context-menu"
 
 
 
@@ -132,6 +138,16 @@ function App() {
         className="w-full h-full fixed bg-white"
         onMouseMove={handleMouseMove}
       >
+      <ContextMenu>
+        <ContextMenuTrigger>Right click</ContextMenuTrigger>
+        <ContextMenuContent>
+          <ContextMenuItem>Profile</ContextMenuItem>
+          <ContextMenuItem>Billing</ContextMenuItem>
+          <ContextMenuItem>Team</ContextMenuItem>
+          <ContextMenuItem>Subscription</ContextMenuItem>
+        </ContextMenuContent>
+      </ContextMenu>
+
         {/* Edit Block */}
         {fadeEditBlock((style, item) =>
           item ? (
@@ -321,7 +337,7 @@ function App() {
             v2IsScaling={v2IsScaling}
             v3IsScaling={v3IsScaling}
           />
-          <Stats />
+          {/* <Stats /> */}
         </Canvas>
       </div>
     </MathJaxContext>
