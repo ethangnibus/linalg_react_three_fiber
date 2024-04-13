@@ -33,6 +33,7 @@
     "lucide-react": "^0.359.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-resizable-panels": "^2.0.16",
     "react-three-fiber": "^6.0.13",
     "tailwind-merge": "^2.2.2",
     "tailwindcss-animate": "^1.0.7",

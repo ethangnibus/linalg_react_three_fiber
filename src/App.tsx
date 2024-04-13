@@ -27,6 +27,11 @@ import {
 import { X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "@/components/ui/resizable"
 
 
 
@@ -453,7 +458,7 @@ function App() {
             setShowV2ContextMenu={setShowV2ContextMenu}
             setShowV3ContextMenu={setShowV3ContextMenu}
           />
-          {/* <Stats /> */}
+          <Stats />
         </Canvas>
       </div>
     </MathJaxContext>
