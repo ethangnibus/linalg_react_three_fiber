@@ -23,6 +23,10 @@ interface BaseVectorsProps {
   setShowEditBlock: (enabled: boolean) => void;
   isRotating: boolean;
   isScaling: boolean;
+  setContextMenuPosition: React.Dispatch<React.SetStateAction<{ x: number; y: number; }>>;
+  setShowVectorContextMenu: (enabled: boolean) => void;
+  setShowVectorAlternate1ContextMenu: (enabled: boolean) => void;
+  setShowVectorAlternate2ContextMenu: (enabled: boolean) => void;
 }
 
 const BaseVector: React.FC<BaseVectorsProps> = ({
@@ -44,6 +48,10 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
   setShowEditBlock,
   isRotating,
   isScaling,
+  setContextMenuPosition,
+  setShowVectorContextMenu,
+  setShowVectorAlternate1ContextMenu,
+  setShowVectorAlternate2ContextMenu,
 }) => {
   const direction = vector.clone().normalize();
 
@@ -212,270 +220,278 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
 
   return (
     <>
-      {isRotating && vectorSphereIsSelected && (
-        <>
-          {/* Rotated Vector */}
-          {rotationSphereIsHovered && !rotationSphereIsDragging && (
+        <group
+        onContextMenu={e => {
+            setContextMenuPosition({ x: e.clientX, y: e.clientY });
+            setShowVectorAlternate1ContextMenu(false);
+            setShowVectorAlternate2ContextMenu(false);
+            setShowVectorContextMenu(true);
+            onToggleOrbitControls(true);
+        }}>
+        {isRotating && vectorSphereIsSelected && (
             <>
-              <animated.mesh position={rotatedVectorEndPosition}>
-                <sphereGeometry args={[0.09, 16, 16]} />
-                <meshToonMaterial
-                  color={"gray"}
-                  transparent={true}
-                  opacity={0.5}
-                />
-              </animated.mesh>
-              <Line
-                points={[
-                  spherePosition.toArray(),
-                  rotatedVectorEndPosition
-                    .clone()
-                    .sub(
-                      rotatedVectorEndPosition
+            {/* Rotated Vector */}
+            {rotationSphereIsHovered && !rotationSphereIsDragging && (
+                <>
+                <animated.mesh position={rotatedVectorEndPosition}>
+                    <sphereGeometry args={[0.09, 16, 16]} />
+                    <meshToonMaterial
+                    color={"gray"}
+                    transparent={true}
+                    opacity={0.5}
+                    />
+                </animated.mesh>
+                <Line
+                    points={[
+                    spherePosition.toArray(),
+                    rotatedVectorEndPosition
                         .clone()
-                        .sub(spherePosition)
-                        .multiplyScalar(0.09 / 2)
-                    )
-                    .toArray(),
-                ]}
-                color="grey"
-                transparent={true}
-                opacity={0.5}
-                lineWidth={5}
-              />
-            </>
-          )}
+                        .sub(
+                        rotatedVectorEndPosition
+                            .clone()
+                            .sub(spherePosition)
+                            .multiplyScalar(0.09 / 2)
+                        )
+                        .toArray(),
+                    ]}
+                    color="grey"
+                    transparent={true}
+                    opacity={0.5}
+                    lineWidth={5}
+                />
+                </>
+            )}
 
-          {/* Rotation Sphere */}
-          <animated.mesh
-            scale={vector.length()}
-            position={spherePosition.clone().toArray()}
-            onPointerMove={(e) => {
-              const intersection = e.intersections[0];
-              if (!intersection) return;
-              const intersection_array = intersection.point.toArray();
-              const rotatedVector = new THREE.Vector3(
-                intersection_array[0] - spherePosition.x,
-                intersection_array[1] - spherePosition.y,
-                intersection_array[2] - spherePosition.z
-              )
-                .normalize()
-                .multiplyScalar(vector.clone().length());
+            {/* Rotation Sphere */}
+            <animated.mesh
+                scale={vector.length()}
+                position={spherePosition.clone().toArray()}
+                onPointerMove={(e) => {
+                const intersection = e.intersections[0];
+                if (!intersection) return;
+                const intersection_array = intersection.point.toArray();
+                const rotatedVector = new THREE.Vector3(
+                    intersection_array[0] - spherePosition.x,
+                    intersection_array[1] - spherePosition.y,
+                    intersection_array[2] - spherePosition.z
+                )
+                    .normalize()
+                    .multiplyScalar(vector.clone().length());
 
-              if (rotationSphereIsDragging) {
+                if (rotationSphereIsDragging) {
+                    setVector(rotatedVector);
+                } else {
+                    setRotatedVectorEndPosition(
+                    spherePosition.clone().add(rotatedVector)
+                    ); // Update sphere position to intersection point
+                }
+                }}
+                onPointerEnter={(e) => {
+                e.stopPropagation();
+                setRotationSphereIsHovered(true);
+                setInfoBlockText(`
+                                    Click this sphere to rotate $v_${vectorNumber}$. You can click and drag to rotate smoothly
+                                `);
+                setShowInfoBlock(true);
+                }}
+                onPointerLeave={() => {
+                setRotationSphereIsHovered(false);
+                setShowInfoBlock(false);
+                }}
+                onPointerDown={(e) => {
+                e.stopPropagation();
+                setRotationSphereIsDragging(true);
+                onToggleOrbitControls(false);
+
+                const intersection = e.intersections[0];
+                if (!intersection) return;
+                const intersection_array = intersection.point.toArray();
+                const rotatedVector = new THREE.Vector3(
+                    intersection_array[0] - spherePosition.x,
+                    intersection_array[1] - spherePosition.y,
+                    intersection_array[2] - spherePosition.z
+                )
+                    .normalize()
+                    .multiplyScalar(vector.clone().length());
                 setVector(rotatedVector);
-              } else {
-                setRotatedVectorEndPosition(
-                  spherePosition.clone().add(rotatedVector)
-                ); // Update sphere position to intersection point
-              }
+                }}
+                onPointerUp={(e) => {
+                e.stopPropagation();
+                setRotationSphereIsDragging(true);
+                onToggleOrbitControls(true);
+                }}
+            >
+                <sphereGeometry args={[1.0, 64, 32, 0, Math.PI * 2]} />
+                <meshToonMaterial
+                color={color}
+                side={THREE.DoubleSide}
+                wireframe
+                transparent
+                opacity={0.1}
+                />
+            </animated.mesh>
+            </>
+        )}
+
+        {/* Scale Point */}
+        {isScaling && vectorSphereIsSelected && (
+            <DragControls
+            autoTransform={false}
+            onDragStart={handleScalePointDragStart}
+            onDrag={(
+                localMatrix,
+                _deltaLocalMatrix,
+                _worldMatrix,
+                _deltaWorldMatrix
+            ) => {
+                handleScalePointDrag(localMatrix);
             }}
-            onPointerEnter={(e) => {
-              e.stopPropagation();
-              setRotationSphereIsHovered(true);
-              setInfoBlockText(`
-                                Click this sphere to rotate $v_${vectorNumber}$. You can click and drag to rotate smoothly
+            >
+            <animated.mesh
+                scale={scalePointScale}
+                position={spherePosition.clone().add(vector).toArray()}
+                onPointerEnter={(e) => {
+                if (rotationSphereIsDragging) {
+                    return;
+                }
+                e.stopPropagation();
+                setScalePointIsHovered(true);
+                setInfoBlockText(`
+                                Drag this point to scale $v_${vectorNumber}$. Right click to edit it's corresponding vector
                             `);
-              setShowInfoBlock(true);
-            }}
-            onPointerLeave={() => {
-              setRotationSphereIsHovered(false);
-              setShowInfoBlock(false);
-            }}
-            onPointerDown={(e) => {
-              e.stopPropagation();
-              setRotationSphereIsDragging(true);
-              onToggleOrbitControls(false);
+                setShowInfoBlock(true);
+                }}
+                onPointerLeave={() => {
+                setScalePointIsHovered(false);
+                setShowInfoBlock(false);
+                }}
+                onPointerDown={() => onToggleOrbitControls(false)}
+                onPointerUp={() => onToggleOrbitControls(true)}
+            >
+                <sphereGeometry args={[0.09, 16, 16]} />
+                <meshToonMaterial color={color} />
+            </animated.mesh>
+            </DragControls>
+        )}
 
-              const intersection = e.intersections[0];
-              if (!intersection) return;
-              const intersection_array = intersection.point.toArray();
-              const rotatedVector = new THREE.Vector3(
-                intersection_array[0] - spherePosition.x,
-                intersection_array[1] - spherePosition.y,
-                intersection_array[2] - spherePosition.z
-              )
-                .normalize()
-                .multiplyScalar(vector.clone().length());
-              setVector(rotatedVector);
-            }}
-            onPointerUp={(e) => {
-              e.stopPropagation();
-              setRotationSphereIsDragging(true);
-              onToggleOrbitControls(true);
-            }}
-          >
-            <sphereGeometry args={[1.0, 64, 32, 0, Math.PI * 2]} />
-            <meshToonMaterial
-              color={color}
-              side={THREE.DoubleSide}
-              wireframe
-              transparent
-              opacity={0.1}
-            />
-          </animated.mesh>
-        </>
-      )}
-
-      {/* Scale Point */}
-      {isScaling && vectorSphereIsSelected && (
-        <DragControls
-          autoTransform={false}
-          onDragStart={handleScalePointDragStart}
-          onDrag={(
-            localMatrix,
-            _deltaLocalMatrix,
-            _worldMatrix,
-            _deltaWorldMatrix
-          ) => {
-            handleScalePointDrag(localMatrix);
-          }}
-        >
-          <animated.mesh
-            scale={scalePointScale}
-            position={spherePosition.clone().add(vector).toArray()}
-            onPointerEnter={(e) => {
-              if (rotationSphereIsDragging) {
-                return;
-              }
-              e.stopPropagation();
-              setScalePointIsHovered(true);
-              setInfoBlockText(`
-                            Drag this point to scale $v_${vectorNumber}$
-                        `);
-              setShowInfoBlock(true);
-            }}
-            onPointerLeave={() => {
-              setScalePointIsHovered(false);
-              setShowInfoBlock(false);
-            }}
+        {vectorSphereIsSelected && (
+            <group
+            position={[
+                visualVectorCenter.x,
+                visualVectorCenter.y,
+                visualVectorCenter.z,
+            ]}
             onPointerDown={() => onToggleOrbitControls(false)}
             onPointerUp={() => onToggleOrbitControls(true)}
-          >
-            <sphereGeometry args={[0.09, 16, 16]} />
-            <meshToonMaterial color={color} />
-          </animated.mesh>
-        </DragControls>
-      )}
-
-      {vectorSphereIsSelected && (
-        <group
-          position={[
-            visualVectorCenter.x,
-            visualVectorCenter.y,
-            visualVectorCenter.z,
-          ]}
-          onPointerDown={() => onToggleOrbitControls(false)}
-          onPointerUp={() => onToggleOrbitControls(true)}
-          onPointerEnter={(e) => {
-            e.stopPropagation();
-            setBaseVectorIsHovered(true);
-            setInfoBlockText(`
-                        This arrow represents the vector
-                        $$v_${vectorNumber} = \\begin{bmatrix} ${vector.x.toFixed(
-              3
-            )} \\\\ ${vector.y.toFixed(3)} \\\\ ${vector.z.toFixed(
-              3
-            )} \\end{bmatrix}$$
-                        Click to add/remove this vector from our collection. See the popup to view our current collection
-                    `);
-            setShowInfoBlock(true);
-          }}
-          onPointerLeave={() => {
-            setBaseVectorIsHovered(false);
-            setShowInfoBlock(false);
-          }}
-          onClick={() => {
-            if (!baseVectorIsDragging) {
-              setBaseVectorIsSelected(!baseVectorIsSelected);
-              setShowEditBlock(true);
-              // setEditBlockText(`$$Edit \\\\ v_${vectorNumber}$$`)
-            }
-          }}
-          onContextMenu={() => console.log("LETS GO")}
-        >
-          <DragControls
-            autoTransform={false}
-            onDragStart={handleBaseVectorDragStart}
-            onDrag={(
-              localMatrix,
-              _deltaLocalMatrix,
-              _worldMatrix,
-              _deltaWorldMatrix
-            ) => {
-              handleBaseVectorDrag(localMatrix);
+            onPointerEnter={(e) => {
+                e.stopPropagation();
+                setBaseVectorIsHovered(true);
+                setInfoBlockText(`
+                            This arrow represents the vector
+                            $$v_${vectorNumber} = \\begin{bmatrix} ${vector.x.toFixed(
+                3
+                )} \\\\ ${vector.y.toFixed(3)} \\\\ ${vector.z.toFixed(
+                3
+                )} \\end{bmatrix}$$
+                            Left click to add/remove this vector from our collection. Right click to edit. See the popup to view our current collection
+                        `);
+                setShowInfoBlock(true);
             }}
-          >
-            <animated.mesh
-              scale-x={cylinderScale}
-              scale-y={1.0}
-              scale-z={cylinderScale}
-              position={[
-                cylinderCenterRelativeToVisualVectorCenter.x,
-                cylinderCenterRelativeToVisualVectorCenter.y,
-                cylinderCenterRelativeToVisualVectorCenter.z,
-              ]}
-              rotation={new THREE.Euler().setFromQuaternion(
-                new THREE.Quaternion().setFromUnitVectors(
-                  new THREE.Vector3(0, 1, 0),
-                  direction
-                )
-              )}
-              renderOrder={2}
-            >
-              <cylinderGeometry args={[0.02, 0.02, cylinderHeight, 16, 1]} />
-              <meshToonMaterial
-                color={color}
-                transparent={true}
-                opacity={
-                  baseVectorIsHovered
-                    ? baseVectorIsSelected
-                      ? 1.0
-                      : 0.8
-                    : baseVectorIsSelected
-                    ? 1.0
-                    : 0.5
+            onPointerLeave={() => {
+                setBaseVectorIsHovered(false);
+                setShowInfoBlock(false);
+            }}
+            onClick={() => {
+                if (!baseVectorIsDragging) {
+                setBaseVectorIsSelected(!baseVectorIsSelected);
+                setShowEditBlock(true);
+                // setEditBlockText(`$$Edit \\\\ v_${vectorNumber}$$`)
                 }
-              />
-            </animated.mesh>
+            }}
+            >
+            <DragControls
+                autoTransform={false}
+                onDragStart={handleBaseVectorDragStart}
+                onDrag={(
+                localMatrix,
+                _deltaLocalMatrix,
+                _worldMatrix,
+                _deltaWorldMatrix
+                ) => {
+                handleBaseVectorDrag(localMatrix);
+                }}
+            >
+                <animated.mesh
+                scale-x={cylinderScale}
+                scale-y={1.0}
+                scale-z={cylinderScale}
+                position={[
+                    cylinderCenterRelativeToVisualVectorCenter.x,
+                    cylinderCenterRelativeToVisualVectorCenter.y,
+                    cylinderCenterRelativeToVisualVectorCenter.z,
+                ]}
+                rotation={new THREE.Euler().setFromQuaternion(
+                    new THREE.Quaternion().setFromUnitVectors(
+                    new THREE.Vector3(0, 1, 0),
+                    direction
+                    )
+                )}
+                renderOrder={2}
+                >
+                <cylinderGeometry args={[0.02, 0.02, cylinderHeight, 16, 1]} />
+                <meshToonMaterial
+                    color={color}
+                    transparent={true}
+                    opacity={
+                    baseVectorIsHovered
+                        ? baseVectorIsSelected
+                        ? 1.0
+                        : 0.8
+                        : baseVectorIsSelected
+                        ? 1.0
+                        : 0.5
+                    }
+                />
+                </animated.mesh>
 
-            <animated.mesh
-              scale-x={coneScale}
-              scale-y={1.0}
-              scale-z={coneScale}
-              position={[
-                coneCenterRelativeToVisualVectorCenter.x,
-                coneCenterRelativeToVisualVectorCenter.y,
-                coneCenterRelativeToVisualVectorCenter.z,
-              ]}
-              rotation={new THREE.Euler().setFromQuaternion(
-                new THREE.Quaternion().setFromUnitVectors(
-                  new THREE.Vector3(0, 1, 0),
-                  direction
-                )
-              )}
-              renderOrder={2}
-            >
-              <coneGeometry args={[0.09, 0.35, 16]} />
-              <meshToonMaterial
-                color={color}
-                transparent={true}
-                opacity={
-                  baseVectorIsHovered
-                    ? baseVectorIsSelected
-                      ? 1.0
-                      : 0.8
-                    : baseVectorIsSelected
-                    ? 1.0
-                    : 0.5
-                }
-              />
-            </animated.mesh>
-          </DragControls>
+                <animated.mesh
+                scale-x={coneScale}
+                scale-y={1.0}
+                scale-z={coneScale}
+                position={[
+                    coneCenterRelativeToVisualVectorCenter.x,
+                    coneCenterRelativeToVisualVectorCenter.y,
+                    coneCenterRelativeToVisualVectorCenter.z,
+                ]}
+                rotation={new THREE.Euler().setFromQuaternion(
+                    new THREE.Quaternion().setFromUnitVectors(
+                    new THREE.Vector3(0, 1, 0),
+                    direction
+                    )
+                )}
+                renderOrder={2}
+                >
+                <coneGeometry args={[0.09, 0.35, 16]} />
+                <meshToonMaterial
+                    color={color}
+                    transparent={true}
+                    opacity={
+                    baseVectorIsHovered
+                        ? baseVectorIsSelected
+                        ? 1.0
+                        : 0.8
+                        : baseVectorIsSelected
+                        ? 1.0
+                        : 0.5
+                    }
+                />
+                </animated.mesh>
+            </DragControls>
+            </group>
+        )}
         </group>
-      )}
-      {lines}
-      {currentLine}
+        {lines}
+        {currentLine}
     </>
   );
 };

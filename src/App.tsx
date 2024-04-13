@@ -25,12 +25,9 @@ import {
   MenubarTrigger,
 } from "@/components/ui/menubar"
 import { X } from "lucide-react"
-import {
-  ContextMenu,
-  ContextMenuContent,
-  ContextMenuItem,
-  ContextMenuTrigger,
-} from "@/components/ui/context-menu"
+import { Button } from "@/components/ui/button"
+import { Separator } from "@/components/ui/separator"
+
 
 
 
@@ -90,6 +87,13 @@ function App() {
   const [v2IsScaling, setV2IsScaling] = useState(true);
   const [v3IsScaling, setV3IsScaling] = useState(true);
 
+  // states for showing context menus
+  const [contextMenuPosition, setContextMenuPosition] = useState({ x: 0, y: 0 });
+  const [showV1ContextMenu, setShowV1ContextMenu] = useState(false);
+  const [showV2ContextMenu, setShowV2ContextMenu] = useState(false);
+  const [showV3ContextMenu, setShowV3ContextMenu] = useState(false);
+
+
 
 
 
@@ -126,6 +130,25 @@ function App() {
     config: { duration: 500, easing: easings.easeInOutQuad }, // 1 second duration
   });
 
+  const fadeV1ContextMenu = useTransition(showV1ContextMenu, {
+    from: { opacity: 0.0 },
+    enter: { opacity: 0.95 },
+    leave: { opacity: 0.0 },
+    config: { duration: 500, easing: easings.easeInOutQuad }, // 1 second duration
+  });
+  const fadeV2ContextMenu = useTransition(showV2ContextMenu, {
+    from: { opacity: 0.0 },
+    enter: { opacity: 0.95 },
+    leave: { opacity: 0.0 },
+    config: { duration: 500, easing: easings.easeInOutQuad }, // 1 second duration
+  });
+  const fadeV3ContextMenu = useTransition(showV3ContextMenu, {
+    from: { opacity: 0.0 },
+    enter: { opacity: 0.95 },
+    leave: { opacity: 0.0 },
+    config: { duration: 500, easing: easings.easeInOutQuad }, // 1 second duration
+  });
+
   return (
     <MathJaxContext
       version={2}
@@ -138,16 +161,6 @@ function App() {
         className="w-full h-full fixed bg-white"
         onMouseMove={handleMouseMove}
       >
-      <ContextMenu>
-        <ContextMenuTrigger>Right click</ContextMenuTrigger>
-        <ContextMenuContent>
-          <ContextMenuItem>Profile</ContextMenuItem>
-          <ContextMenuItem>Billing</ContextMenuItem>
-          <ContextMenuItem>Team</ContextMenuItem>
-          <ContextMenuItem>Subscription</ContextMenuItem>
-        </ContextMenuContent>
-      </ContextMenu>
-
         {/* Edit Block */}
         {fadeEditBlock((style, item) =>
           item ? (
@@ -278,11 +291,110 @@ function App() {
           ) : null
         )}
 
+        {/* Context Menu V1 */}
+        {fadeV1ContextMenu((style, item) =>
+          item ? (
+            <animated.div
+              className="z-30 absolute max-w-[300px]"
+              style={{
+                ...style,
+                left: contextMenuPosition.x, // Fixme: Change to be in the bounds of the window
+                bottom: contextMenuPosition.y,
+              }}
+            >
+              <Card className="p-1">
+                  <MathJax className="text-center" dynamic={true} hideUntilTypeset={"every"}>
+                    <p>$$v_1$$</p>
+                  </MathJax>
+                  <Separator/>
+                  <Button className="w-full justify-start mt-1 mb-1" variant="ghost" onClick={() => setV1IsSelected(!v1IsSelected)}>
+                    {v1IsSelected ? "Remove this vector from our collection" : "Add this vector to our collection"}
+                  </Button>
+                  <Separator/>
+                  <Button className="w-full justify-start mt-1 mb-1" variant="ghost" onClick={() => setV1IsRotating(!v1IsRotating)}>
+                    {v1IsRotating ? "Remove the rotation sphere" : "Add the rotation sphere"}
+                  </Button>
+                  <Button className="w-full justify-start" variant="ghost" onClick={() => setV1IsScaling(!v1IsScaling)}>
+                    {v1IsScaling ? "Remove the scaling point" : "Add the scaling point"}
+                  </Button>
+              </Card>
+
+            </animated.div>
+          ) : null
+        )}
+        {/* Context Menu V2 */}
+        {fadeV2ContextMenu((style, item) =>
+          item ? (
+            <animated.div
+              className="z-30 absolute max-w-[300px]"
+              style={{
+                ...style,
+                left: contextMenuPosition.x, // Fixme: Change to be in the bounds of the window
+                bottom: contextMenuPosition.y,
+              }}
+            >
+              <Card className="p-1">
+                  <MathJax className="text-center" dynamic={true} hideUntilTypeset={"every"}>
+                    <p>$$v_2$$</p>
+                  </MathJax>
+                  <Separator/>
+                  <Button className="w-full justify-start mt-1 mb-1" variant="ghost" onClick={() => setV2IsSelected(!v2IsSelected)}>
+                    {v2IsSelected ? "Remove this vector from our collection" : "Add this vector to our collection"}
+                  </Button>
+                  <Separator/>
+                  <Button className="w-full justify-start mt-1 mb-1" variant="ghost" onClick={() => setV2IsRotating(!v2IsRotating)}>
+                    {v2IsRotating ? "Remove the rotation sphere" : "Add the rotation sphere"}
+                  </Button>
+                  <Button className="w-full justify-start" variant="ghost" onClick={() => setV2IsScaling(!v2IsScaling)}>
+                    {v2IsScaling ? "Remove the scaling point" : "Add the scaling point"}
+                  </Button>
+              </Card>
+
+            </animated.div>
+          ) : null
+        )}
+        {/* Context Menu V3 */}
+        {fadeV3ContextMenu((style, item) =>
+          item ? (
+            <animated.div
+              className="z-30 absolute max-w-[300px]"
+              style={{
+                ...style,
+                left: contextMenuPosition.x, // Fixme: Change to be in the bounds of the window
+                bottom: contextMenuPosition.y,
+              }}
+            >
+              <Card className="p-1">
+                  <MathJax className="text-center" dynamic={true} hideUntilTypeset={"every"}>
+                    <p>$$v_3$$</p>
+                  </MathJax>
+                  <Separator/>
+                  <Button className="w-full justify-start mt-1 mb-1" variant="ghost" onClick={() => setV3IsSelected(!v3IsSelected)}>
+                    {v3IsSelected ? "Remove this vector from our collection" : "Add this vector to our collection"}
+                  </Button>
+                  <Separator/>
+                  <Button className="w-full justify-start mt-1 mb-1" variant="ghost" onClick={() => setV3IsRotating(!v3IsRotating)}>
+                    {v3IsRotating ? "Remove the rotation sphere" : "Add the rotation sphere"}
+                  </Button>
+                  <Button className="w-full justify-start" variant="ghost" onClick={() => setV3IsScaling(!v3IsScaling)}>
+                    {v3IsScaling ? "Remove the scaling point" : "Add the scaling point"}
+                  </Button>
+              </Card>
+
+            </animated.div>
+          ) : null
+        )}
+
         <Canvas
           className="select-none"
           camera={{
             fov: 90,
             position: [2.5, 2, 1.5],
+          }}
+          onPointerDown={() => {
+            setShowV1ContextMenu(false);
+            setShowV2ContextMenu(false);
+            setShowV3ContextMenu(false);
           }}
         >
           <color attach="background" args={["white"]} />
@@ -336,6 +448,10 @@ function App() {
             v1IsScaling={v1IsScaling}
             v2IsScaling={v2IsScaling}
             v3IsScaling={v3IsScaling}
+            setContextMenuPosition={setContextMenuPosition}
+            setShowV1ContextMenu={setShowV1ContextMenu}
+            setShowV2ContextMenu={setShowV2ContextMenu}
+            setShowV3ContextMenu={setShowV3ContextMenu}
           />
           {/* <Stats /> */}
         </Canvas>

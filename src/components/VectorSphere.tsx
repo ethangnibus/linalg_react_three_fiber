@@ -42,6 +42,10 @@ interface VectorSphereProps {
     v1IsScaling: boolean,
     v2IsScaling: boolean,
     v3IsScaling: boolean,
+    setContextMenuPosition: React.Dispatch<React.SetStateAction<{ x: number; y: number; }>>;
+    setShowV1ContextMenu: (enabled: boolean) => void;
+    setShowV2ContextMenu: (enabled: boolean) => void;
+    setShowV3ContextMenu: (enabled: boolean) => void;
 }
 
 function vectorsAreCollinear(v1: THREE.Vector3, v2: THREE.Vector3) {
@@ -84,6 +88,10 @@ const VectorSphere: React.FC<VectorSphereProps> = ({
     v1IsScaling,
     v2IsScaling,
     v3IsScaling,
+    setContextMenuPosition,
+    setShowV1ContextMenu,
+    setShowV2ContextMenu,
+    setShowV3ContextMenu,
 }) => {
     const [vectorSphereIsHovered, setVectorSphereIsHovered] = useState(false); // New state for hover
 
@@ -201,7 +209,7 @@ const VectorSphere: React.FC<VectorSphereProps> = ({
                 setInfoBlockText(`
                     This point represents the vector
                     $$\\text{p} = \\begin{bmatrix} ${vectorSpherePosition.x.toFixed(3)} \\\\ ${vectorSpherePosition.y.toFixed(3)} \\\\ ${vectorSpherePosition.z.toFixed(3)} \\end{bmatrix}$$
-                    Click on this point to toggle the collection of \n
+                    Left click on this point to toggle the collection of \n
                     arrow vectors that we will use to visualize span
                 `);
                 setShowInfoBlock(true);
@@ -235,6 +243,11 @@ const VectorSphere: React.FC<VectorSphereProps> = ({
                     setShowEditBlock={setShowEditBlock}
                     isRotating={v1IsRotating}
                     isScaling={v1IsScaling}
+                    setContextMenuPosition={setContextMenuPosition}
+                    setShowVectorContextMenu={setShowV1ContextMenu}
+                    setShowVectorAlternate1ContextMenu={setShowV2ContextMenu}
+                    setShowVectorAlternate2ContextMenu={setShowV3ContextMenu}
+
                 />
                 <BaseVector // v2 teal
                     vector={v2}
@@ -255,6 +268,11 @@ const VectorSphere: React.FC<VectorSphereProps> = ({
                     setShowEditBlock={setShowEditBlock}
                     isRotating={v2IsRotating}
                     isScaling={v2IsScaling}
+                    setContextMenuPosition={setContextMenuPosition}
+                    setShowVectorContextMenu={setShowV2ContextMenu}
+                    setShowVectorAlternate1ContextMenu={setShowV1ContextMenu}
+                    setShowVectorAlternate2ContextMenu={setShowV3ContextMenu}
+
                 />
                 <BaseVector // v3 off red
                     vector={v3}
@@ -275,6 +293,11 @@ const VectorSphere: React.FC<VectorSphereProps> = ({
                     setShowEditBlock={setShowEditBlock}
                     isRotating={v3IsRotating}
                     isScaling={v3IsScaling}
+                    setContextMenuPosition={setContextMenuPosition}
+                    setShowVectorContextMenu={setShowV3ContextMenu}
+                    setShowVectorAlternate1ContextMenu={setShowV1ContextMenu}
+                    setShowVectorAlternate2ContextMenu={setShowV2ContextMenu}
+
                 />
             </>
 
