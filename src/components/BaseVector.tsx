@@ -20,7 +20,6 @@ interface BaseVectorsProps {
   setInfoBlockText: (newString: String) => void;
   numScaledVectors: number;
   setNumScaledVectors: (number: number) => void;
-  setShowEditBlock: (enabled: boolean) => void;
   isRotating: boolean;
   isScaling: boolean;
   setContextMenuPosition: React.Dispatch<React.SetStateAction<{ x: number; y: number; }>>;
@@ -45,7 +44,6 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
   setInfoBlockText,
   numScaledVectors,
   setNumScaledVectors,
-  setShowEditBlock,
   isRotating,
   isScaling,
   setContextMenuPosition,
@@ -404,7 +402,6 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
             onClick={() => {
                 if (!baseVectorIsDragging) {
                 setBaseVectorIsSelected(!baseVectorIsSelected);
-                setShowEditBlock(true);
                 // setEditBlockText(`$$Edit \\\\ v_${vectorNumber}$$`)
                 }
             }}

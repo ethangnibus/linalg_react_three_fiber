@@ -14,7 +14,6 @@ interface VectorSphereProps {
     setCameraTarget: (newPosition: THREE.Vector3) => void;
     setShowInfoBlock: (enabled: boolean) => void;
     setInfoBlockText: (newString: String) => void;
-    setShowEditBlock: (enabled: boolean) => void;
     setEditBlockText: (newString: String) => void;
     v1IsSelected: boolean;
     setV1IsSelected: (enabled: boolean) => void;
@@ -60,7 +59,6 @@ const VectorSphere: React.FC<VectorSphereProps> = ({
     setCameraTarget,
     setShowInfoBlock,
     setInfoBlockText,
-    setShowEditBlock,
     setEditBlockText,
     v1IsSelected,
     setV1IsSelected,
@@ -195,7 +193,6 @@ const VectorSphere: React.FC<VectorSphereProps> = ({
             position={vectorSpherePosition.toArray()}
             scale={vectorSphereScale}
             onClick={() => {
-                setShowEditBlock(true)
                 setVectorSphereIsSelected(!vectorSphereIsSelected);
                 if (vectorSphereIsSelected) {
                     setCameraTarget(vectorSpherePosition);
@@ -240,7 +237,6 @@ const VectorSphere: React.FC<VectorSphereProps> = ({
                     setInfoBlockText={setInfoBlockText}
                     numScaledVectors={numScaledVectors}
                     setNumScaledVectors={setNumScaledVectors}
-                    setShowEditBlock={setShowEditBlock}
                     isRotating={v1IsRotating}
                     isScaling={v1IsScaling}
                     setContextMenuPosition={setContextMenuPosition}
@@ -265,7 +261,6 @@ const VectorSphere: React.FC<VectorSphereProps> = ({
                     setInfoBlockText={setInfoBlockText}
                     numScaledVectors={numScaledVectors}
                     setNumScaledVectors={setNumScaledVectors}
-                    setShowEditBlock={setShowEditBlock}
                     isRotating={v2IsRotating}
                     isScaling={v2IsScaling}
                     setContextMenuPosition={setContextMenuPosition}
@@ -290,7 +285,6 @@ const VectorSphere: React.FC<VectorSphereProps> = ({
                     setInfoBlockText={setInfoBlockText}
                     numScaledVectors={numScaledVectors}
                     setNumScaledVectors={setNumScaledVectors}
-                    setShowEditBlock={setShowEditBlock}
                     isRotating={v3IsRotating}
                     isScaling={v3IsScaling}
                     setContextMenuPosition={setContextMenuPosition}
