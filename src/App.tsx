@@ -337,6 +337,7 @@ function App() {
           <ResizablePanel collapsible={true} id="right" order={2} collapsedSize={5} minSize={5}>
 <div className="w-full h-full">
           <Canvas
+  resize={{ debounce: 0 }}
   className="select-none"
   camera={{
     fov: 90,
