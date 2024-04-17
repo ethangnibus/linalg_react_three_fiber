@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Stats } from "@react-three/drei";
 import AxisLines from "./components/AxisLines";
@@ -57,6 +57,7 @@ const config = {
   },
   messageStyle: "none"
 };
+
 
 function App() {
   const [orbitControlsEnabled, setOrbitControlsEnabled] = useState(true);
@@ -151,6 +152,27 @@ function App() {
     config: { duration: 500, easing: easings.easeInOutQuad }, // 1 second duration
   });
 
+
+  // State to determine if examples are rendered side to side or vertical
+  const [resizablePanelIsVertical, setResizablePanelIsVertical] = useState(true);
+  useEffect(() => {
+    const handleResize = () => {
+      setResizablePanelIsVertical(window.innerWidth > window.innerHeight);
+    };
+
+    // Initial call to set direction
+    handleResize();
+
+    // Add event listener for window resize
+    window.addEventListener("resize", handleResize);
+
+    // Clean up event listener
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+
   return (
     <MathJaxContext
       version={2}
@@ -163,7 +185,7 @@ function App() {
         className="w-full h-full fixed bg-white"
         onMouseMove={handleMouseMove}
       >
-        <ResizablePanelGroup direction="horizontal" autoSaveId="persistence">
+        <ResizablePanelGroup direction={resizablePanelIsVertical ? "horizontal" : "vertical"} autoSaveId="persistence">
           {showEditPanel && (
             <>
             <ResizablePanel collapsible={true} id="left" order={1} collapsedSize={30} minSize={30}>
