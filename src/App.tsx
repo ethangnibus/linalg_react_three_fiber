@@ -92,7 +92,7 @@ function App() {
                 <AccordionTrigger className="">
                   Definiton: Span of Vectors
                 </AccordionTrigger>
-                <AccordionContent className="h-screen">
+                <AccordionContent className="">
                   <Definition1 />
                 </AccordionContent>
               </AccordionItem>

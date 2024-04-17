@@ -157,13 +157,13 @@ function Definition1() {
 
   return (
       <div
-        className="w-full h-full"
+        className="h-full aspect-[3/2] lg:aspect-[3/1]"
         onMouseMove={handleMouseMove}
       >
         <Button
           variant="outline"
           size="icon"
-          className="mt-8 ml-8 mb-2 absolute z-10"
+          className="mt-2 ml-2 mb-2 absolute z-10"
           onClick={() => setShowEditPanel(!showEditPanel)}
         >
           {resizablePanelIsVertical ? (
