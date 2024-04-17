@@ -334,7 +334,7 @@ function App() {
           )}
           
           
-          <ResizablePanel collapsible={true} id="right" order={2} collapsedSize={5} minSize={5}>
+          <ResizablePanel collapsible={true} id="right" order={2} collapsedSize={15} minSize={15}>
 <div className="w-full h-full">
           <Canvas
   resize={{ debounce: 0 }}
