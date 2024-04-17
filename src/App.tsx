@@ -7,7 +7,7 @@ import VectorSphere from "./components/VectorSphere";
 import { Vector3 } from "three"; // Import Vector3 from three
 import { MathJax, MathJaxContext } from "better-react-mathjax";
 import { useTransition, animated, easings } from "@react-spring/web";
-import { ChevronRightIcon, ChevronLeftIcon } from "@radix-ui/react-icons"
+import { ChevronRightIcon, ChevronLeftIcon, ChevronUpIcon, ChevronDownIcon } from "@radix-ui/react-icons"
 
 import {
   Card,
@@ -157,7 +157,7 @@ function App() {
   const [resizablePanelIsVertical, setResizablePanelIsVertical] = useState(true);
   useEffect(() => {
     const handleResize = () => {
-      setResizablePanelIsVertical(window.innerWidth > window.innerHeight);
+      setResizablePanelIsVertical(window.innerWidth > window.innerHeight * 1.1);
     };
 
     // Initial call to set direction
@@ -185,20 +185,35 @@ function App() {
         className="w-full h-full fixed bg-white"
         onMouseMove={handleMouseMove}
       >
-        <ResizablePanelGroup direction={resizablePanelIsVertical ? "horizontal" : "vertical"} autoSaveId="persistence">
+       
+        <Button
+              variant="outline" size="icon"
+              className="mt-8 ml-8 mb-2 absolute z-10"
+              onClick={() => setShowEditPanel(!showEditPanel)}
+            >
+          {resizablePanelIsVertical ? (
+            showEditPanel ? (
+              <ChevronRightIcon className="h-4 w-4" />
+            ) : (
+              <ChevronLeftIcon className="h-4 w-4" />
+            )
+          ) : (
+            showEditPanel ? (
+              <ChevronUpIcon className="h-4 w-4" />
+            ) : (
+              <ChevronDownIcon className="h-4 w-4" />
+            )
+          )}
+
+        </Button>
+        <ResizablePanelGroup className="z-0" direction={resizablePanelIsVertical ? "horizontal" : "vertical"} autoSaveId="persistence">
+        
           {showEditPanel && (
             <>
             <ResizablePanel collapsible={true} id="left" order={1} collapsedSize={30} minSize={30}>
+            
           <ScrollArea className="h-full w-full px-4">
-            <div className="w-full h-auto flex justify-end">
-                <Button
-                variant="outline" size="icon"
-                className="m-8"
-                onClick={() => setShowEditPanel(!showEditPanel)}
-              >
-                <ChevronLeftIcon className="h-4 w-4" />
-              </Button>
-            </div>
+            <div className="h-24"></div>
           
           
 
@@ -321,17 +336,6 @@ function App() {
           
           <ResizablePanel collapsible={true} id="right" order={2} collapsedSize={5} minSize={5}>
 <div className="w-full h-full">
-  {!showEditPanel && (
-    <Button
-      variant="outline" size="icon"
-      className="absolute z-50 m-8"
-      onClick={() => setShowEditPanel(!showEditPanel)}
-    >
-      <ChevronRightIcon className="h-4 w-4" />
-    
-    </Button>
-  )}
-  
           <Canvas
   className="select-none"
   camera={{
