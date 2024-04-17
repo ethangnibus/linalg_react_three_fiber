@@ -355,7 +355,7 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
                 e.stopPropagation();
                 setScalePointIsHovered(true);
                 setInfoBlockText(`
-                                Drag this point to scale $v_${vectorNumber}$. Right click to edit it's corresponding vector
+                                Drag this point to scale $v_${vectorNumber}$. Right click to edit its corresponding vector
                             `);
                 setShowInfoBlock(true);
                 }}

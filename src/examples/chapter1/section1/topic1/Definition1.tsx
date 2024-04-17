@@ -42,24 +42,8 @@ import {
 } from "@/components/ui/resizable";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-// Before optimizing for mobile
 
-const config = {
-  "fast-preview": {
-    disabled: true,
-  },
-  tex2jax: {
-    inlineMath: [
-      ["$", "$"],
-      ["\\(", "\\)"],
-    ],
-    displayMath: [
-      ["$$", "$$"],
-      ["\\[", "\\]"],
-    ],
-  },
-  messageStyle: "none",
-};
+// Before optimizing for mobile
 
 function Definition1() {
   const [orbitControlsEnabled, setOrbitControlsEnabled] = useState(true);
@@ -171,11 +155,6 @@ function Definition1() {
   }, []);
 
   return (
-    <MathJaxContext
-      version={2}
-      config={config}
-      onStartup={(mathJax) => (mathJax.Hub.processSectionDelay = 0)}
-    >
       <div
         className="w-full h-full"
         onMouseMove={handleMouseMove}
@@ -670,7 +649,6 @@ function Definition1() {
         )}
         {/* =================== Info Block End ================== */}
       </div>
-    </MathJaxContext>
   );
 }
 
