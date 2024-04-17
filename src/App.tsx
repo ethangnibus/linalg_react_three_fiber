@@ -1,4 +1,3 @@
-import React, { useState, useEffect } from "react";
 import { ThemeProvider } from "@/components/ui/theme-provider";
 import { H1, P } from "./components/ui/typography";
 import {
@@ -9,17 +8,14 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { MathJax, MathJaxContext } from "better-react-mathjax";
-import { AspectRatio } from "@/components/ui/aspect-ratio"
-
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 import Definition1 from "@/examples/chapter1/section1/topic1/Definition1.tsx";
 const mathJaxConfig = {
@@ -82,12 +78,18 @@ function App() {
             combinations of the collection look like?`}
           </MathJax>
 
-          
-
-          <Card className="h-screen">
-          <Definition1 />
+          <Card className="bg-slate-200">
+            <Accordion type="single" collapsible>
+              <AccordionItem value="item-1">
+                <AccordionTrigger className="p-2">
+                  Span of Vectors // Definiton
+                </AccordionTrigger>
+                <AccordionContent className="h-screen">
+                  <Definition1 />
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
           </Card>
-
 
           <MathJax dynamic={true} hideUntilTypeset={"every"}>
             {`Determining the span of a collection of vectors is an
@@ -97,8 +99,6 @@ function App() {
             the general $shape$ and $size$ the span can take in
             $\\mathbb{R}^2$ and $\\mathbb{R}^3$.`}
           </MathJax>
-
-          
         </div>
       </ThemeProvider>
     </MathJaxContext>
