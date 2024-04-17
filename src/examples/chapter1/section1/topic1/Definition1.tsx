@@ -15,7 +15,6 @@ import {
   ChevronUpIcon,
   ChevronDownIcon,
 } from "@radix-ui/react-icons";
-import { ModeToggle } from "@/components/ui/mode-toggle";
 import { P } from "@/components/ui/typography";
 
 import {
@@ -179,9 +178,7 @@ function Definition1() {
             <ChevronDownIcon className="h-4 w-4" />
           )}
         </Button>
-        <div className="mt-8 ml-24 mb-2 absolute z-20">
-          <ModeToggle />
-        </div>
+        
 
         <ResizablePanelGroup
           className="z-0"

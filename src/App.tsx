@@ -16,6 +16,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { ModeToggle } from "./components/ui/mode-toggle";
 
 import Definition1 from "@/examples/chapter1/section1/topic1/Definition1.tsx";
 const mathJaxConfig = {
@@ -43,6 +44,13 @@ function App() {
       onStartup={(mathJax) => (mathJax.Hub.processSectionDelay = 0)}
     >
       <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
+
+        <div className="absolute w-screen flex justify-end">
+          <div className="m-8">
+            <ModeToggle />
+          </div>
+        </div>
+
         <div className="w-full p-2 lg:p-4 space-y-8">
           <Breadcrumb>
             <BreadcrumbList>
@@ -77,11 +85,11 @@ function App() {
             combinations of the collection look like?`}
           </MathJax>
 
-          <Card className="bg-slate-200">
-            <Accordion type="single" collapsible>
+          <Card>
+            <Accordion type="single" collapsible className="px-2">
               <AccordionItem value="item-1">
-                <AccordionTrigger className="p-2">
-                  Span of Vectors // Definiton
+                <AccordionTrigger className="">
+                  Definiton: Span of Vectors
                 </AccordionTrigger>
                 <AccordionContent className="h-screen">
                   <Definition1 />
@@ -99,6 +107,7 @@ function App() {
             $\\mathbb{R}^2$ and $\\mathbb{R}^3$.`}
           </MathJax>
         </div>
+
       </ThemeProvider>
     </MathJaxContext>
   );
