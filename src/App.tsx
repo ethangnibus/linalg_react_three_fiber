@@ -36,6 +36,7 @@ const mathJaxConfig = {
   messageStyle: "none",
 };
 
+// FIXME: USE ACCORDION for the three examples !!!
 function App() {
   return (
     <MathJaxContext
