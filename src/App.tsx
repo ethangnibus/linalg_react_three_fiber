@@ -48,7 +48,7 @@ function App() {
       onStartup={(mathJax) => (mathJax.Hub.processSectionDelay = 0)}
     >
       <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
-        <div className="w-full p-2 lg:p-4 space-y-4">
+        <div className="w-full p-2 lg:p-4 space-y-8">
           <Breadcrumb>
             <BreadcrumbList>
               <BreadcrumbItem>
