@@ -1,5 +1,5 @@
 import { ThemeProvider } from "@/components/ui/theme-provider";
-import { H1, P } from "./components/ui/typography";
+import { H1 } from "./components/ui/typography";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -34,7 +34,6 @@ const mathJaxConfig = {
   },
   messageStyle: "none",
 };
-const vectorNumber = 1;
 
 function App() {
   return (

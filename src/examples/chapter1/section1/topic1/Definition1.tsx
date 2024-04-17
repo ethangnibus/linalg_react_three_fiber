@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Canvas } from "@react-three/fiber";
-import { OrbitControls, Stats } from "@react-three/drei";
+import { OrbitControls,
+  // Stats
+} from "@react-three/drei";
 import AxisLines from "@/components/AxisLines";
 import GridLines from "@/components/GridLines";
 import VectorSphere from "@/components/VectorSphere";
 import { Vector3 } from "three"; // Import Vector3 from three
-import { MathJax, MathJaxContext } from "better-react-mathjax";
+import { MathJax } from "better-react-mathjax";
 import { useTransition, animated, easings } from "@react-spring/web";
 import {
   ChevronRightIcon,
