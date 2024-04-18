@@ -146,7 +146,7 @@ function Definition1() {
   );
   useEffect(() => {
     const handleResize = () => {
-      setResizablePanelIsVertical(window.innerWidth > window.innerHeight * 1.1);
+      setResizablePanelIsVertical(window.innerWidth >= 768);
     };
 
     // Initial call to set direction
@@ -169,7 +169,7 @@ function Definition1() {
         </AccordionTrigger>
         <AccordionContent className="">
           <div
-            className="h-full aspect-[1/1] lg:aspect-[3/1]"
+            className="w-full aspect-[8/10] md:aspect-[5/2]"
             onMouseMove={handleMouseMove}
           >
             <Button
