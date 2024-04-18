@@ -1,5 +1,6 @@
 import { ThemeProvider } from "@/components/ui/theme-provider";
-import { H1 } from "./components/ui/typography";
+import { H1, H2 } from "./components/ui/typography";
+import { Separator } from "@radix-ui/react-dropdown-menu";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -8,17 +9,20 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { Card } from "@/components/ui/card";
-import { MathJax, MathJaxContext } from "better-react-mathjax";
 import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import { ModeToggle } from "./components/ui/mode-toggle";
+  Card,
+  CardHeader,
+  CardContent,
+  CardFooter,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
+import { MathJax, MathJaxContext } from "better-react-mathjax";
+
+import { ModeToggle } from "@/components/ui/mode-toggle";
 
 import Definition1 from "@/examples/chapter1/section1/topic1/Definition1.tsx";
+import Example16 from "@/examples/chapter1/section1/topic1/Example16.tsx";
 const mathJaxConfig = {
   "fast-preview": {
     disabled: true,
@@ -45,7 +49,6 @@ function App() {
       onStartup={(mathJax) => (mathJax.Hub.processSectionDelay = 0)}
     >
       <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
-
         <div className="absolute w-screen flex justify-end">
           <div className="m-8">
             <ModeToggle />
@@ -86,18 +89,7 @@ function App() {
             combinations of the collection look like?`}
           </MathJax>
 
-          <Card>
-            <Accordion type="single" collapsible className="px-2">
-              <AccordionItem value="item-1">
-                <AccordionTrigger className="">
-                  Definiton: Span of Vectors
-                </AccordionTrigger>
-                <AccordionContent className="">
-                  <Definition1 />
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
-          </Card>
+          <Definition1 />
 
           <MathJax dynamic={true} hideUntilTypeset={"every"}>
             {`Determining the span of a collection of vectors is an
@@ -107,8 +99,8 @@ function App() {
             the general $shape$ and $size$ the span can take in
             $\\mathbb{R}^2$ and $\\mathbb{R}^3$.`}
           </MathJax>
+          <Example16 />
         </div>
-
       </ThemeProvider>
     </MathJaxContext>
   );

@@ -288,7 +288,7 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
                 e.stopPropagation();
                 setRotationSphereIsHovered(true);
                 setInfoBlockText(`
-                                    Click this sphere to rotate $v_${vectorNumber}$. You can click and drag to rotate smoothly
+                                    Left click this sphere to rotate $v_${vectorNumber}$. Right click to edit the vector. You can click and drag to rotate smoothly
                                 `);
                 setShowInfoBlock(true);
                 }}
