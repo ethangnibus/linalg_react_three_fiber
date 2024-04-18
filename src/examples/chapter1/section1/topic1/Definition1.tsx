@@ -169,7 +169,7 @@ function Definition1() {
         </AccordionTrigger>
         <AccordionContent className="">
           <div
-            className="h-full aspect-[3/2] lg:aspect-[3/1]"
+            className="h-full aspect-[1/1] lg:aspect-[3/1]"
             onMouseMove={handleMouseMove}
           >
             <Button
