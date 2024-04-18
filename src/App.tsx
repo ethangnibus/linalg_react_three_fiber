@@ -1,6 +1,5 @@
 import { ThemeProvider } from "@/components/ui/theme-provider";
-import { H1, H2 } from "./components/ui/typography";
-import { Separator } from "@radix-ui/react-dropdown-menu";
+import { H1 } from "./components/ui/typography";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -9,14 +8,6 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import {
-  Card,
-  CardHeader,
-  CardContent,
-  CardFooter,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
 import { MathJax, MathJaxContext } from "better-react-mathjax";
 
 import { ModeToggle } from "@/components/ui/mode-toggle";

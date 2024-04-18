@@ -175,7 +175,7 @@ function Definition1() {
             <Button
               variant="outline"
               size="icon"
-              className="mt-2 ml-2 mb-2 absolute z-10 border-2 border-primary"
+              className=" m-2 mb-2 absolute z-10 border-2 bg-white hover:bg-yellow-400 dark:hover:bg-yellow-500 text-black border-black"
               onClick={() => setShowEditPanel(!showEditPanel)}
             >
               {resizablePanelIsVertical ? (
