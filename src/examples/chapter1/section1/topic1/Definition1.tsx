@@ -175,7 +175,7 @@ function Definition1() {
             <Button
               variant="outline"
               size="icon"
-              className=" m-2 mb-2 absolute z-10 border-2 bg-white hover:bg-yellow-400 dark:hover:bg-yellow-500 text-black border-black"
+              className=" m-2 mb-2 absolute z-10 border-2 bg-white text-black border-black"
               onClick={() => setShowEditPanel(!showEditPanel)}
             >
               {resizablePanelIsVertical ? (
@@ -404,7 +404,7 @@ function Definition1() {
                 collapsedSize={15}
                 minSize={15}
               >
-                <div className="w-full h-full">
+                <div className="w-full h-full border-t-2 border-b-2 border-r-2 bg-white">
                   <Canvas
                     resize={{ debounce: 0 }}
                     className="select-none"
