@@ -1,5 +1,5 @@
 import { ThemeProvider } from "@/components/ui/theme-provider";
-import { H1 } from "./components/ui/typography";
+import { H3 } from "./components/ui/typography";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -14,6 +14,9 @@ import { ModeToggle } from "@/components/ui/mode-toggle";
 
 import Definition1 from "@/examples/chapter1/section1/topic1/Definition1.tsx";
 import Example16 from "@/examples/chapter1/section1/topic1/Example16.tsx";
+import Example20 from "@/examples/chapter1/section1/topic1/Example20.tsx";
+
+import Sandbox from "@/examples/chapter1/section1/topic1/Sandbox.tsx";
 const mathJaxConfig = {
   "fast-preview": {
     disabled: true,
@@ -46,7 +49,7 @@ function App() {
           </div>
         </div>
 
-        <div className="w-full p-2 lg:p-4 space-y-8">
+        <div className="w-full p-2 md:p-24 lg:p-32 space-y-8">
           <Breadcrumb>
             <BreadcrumbList>
               <BreadcrumbItem>
@@ -71,10 +74,12 @@ function App() {
             </BreadcrumbList>
           </Breadcrumb>
 
-          <H1>1.2.4: Spans</H1>
+          <div className="w-full h-1 border-b-2 bg-gradient-to-r from-primary to-secondary border-background" />
+          <H3 className="ml-10 ">1.2.4: Spans</H3>
+          
 
           <MathJax dynamic={true} hideUntilTypeset={"every"}>
-            {`With the notion of linear combinations in hand,
+            {`$\\qquad$ With the notion of linear combinations in hand,
             we now arrive at a natural question: Given a collection
             of real $n$-vectors, what does the set of $all$ linear
             combinations of the collection look like?`}
@@ -91,6 +96,12 @@ function App() {
             $\\mathbb{R}^2$ and $\\mathbb{R}^3$.`}
           </MathJax>
           <Example16 />
+          <div className="w-full h-1 border-b-2 bg-gradient-to-r from-primary to-secondary border-background" />
+
+          <Example20 />
+          <div className="w-full h-1 border-b-2 bg-gradient-to-r from-primary to-secondary border-background" />
+
+          <Sandbox />
         </div>
       </ThemeProvider>
     </MathJaxContext>

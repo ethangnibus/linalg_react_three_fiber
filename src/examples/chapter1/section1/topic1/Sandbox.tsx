@@ -29,7 +29,20 @@ import {
 import {
   Card,
   CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
 } from "@/components/ui/card";
+import {
+  Menubar,
+  MenubarContent,
+  MenubarItem,
+  MenubarMenu,
+  MenubarSeparator,
+  // MenubarShortcut,
+  MenubarTrigger,
+} from "@/components/ui/menubar";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -41,7 +54,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 
 // Before optimizing for mobile
 
-function Definition1() {
+function Sandbox() {
   const [orbitControlsEnabled, setOrbitControlsEnabled] = useState(true);
   const [vectorSpherePosition, setVectorSpherePosition] = useState<Vector3>(
     new Vector3(0, 0, 0)
@@ -91,7 +104,7 @@ function Definition1() {
   const [infoBlockText, setInfoBlockText] = useState<String>(`Info Block`);
 
   const [showEditPanel, setShowEditPanel] = useState(true);
-  const [_editBlockText, setEditBlockText] = useState<String>(`
+  const [editBlockText, setEditBlockText] = useState<String>(`
   $$\\text{Span } \\{ \\}$$
   `); // New state for hover
 
@@ -151,20 +164,10 @@ function Definition1() {
   }, []);
 
   return (
-    <div className="">
-    <div className="w-full flex justify-end">
-      <div className="absolute flex mr-10">
-        <div className="bg-gradient-to-r from-amber-500 to-amber-300 px-4 py-2 rounded-full flex">
-          <H3 className="text-primary inline-block align-middle">Definition</H3>
-        </div>
-      </div>
-    </div>
-
-    <div className="pt-6">
-    <Accordion type="single" collapsible className="px-2 border-2 bg-amber-100 dark:bg-secondary dark:text-primary border-secondary">
+    <Accordion type="single" collapsible className="px-2 border-2 bg-secondary">
       <AccordionItem value="item-1">
         <AccordionTrigger className="">
-          <H3 className="mx-8">Span of Vectors</H3>
+          <H3 className="mx-8">Sandbox: Span of vectors</H3>
         </AccordionTrigger>
         <AccordionContent className="">
           <div
@@ -207,39 +210,171 @@ function Definition1() {
                     <ScrollArea className="h-full w-full px-4">
                       <div className="h-10"></div>
 
-                      <MathJax dynamic={true} hideUntilTypeset={"every"} className="mt-4 ml-4 mr-4"> {`
-                      Given a collection of vectors $ \\textbf{v}_1, ..., \\textbf{v}_k \\in \\mathbb{R}^n$,
-                      their $\\textbf{span}$
-                      
-                      $$
-                        \\text{Span } \\{ \\textbf{v}_1, ..., \\textbf{v}_k \\} \\subset \\mathbb{R}^n
-                      $$
-                      is the set of all their linear combinations. In other words,
-                      $\\text{Span } \\{ \\textbf{v}_1, ..., \\textbf{v}_k \\}$
-                      consists of all
-                      $\\textbf{v} \\in \\mathbb{R}^n$ that can be expressed in the form
-
-                      $$
-                        \\textbf{v} = a_1 \\textbf{v}_1 \\text{ } + \\text{ } ... \\text{ } + \\text{ }  a_k \\textbf{v}_k
-                      $$
-                      for some weights $a_1, a_2, ..., a_k \\in \\mathbb{R}$.
-                      Geometrically, the span of a collection of vectors is the set
-                      of all vectors that can be reached by $traveling$
-                      along scales of each of the individual vectors in turn.
-                      `}</MathJax>
                       <Card className="mt-4 mb-4">
-                        <CardContent className="">
+                        <CardHeader>
+                          <CardTitle>
+                            What does this example visualize?
+                          </CardTitle>
+                          <CardDescription>
+                            We are visualizing the span of a collection of
+                            vectors given by the equation below. You can click
+                            on base vectors to add/subtract them from the
+                            collection. In the viewport, the combined span of
+                            every vector in our collection will be visualized in
+                            transparent blue.
+                          </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="h-12 w-50 mb-2 flex justify-center">
+                            <Card className="h-full w-40 px-5 flex justify-center drop-shadow">
                               <MathJax
-                                className="pt-6 "
+                                className="text-center self-center px-1"
                                 dynamic={true}
                                 hideUntilTypeset={"every"}
-                              >{`
-                                The span of a single non-zero vector 
-                                $\\textbf{v}_1$ is the line though the
-                                origin containing $\\textbf{v}_1$.`}
+                              >
+                                {editBlockText}
+                                {/* Edit Block Text */}
                               </MathJax>
+                            </Card>
+                          </div>
                         </CardContent>
+                        <CardFooter className="flex flex-col">
+                          <P className="mb-2 self-start">
+                            You can edit our collection below:
+                          </P>
+
+                          <Menubar>
+                            {/* v1 */}
+                            <MenubarMenu>
+                              <MenubarTrigger className="h-8">
+                                <MathJax
+                                  className="h-10 self-center"
+                                  dynamic={true}
+                                  hideUntilTypeset={"every"}
+                                >
+                                  {`$$\\small{\\text{Edit } \\mathbf{v}_1}$$`}
+                                </MathJax>
+                              </MenubarTrigger>
+                              <MenubarContent>
+                                <MenubarItem
+                                  onClick={() => setV1IsSelected(!v1IsSelected)}
+                                >
+                                  {v1IsSelected
+                                    ? "Remove this vector from our collection"
+                                    : "Add this vector to our collection"}
+                                </MenubarItem>
+                                <MenubarSeparator />
+                                <MenubarItem
+                                  onClick={() => setV1IsRotating(!v1IsRotating)}
+                                >
+                                  {v1IsRotating
+                                    ? "Remove the rotation sphere"
+                                    : "Add the rotation sphere"}
+                                </MenubarItem>
+                                <MenubarItem
+                                  onClick={() => setV1IsScaling(!v1IsScaling)}
+                                >
+                                  {v1IsScaling
+                                    ? "Remove the scaling point"
+                                    : "Add the scaling point"}
+                                </MenubarItem>
+                              </MenubarContent>
+                            </MenubarMenu>
+
+                            {/* v2 */}
+                            <MenubarMenu>
+                              <MenubarTrigger className="h-8">
+                                <MathJax
+                                  className="h-10 self-center"
+                                  dynamic={true}
+                                  hideUntilTypeset={"every"}
+                                >
+                                  {`$$\\small{\\text{Edit } \\mathbf{v}_2}$$`}
+                                </MathJax>
+                              </MenubarTrigger>
+                              <MenubarContent>
+                                <MenubarItem
+                                  onClick={() => setV2IsSelected(!v2IsSelected)}
+                                >
+                                  {v2IsSelected
+                                    ? "Remove this vector from our collection"
+                                    : "Add this vector to our collection"}
+                                </MenubarItem>
+                                <MenubarSeparator />
+                                <MenubarItem
+                                  onClick={() => setV2IsRotating(!v2IsRotating)}
+                                >
+                                  {v2IsRotating
+                                    ? "Remove the rotation angles"
+                                    : "Add the rotation angles"}
+                                </MenubarItem>
+                                <MenubarItem
+                                  onClick={() => setV2IsScaling(!v2IsScaling)}
+                                >
+                                  {v2IsScaling
+                                    ? "Remove the scaling point"
+                                    : "Add the scaling point"}
+                                </MenubarItem>
+                              </MenubarContent>
+                            </MenubarMenu>
+
+                            {/* v3 */}
+                            <MenubarMenu>
+                              <MenubarTrigger className="h-8">
+                                <MathJax
+                                  className="h-10 self-center"
+                                  dynamic={true}
+                                  hideUntilTypeset={"every"}
+                                >
+                                  {`$$\\small{\\text{Edit } \\mathbf{v}_3}$$`}
+                                </MathJax>
+                              </MenubarTrigger>
+                              <MenubarContent>
+                                <MenubarItem
+                                  onClick={() => setV3IsSelected(!v3IsSelected)}
+                                >
+                                  {v3IsSelected
+                                    ? "Remove this vector from our collection"
+                                    : "Add this vector to our collection"}
+                                </MenubarItem>
+                                <MenubarSeparator />
+                                <MenubarItem
+                                  onClick={() => setV3IsRotating(!v3IsRotating)}
+                                >
+                                  {v3IsRotating
+                                    ? "Remove the rotation angles"
+                                    : "Add the rotation angles"}
+                                </MenubarItem>
+                                <MenubarItem
+                                  onClick={() => setV3IsScaling(!v3IsScaling)}
+                                >
+                                  {v3IsScaling
+                                    ? "Remove the scaling point"
+                                    : "Add the scaling point"}
+                                </MenubarItem>
+                              </MenubarContent>
+                            </MenubarMenu>
+                          </Menubar>
+                        </CardFooter>
                       </Card>
+                      <P>
+                        This experiment aims to explore and visualize the
+                        concept of the span of vectors in three-dimensional
+                        space. The span of vectors represents all possible
+                        linear combinations of those vectors, effectively
+                        forming a subspace in the three-dimensional coordinate
+                        system. Through interactive graphics and animations,
+                        this experiment will illustrate how the span of three
+                        given vectors is represented geometrically. By
+                        manipulating the vectors and observing their
+                        combinations, participants will gain insights into the
+                        fundamental concepts of linear algebra, such as linear
+                        independence, basis, and subspaces. This visual
+                        exploration promises to provide an intuitive
+                        understanding of abstract mathematical concepts and
+                        their real-world applications, offering a dynamic
+                        learning experience for students and enthusiasts alike.
+                      </P>
                     </ScrollArea>
                   </ResizablePanel>
                   <ResizableHandle withHandle />
@@ -516,9 +651,7 @@ function Definition1() {
         </AccordionContent>
       </AccordionItem>
     </Accordion>
-    </div>
-    </div>
   );
 }
 
-export default Definition1;
+export default Sandbox;
