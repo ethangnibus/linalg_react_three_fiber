@@ -6,9 +6,10 @@ import {
   OrbitControls,
   // Stats
 } from "@react-three/drei";
-import AxisLines from "@/components/AxisLines";
+import AxisLines from "@/components/AxisLines3D";
 import GridLines from "@/components/GridLines";
 import VectorSphere from "@/components/VectorSphere";
+import * as THREE from 'three';
 import { Vector3 } from "three"; // Import Vector3 from three
 import { MathJax } from "better-react-mathjax";
 import { useTransition, animated, easings } from "@react-spring/web";
@@ -55,6 +56,12 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 // Before optimizing for mobile
 
 function Sandbox() {
+  const [v1, setV1] = useState<THREE.Vector3>(new THREE.Vector3(1.0, 0.1, 0.2));
+  const [v2, setV2] = useState<THREE.Vector3>(new THREE.Vector3(0.1, 1.0, 0.2));
+  const [v3, setV3] = useState<THREE.Vector3>(new THREE.Vector3(0.1, -0.1, 1.0));
+  const [vectorSphereIsSelected, setVectorSphereIsSelected] = useState(false);
+
+
   const [orbitControlsEnabled, setOrbitControlsEnabled] = useState(true);
   const [vectorSpherePosition, setVectorSpherePosition] = useState<Vector3>(
     new Vector3(0, 0, 0)
@@ -167,7 +174,7 @@ function Sandbox() {
     <Accordion type="single" collapsible className="px-2 border-2 bg-secondary">
       <AccordionItem value="item-1">
         <AccordionTrigger className="">
-          <H3 className="mx-8">Sandbox: Span of vectors</H3>
+          <H3 className="mx-8">Sandbox: Span of Vectors</H3>
         </AccordionTrigger>
         <AccordionContent className="">
           <div
@@ -419,6 +426,14 @@ function Sandbox() {
                     <AxisLines />
 
                     <VectorSphere
+                      v1={v1}
+                      v2={v2}
+                      v3={v3}
+                      setV1={setV1}
+                      setV2={setV2}
+                      setV3={setV3}
+                      vectorSphereIsSelected={vectorSphereIsSelected}
+                      setVectorSphereIsSelected={setVectorSphereIsSelected}
                       onToggleOrbitControls={handleToggleOrbitControls}
                       vectorSpherePosition={vectorSpherePosition}
                       setVectorSpherePosition={setVectorSpherePosition}
@@ -456,6 +471,9 @@ function Sandbox() {
                       setShowV1ContextMenu={setShowV1ContextMenu}
                       setShowV2ContextMenu={setShowV2ContextMenu}
                       setShowV3ContextMenu={setShowV3ContextMenu}
+                      v1IsShown={true}
+                      v2IsShown={true}
+                      v3IsShown={true}
                     />
                     {/* <Stats/> */}
                   </Canvas>

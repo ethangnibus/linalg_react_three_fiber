@@ -14,6 +14,7 @@ interface BaseVectorsProps {
   spherePosition: THREE.Vector3; // Change to Vector3 type
   updateSpherePosition: (newPosition: THREE.Vector3) => void; // Add prop for updating sphere position
   vectorSphereIsSelected: boolean;
+  baseVectorIsShown: boolean;
   baseVectorIsSelected: boolean;
   setBaseVectorIsSelected: (enabled: boolean) => void;
   setShowInfoBlock: (enabled: boolean) => void;
@@ -38,6 +39,7 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
   spherePosition,
   updateSpherePosition,
   vectorSphereIsSelected,
+  baseVectorIsShown,
   baseVectorIsSelected,
   setBaseVectorIsSelected,
   setShowInfoBlock,
@@ -218,6 +220,9 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
 
   return (
     <>
+    {baseVectorIsShown && (
+    <>
+    
         <group
         onContextMenu={e => {
             setContextMenuPosition({ x: e.clientX, y: e.clientY });
@@ -489,6 +494,8 @@ const BaseVector: React.FC<BaseVectorsProps> = ({
         </group>
         {lines}
         {currentLine}
+    </>
+    )}
     </>
   );
 };

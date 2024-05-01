@@ -6,10 +6,10 @@ import {
   OrbitControls,
   // Stats
 } from "@react-three/drei";
-import AxisLines from "@/components/AxisLines";
+import AxisLines2D from "@/components/AxisLines2D";
 import GridLines from "@/components/GridLines";
 import VectorSphere from "@/components/VectorSphere";
-import { Vector3 } from "three"; // Import Vector3 from three
+import * as THREE from 'three';
 import { MathJax } from "better-react-mathjax";
 import { useTransition, animated, easings } from "@react-spring/web";
 import {
@@ -42,12 +42,18 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 // Before optimizing for mobile
 
 function Definition1() {
+  const [v1, setV1] = useState<THREE.Vector3>(new THREE.Vector3(0.5, 0.0, -1.0));
+  const [v2, setV2] = useState<THREE.Vector3>(new THREE.Vector3(0.1, 1.0, 0.2));
+  const [v3, setV3] = useState<THREE.Vector3>(new THREE.Vector3(0.1, -0.1, 1.0));
+  const [vectorSphereIsSelected, setVectorSphereIsSelected] = useState(true);
+
+
   const [orbitControlsEnabled, setOrbitControlsEnabled] = useState(true);
-  const [vectorSpherePosition, setVectorSpherePosition] = useState<Vector3>(
-    new Vector3(0, 0, 0)
+  const [vectorSpherePosition, setVectorSpherePosition] = useState<THREE.Vector3>(
+    new THREE.Vector3(0, 0, 0)
   );
-  const [cameraTarget, setCameraTarget] = useState<Vector3>(
-    new Vector3(0, 0, 0)
+  const [cameraTarget, setCameraTarget] = useState<THREE.Vector3>(
+    new THREE.Vector3(0, 0, 0)
   );
   const [infoBlockPosition, setInfoBlockPosition] = useState<{
     x: number;
@@ -55,7 +61,7 @@ function Definition1() {
   }>({ x: 0, y: 0 });
 
   // states for when vectors are selected
-  const [v1IsSelected, setV1IsSelected] = useState(false);
+  const [v1IsSelected, setV1IsSelected] = useState(true);
   const [v2IsSelected, setV2IsSelected] = useState(false);
   const [v3IsSelected, setV3IsSelected] = useState(false);
 
@@ -259,7 +265,7 @@ function Definition1() {
                     className="select-none"
                     camera={{
                       fov: 90,
-                      position: [2.5, 2, 1.5],
+                      position: [0, 2.5, 0],
                     }}
                     onPointerDown={() => {
                       setShowV1ContextMenu(false);
@@ -281,9 +287,17 @@ function Definition1() {
                     <directionalLight intensity={1} position={[-11, 11, -11]} />
 
                     <GridLines />
-                    <AxisLines />
+                    <AxisLines2D />
 
                     <VectorSphere
+                      v1={v1}
+                      v2={v2}
+                      v3={v3}
+                      setV1={setV1}
+                      setV2={setV2}
+                      setV3={setV3}
+                      vectorSphereIsSelected={vectorSphereIsSelected}
+                      setVectorSphereIsSelected={setVectorSphereIsSelected}
                       onToggleOrbitControls={handleToggleOrbitControls}
                       vectorSpherePosition={vectorSpherePosition}
                       setVectorSpherePosition={setVectorSpherePosition}
@@ -311,7 +325,7 @@ function Definition1() {
                       setShowV2V3Span={setShowV2V3Span}
                       showV1V2V3Span={showV1V2V3Span}
                       setShowV1V2V3Span={setShowV1V2V3Span}
-                      v1IsRotating={v1IsRotating}
+                      v1IsRotating={false}
                       v2IsRotating={v2IsRotating}
                       v3IsRotating={v3IsRotating}
                       v1IsScaling={v1IsScaling}
@@ -321,6 +335,9 @@ function Definition1() {
                       setShowV1ContextMenu={setShowV1ContextMenu}
                       setShowV2ContextMenu={setShowV2ContextMenu}
                       setShowV3ContextMenu={setShowV3ContextMenu}
+                      v1IsShown={true}
+                      v2IsShown={false}
+                      v3IsShown={false}
                     />
                     {/* <Stats/> */}
                   </Canvas>

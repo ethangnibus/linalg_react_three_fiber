@@ -1,5 +1,8 @@
 import { H2 } from "@/components/ui/typography";
 import { Card, CardContent } from "@/components/ui/card"
+import Example20_1 from "@/examples/chapter1/section1/topic1/Example20_1.tsx";
+import Example20_2 from "@/examples/chapter1/section1/topic1/Example20_2.tsx";
+import Example20_3 from "@/examples/chapter1/section1/topic1/Example20_3.tsx";
 
 
 import { MathJax } from "better-react-mathjax";
@@ -94,33 +97,48 @@ function Example20() {
                     className="w-4/5 md:w-10/12"
                   >
                     <CarouselContent>
-                      <CarouselItem key={1} className="md:basis-1/2 lg:basis-1/3">
+                      <CarouselItem key={1} className="md:basis-1/2">
                         <div className="p-1">
-                          <Card>
-                            <CardContent className="flex aspect-square items-center justify-center p-6">
-                              <span className="text-3xl font-semibold">{1}</span>
-                            </CardContent>
-                          </Card>
+                        <Card className="p-2 absolute z-10 m-8 opacity-95">
+                          <MathJax dynamic={true} hideUntilTypeset={"every"}>{`
+                              $\\text{Span} \\{ \\textbf{v}_1, \\textbf{v}_2 \\}$
+                              `}</MathJax>
+                        </Card>
+                        <Card>
+                          <CardContent className="flex aspect-square items-center justify-center p-6">
+                            <Example20_1 />
+                          </CardContent>
+                        </Card>
                         </div>
                       </CarouselItem>
 
-                      <CarouselItem key={2} className="md:basis-1/2 lg:basis-1/3">
+                      <CarouselItem key={2} className="md:basis-1/2">
                         <div className="p-1">
-                          <Card>
-                            <CardContent className="flex aspect-square items-center justify-center p-6">
-                              <span className="text-3xl font-semibold">{2}</span>
-                            </CardContent>
-                          </Card>
+                        <Card className="p-2 absolute z-10 m-8 opacity-95">
+                          <MathJax dynamic={true} hideUntilTypeset={"every"}>{`
+                              $\\text{Span} \\{ \\textbf{v}_1, \\textbf{v}_2 \\}$
+                              `}</MathJax>
+                        </Card>
+                        <Card>
+                          <CardContent className="flex aspect-square items-center justify-center p-6">
+                            <Example20_2 />
+                          </CardContent>
+                        </Card>
                         </div>
                       </CarouselItem>
 
-                      <CarouselItem key={3} className="md:basis-1/2 lg:basis-1/3">
+                      <CarouselItem key={3} className="md:basis-1/2">
                         <div className="p-1">
-                          <Card>
-                            <CardContent className="flex aspect-square items-center justify-center p-6">
-                              <span className="text-3xl font-semibold">{3}</span>
-                            </CardContent>
-                          </Card>
+                        <Card className="p-2 absolute z-10 m-8 opacity-95">
+                          <MathJax dynamic={true} hideUntilTypeset={"every"}>{`
+                              $\\text{Span} \\{ \\textbf{v}_1, \\textbf{v}_2, \\textbf{v}_3 \\}$
+                              `}</MathJax>
+                        </Card>
+                        <Card>
+                          <CardContent className="flex aspect-square items-center justify-center p-6">
+                            <Example20_3 />
+                          </CardContent>
+                        </Card>
                         </div>
                       </CarouselItem>
 

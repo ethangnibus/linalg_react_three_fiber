@@ -8,6 +8,14 @@ import { useSpring, animated } from '@react-spring/three';
 
 
 interface VectorSphereProps {
+    v1: THREE.Vector3;
+    v2: THREE.Vector3;
+    v3: THREE.Vector3;
+    setV1: (newVector: THREE.Vector3) => void;
+    setV2: (newVector: THREE.Vector3) => void;
+    setV3: (newVector: THREE.Vector3) => void;
+    vectorSphereIsSelected: boolean;
+    setVectorSphereIsSelected: (enabled: boolean) => void;
     onToggleOrbitControls: (enabled: boolean) => void;
     vectorSpherePosition: THREE.Vector3;
     setVectorSpherePosition: (newPosition: THREE.Vector3) => void;
@@ -45,6 +53,9 @@ interface VectorSphereProps {
     setShowV1ContextMenu: (enabled: boolean) => void;
     setShowV2ContextMenu: (enabled: boolean) => void;
     setShowV3ContextMenu: (enabled: boolean) => void;
+    v1IsShown: boolean;
+    v2IsShown: boolean;
+    v3IsShown: boolean;
 }
 
 function vectorsAreCollinear(v1: THREE.Vector3, v2: THREE.Vector3) {
@@ -53,6 +64,14 @@ function vectorsAreCollinear(v1: THREE.Vector3, v2: THREE.Vector3) {
 }
 
 const VectorSphere: React.FC<VectorSphereProps> = ({
+    v1,
+    v2,
+    v3,
+    setV1,
+    setV2,
+    setV3,
+    vectorSphereIsSelected,
+    setVectorSphereIsSelected,
     onToggleOrbitControls,
     vectorSpherePosition,
     setVectorSpherePosition,
@@ -90,14 +109,14 @@ const VectorSphere: React.FC<VectorSphereProps> = ({
     setShowV1ContextMenu,
     setShowV2ContextMenu,
     setShowV3ContextMenu,
+    v1IsShown,
+    v2IsShown,
+    v3IsShown,
 }) => {
     const [vectorSphereIsHovered, setVectorSphereIsHovered] = useState(false); // New state for hover
 
     
-    const [vectorSphereIsSelected, setVectorSphereIsSelected] = useState(false);
-    const [v1, setV1] = useState<THREE.Vector3>(new THREE.Vector3(1.0, 0.1, 0.2));
-    const [v2, setV2] = useState<THREE.Vector3>(new THREE.Vector3(0.1, 1.0, 0.2));
-    const [v3, setV3] = useState<THREE.Vector3>(new THREE.Vector3(0.1, -0.1, 1.0));
+    
 
     const [numScaledVectors, setNumScaledVectors] = useState(1);
 
@@ -231,6 +250,7 @@ const VectorSphere: React.FC<VectorSphereProps> = ({
                     spherePosition={vectorSpherePosition}
                     updateSpherePosition={updateSpherePosition}
                     vectorSphereIsSelected={vectorSphereIsSelected}
+                    baseVectorIsShown={v1IsShown}
                     baseVectorIsSelected={v1IsSelected}
                     setBaseVectorIsSelected={setV1IsSelected}
                     setShowInfoBlock={setShowInfoBlock}
@@ -255,6 +275,7 @@ const VectorSphere: React.FC<VectorSphereProps> = ({
                     spherePosition={vectorSpherePosition}
                     updateSpherePosition={updateSpherePosition}
                     vectorSphereIsSelected={vectorSphereIsSelected}
+                    baseVectorIsShown={v2IsShown}
                     baseVectorIsSelected={v2IsSelected}
                     setBaseVectorIsSelected={setV2IsSelected}
                     setShowInfoBlock={setShowInfoBlock}
@@ -279,6 +300,7 @@ const VectorSphere: React.FC<VectorSphereProps> = ({
                     spherePosition={vectorSpherePosition}
                     updateSpherePosition={updateSpherePosition}
                     vectorSphereIsSelected={vectorSphereIsSelected}
+                    baseVectorIsShown={v3IsShown}
                     baseVectorIsSelected={v3IsSelected}
                     setBaseVectorIsSelected={setV3IsSelected}
                     setShowInfoBlock={setShowInfoBlock}

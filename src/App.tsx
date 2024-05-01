@@ -14,6 +14,7 @@ import { ModeToggle } from "@/components/ui/mode-toggle";
 
 import Definition1 from "@/examples/chapter1/section1/topic1/Definition1.tsx";
 import Example16 from "@/examples/chapter1/section1/topic1/Example16.tsx";
+
 import Example20 from "@/examples/chapter1/section1/topic1/Example20.tsx";
 
 import Sandbox from "@/examples/chapter1/section1/topic1/Sandbox.tsx";
@@ -77,6 +78,7 @@ function App() {
           <div className="w-full h-1 border-b-2 bg-gradient-to-r from-primary to-secondary border-background" />
           <H3 className="ml-10 ">1.2.4: Spans</H3>
           
+          <Sandbox />
 
           <MathJax dynamic={true} hideUntilTypeset={"every"}>
             {`$\\qquad$ With the notion of linear combinations in hand,
@@ -100,8 +102,6 @@ function App() {
 
           <Example20 />
           <div className="w-full h-1 border-b-2 bg-gradient-to-r from-primary to-secondary border-background" />
-
-          <Sandbox />
         </div>
       </ThemeProvider>
     </MathJaxContext>
